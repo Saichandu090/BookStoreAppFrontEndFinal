@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { IBook } from '../../model/interfaces/books';
+import { BooksService } from '../../services/books/books.service';
+import { IJsonResponse } from '../../model/interfaces/jsonresponse';
 
 @Component({
   selector: 'app-homepage',
@@ -7,6 +10,20 @@ import { Component } from '@angular/core';
   templateUrl: './homepage.component.html',
   styleUrl: './homepage.component.css'
 })
-export class HomepageComponent {
+export class HomepageComponent implements OnInit{
 
+
+  bookList:IBook[]=[];
+
+  private bookService=inject(BooksService);
+
+  getAllBooks(){
+    this.bookService.getAllBooks().subscribe((res:IJsonResponse)=>{
+      this.bookList=res.data;
+    })
+  }
+
+  ngOnInit(): void {
+      this.getAllBooks();
+  }
 }

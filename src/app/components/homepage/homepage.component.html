@@ -1,1 +1,29 @@
-<p>homepage works!</p>
+<div class="container-fluid">
+    <div class="row">
+        <!-- <div class="col-2">
+            <h5>Category</h5>
+            @for (item of categoryList$ | async; track $index) {
+                <button class="btn btn-success mt-2" (click)="getProductByCategoryId(item.categoryId)">{{item.categoryName}}</button>
+            }
+        </div> -->
+        <div class="col-10">
+            <div class="row mt-3">
+                @for (item of bookList; track $index) {
+                    <div class="col-3">
+                        <div class="card product-card">
+                            <img [src]="item.bookLogo" class="card-img-top product-image" alt="Product Image">
+                            <span class="category-badge">{{item.quantity}}</span>
+                            <!-- <span class="category-badge">{{item.author}}</span> -->
+                            <div class="card-body">
+                                <h3 class="card-title">{{item.bookName}}</h3> 
+                                <h6 class="card-title">{{item.author}}</h6>
+                                <p class="product-price">{{item.price}}</p>
+                                <button class="btn add-to-cart-btn">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

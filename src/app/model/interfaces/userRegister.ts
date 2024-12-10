@@ -10,6 +10,6 @@ export interface IUserRegister{
 }
 
 export interface ILogin{
-    emailId:string,
+    email:string,
     password:string
 }
