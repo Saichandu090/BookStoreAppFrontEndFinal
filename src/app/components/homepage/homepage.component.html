@@ -6,10 +6,10 @@
                 <button class="btn btn-success mt-2" (click)="getProductByCategoryId(item.categoryId)">{{item.categoryName}}</button>
             }
         </div> -->
-        <div class="col-10">
+        <div class="col-12">
             <div class="row mt-3">
                 @for (item of bookList; track $index) {
-                    <div class="col-3">
+                    <div class="col-3 mt-3">
                         <div class="card product-card">
                             <img [src]="item.bookLogo" class="card-img-top product-image" alt="Product Image">
                             <span class="category-badge">{{item.quantity}}</span>
@@ -19,8 +19,8 @@
                                 <h6 class="card-title">{{item.author | titlecase}}</h6>
                                 <p class="product-price">{{item.price | currency:"INR"}}</p>
                                 @if (currentUser.role=="ADMIN") {
-                                    <button class="btn btn-info mx-5">Update</button>
-                                    <button class="btn btn-danger">Delete</button>
+                                    <button class="btn btn-info mx-5" (click)="onEditBook()">Update</button>
+                                    <button class="btn btn-danger" (click)="onDeleteBook(item.bookId)">Delete</button>
                                 }@else {
                                     <button class="btn add-to-cart-btn">Add to Cart</button>
                                 }
@@ -30,5 +30,42 @@
                 }
             </div>
         </div>
+    </div>
+</div>
+
+
+<div id="myModal" class="modal" #addBook>
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Register</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="onEditClose()"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <label for="">Name</label>
+                        <input type="text"  class="form-control">
+                    </div>
+                    <div class="col-12">
+                        <label for="">Mobile Number</label>
+                        <input type="text"  class="form-control">
+                    </div>
+                    <div class="col-12">
+                        <label for="">Password</label>
+                        <input type="text"  class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+                    (click)="onEditClose()">Close</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+                    >Register</button>
+            </div>
+        </div>
+
     </div>
 </div>

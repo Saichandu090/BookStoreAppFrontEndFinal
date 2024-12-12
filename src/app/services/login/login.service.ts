@@ -14,8 +14,6 @@ export class LoginService {
 
   private http: HttpClient = inject(HttpClient);
 
-  onLogout: Subject<boolean> = new Subject<boolean>();
-
   registerUser(user: IUserRegister): Observable<IJsonResponse> {
     return this.http.post<IJsonResponse>(this.baseURL + "register", user)
   }

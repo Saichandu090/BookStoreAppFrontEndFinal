@@ -116,20 +116,6 @@
                 <div class="row">
                     <form [formGroup]="bookForm">
                         <div class="col-12">
-                            <label for="">Book Id</label>
-                            <input type="text" formControlName="id"  class="form-control">
-                            @if(bookForm.controls["id"].dirty){
-                                <div class="text-danger">
-                                    @if (bookForm.controls["id"].errors?.['required']) {
-                                        <span>This is Required</span>
-                                    }
-                                    @if (bookForm.controls["id"].errors?.['pattern']) {
-                                        <span>Only numbers Required</span>
-                                    }
-                                </div>
-                            }
-                        </div>
-                        <div class="col-12">
                             <label for="">Book Name</label>
                             <input type="text" formControlName="name"  class="form-control">
                             @if(bookForm.controls["name"].dirty){

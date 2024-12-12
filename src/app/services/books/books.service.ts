@@ -15,7 +15,7 @@ export class BooksService {
 
   private http:HttpClient=inject(HttpClient);
 
-  onBookAdded: Subject<boolean> = new Subject<boolean>();
+  onBookChanged: Subject<boolean> = new Subject<boolean>();
 
   getAllBooks():Observable<IJsonResponse>{
 
@@ -35,6 +35,15 @@ export class BooksService {
       'Content-Type': 'application/json',
     });
     return this.http.post<IJsonResponse>(this.baseURL+'addBook',obj,{headers})
+  }
+
+  deleteBook(id:number):Observable<IJsonResponse>{
+    let token = localStorage.getItem(Constant.LOGIN_TOKEN);
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.delete<IJsonResponse>(`${this.baseURL}deleteBook/${id}`,{headers})
   }
 
 }

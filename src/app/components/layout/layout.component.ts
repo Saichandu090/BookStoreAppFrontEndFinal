@@ -47,11 +47,6 @@ export class LayoutComponent implements OnInit{
 
   ngOnInit(): void {
     this.getCurrentUser();
-    this.loginService.onLogout.subscribe((res:boolean)=>{
-      if(res){
-        this.getCurrentUser()
-      }
-    })
   }
 
 
@@ -65,7 +60,6 @@ export class LayoutComponent implements OnInit{
       localStorage.removeItem("appToken")
       localStorage.removeItem("UserDetails")
       this.router.navigateByUrl("/login")
-      this.loginService.onLogout.next(true);
     }
   }
 
@@ -105,7 +99,6 @@ export class LayoutComponent implements OnInit{
   fb:FormBuilder=inject(FormBuilder);
 
   bookForm=this.fb.group({
-    id:new FormControl('',[Validators.required,Validators.pattern("^[0-9]+$")]),
     name:new FormControl('',[Validators.required,Validators.pattern("^[a-zA-Z ]{3,}$")]),
     author:new FormControl('',[Validators.required,Validators.pattern("^[a-zA-Z ]{5,}$")]),
     description:new FormControl('',[Validators.required,Validators.pattern("^[a-zA-Z ]{5,}$")]),
@@ -121,7 +114,7 @@ export class LayoutComponent implements OnInit{
       if(res.result){
         console.log(res.message)
         this.toastr.success("Book added Successfully")
-        this.bookService.onBookAdded.next(true);
+        this.bookService.onBookChanged.next(true);
         this.closeAddBookModel();
       }
     })

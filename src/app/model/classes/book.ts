@@ -1,5 +1,4 @@
 export class Book{
-    id:number
     name:string
     author:string
     description:string
@@ -8,7 +7,6 @@ export class Book{
     bookLogo:string
 
     constructor(){
-        this.id=0,
         this.name='',
         this.author='',
         this.description='',
