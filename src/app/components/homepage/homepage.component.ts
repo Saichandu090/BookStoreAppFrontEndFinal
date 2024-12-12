@@ -7,11 +7,13 @@ import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { LoggedInUser } from '../../model/classes/user';
 import { ToastrService } from 'ngx-toastr';
+import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Book } from '../../model/classes/book';
 
 @Component({
   selector: 'app-homepage',
   standalone: true,
-  imports: [ButtonModule, CommonModule],
+  imports: [ButtonModule, CommonModule,ReactiveFormsModule],
   templateUrl: './homepage.component.html',
   styleUrl: './homepage.component.css'
 })
@@ -55,9 +57,11 @@ export class HomepageComponent implements OnInit {
     }
   }
 
+  //======================================//
 
-  onEditBook() {
+  onEditBook(id:number) {
     if (this.editBook) {
+      this.editableBook=id;
       this.editBook.nativeElement.style.display = "block";
     }
   }
@@ -67,6 +71,8 @@ export class HomepageComponent implements OnInit {
       this.editBook.nativeElement.style.display = "none";
     }
   }
+
+  //======================================//
 
   toaster=inject(ToastrService);
 
@@ -86,5 +92,35 @@ export class HomepageComponent implements OnInit {
     }
   }
 
+
+
+  fb:FormBuilder=inject(FormBuilder);
   
+    bookForm=this.fb.group({
+      name:new FormControl('',[Validators.required,Validators.pattern("^[a-zA-Z ]{3,}$")]),
+      author:new FormControl('',[Validators.required,Validators.pattern("^[a-zA-Z ]{5,}$")]),
+      description:new FormControl('',[Validators.required,Validators.pattern("^[a-zA-Z ]{5,}$")]),
+      price:new FormControl('',[Validators.required,Validators.pattern("^[0-9.]+$")]),
+      quantity:new FormControl('',[Validators.required,Validators.min(16)]),
+      bookLogo:new FormControl('',[Validators.required])
+    })
+
+  
+    editableBook!:number;
+    updatableBook:Book=new Book();
+
+    onUpdateBook(){
+      this.updatableBook = Object.assign(new Book(), this.bookForm.value);
+      this.bookService.updateBook(this.editableBook,this.updatableBook).subscribe((res:IJsonResponse)=>{
+        if(res.result){
+          this.toaster.success(res.message)
+          this.bookService.onBookChanged.next(true);
+          this.onEditClose()
+          this.editableBook=0
+          this.updatableBook=new Book()
+        }else{
+          this.toaster.error(res.message);
+        }
+      })
+    }
 }

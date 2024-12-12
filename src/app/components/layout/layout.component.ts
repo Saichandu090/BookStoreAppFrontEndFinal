@@ -125,7 +125,7 @@ export class LayoutComponent implements OnInit{
   //=============================================//
 
   showSuccess() {
-    this.toastr.error('Logout Success');
+    this.toastr.show('Logout Success');
   }
   
 }
