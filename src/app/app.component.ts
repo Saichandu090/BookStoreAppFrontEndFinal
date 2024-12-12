@@ -9,7 +9,27 @@ import { Constant } from './constants/constant';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
+export class AppComponent implements OnInit{
 
+  userEmail:string='';
+
+  router=inject(Router);
+
+  getUserMail(){
+    const userName=localStorage.getItem("UserName");
+    if(userName!=null){
+      this.userEmail=userName;
+    }
+  }
+
+  ngOnInit(): void {
+    this.getUserMail();
+  }
+
+  onLogOut(){
+    localStorage.removeItem(Constant.LOGIN_TOKEN);
+    localStorage.removeItem("UserName");
+    this.router.navigateByUrl("/login");
+  }
   
 }

@@ -2,8 +2,10 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { HomepageComponent } from './components/homepage/homepage.component';
-import { LayoutComponent } from './components/layout/layout.component';
 import { loginGuard } from './guards/login.guard';
+import { AdminLoginComponent } from './components/admin-login/admin-login.component';
+import { AdminRegisterComponent } from './components/admin-register/admin-register.component';
+import { LayoutComponent } from './components/layout/layout.component';
 
 export const routes: Routes = [
     {
@@ -18,6 +20,14 @@ export const routes: Routes = [
     {
         path: "register",
         component: RegisterComponent
+    },
+    {
+        path:"adminLogin",
+        component:AdminLoginComponent
+    },
+    {
+        path:"adminRegister",
+        component:AdminRegisterComponent
     },
     {
         path: '',

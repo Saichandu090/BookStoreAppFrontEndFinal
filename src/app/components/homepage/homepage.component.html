@@ -15,10 +15,15 @@
                             <span class="category-badge">{{item.quantity}}</span>
                             <!-- <span class="category-badge">{{item.author}}</span> -->
                             <div class="card-body">
-                                <h3 class="card-title">{{item.bookName}}</h3> 
-                                <h6 class="card-title">{{item.author}}</h6>
-                                <p class="product-price">{{item.price}}</p>
-                                <button class="btn add-to-cart-btn">Add to Cart</button>
+                                <h3 class="card-title">{{item.bookName | titlecase}}</h3> 
+                                <h6 class="card-title">{{item.author | titlecase}}</h6>
+                                <p class="product-price">{{item.price | currency:"INR"}}</p>
+                                @if (currentUser.role=="ADMIN") {
+                                    <button class="btn btn-info mx-5">Update</button>
+                                    <button class="btn btn-danger">Delete</button>
+                                }@else {
+                                    <button class="btn add-to-cart-btn">Add to Cart</button>
+                                }
                             </div>
                         </div>
                     </div>

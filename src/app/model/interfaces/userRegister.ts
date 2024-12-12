@@ -3,7 +3,7 @@ import { DatePipe } from "@angular/common"
 export interface IUserRegister{
     firstName:string,
     lastName:string,
-    dateOfBirth:DatePipe,
+    dateOfBirth:Date,
     password:string,
     email:string,
     role:string

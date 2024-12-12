@@ -1,4 +1,4 @@
-export interface IBook{
+export interface IBookResponse{
     bookId:number,
     bookName:string,
     author:string,

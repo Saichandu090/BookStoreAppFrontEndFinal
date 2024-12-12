@@ -2,6 +2,10 @@
     font-family: monospace !important;
 }
 
+.bgc-center{
+    margin: 10%;
+}
+
 .container {
     background-color: #fff;
     padding: 25px;

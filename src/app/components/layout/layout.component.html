@@ -1,105 +1,83 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary" style="background-color: #6262e1 !important ">
+<nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary" style="background-color: #e65757b6 !important ">
     <!-- Container wrapper -->
     <div class="container-fluid">
         <!-- Toggle button -->
-        <button data-mdb-collapse-init class="navbar-toggler" type="button"
-            data-mdb-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-            aria-label="Toggle navigation">
+        <button data-mdb-collapse-init class="navbar-toggler" type="button" data-mdb-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <i class="fa fa-bars"></i>
         </button>
 
         <!-- Collapsible wrapper -->
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Navbar brand -->
-            <a class="navbar-brand mt-2 mt-lg-0" href="#">
-                <h2>BOOK-STORE</h2>
+            <a class="navbar-brand mt-2 mt-lg-0" routerLink="/homepage">
+                Book Store Application
             </a>
+            
+
             <!-- Left links -->
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <button class="btn btn-info mx-2">Add-Book</button>
-                </li>
-                <li class="nav-item">
-                    <button class="btn btn-info mx-2">Cart</button>
-                </li>
-                <li class="nav-item">
-                    <button class="btn btn-info mx-2">Address</button>
-                </li>
-            </ul>
+             @if(currentUser.role=="ADMIN")
+             {
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <div class="card flex justify-center mx-2">
+                        <p-button (onClick)="openAddBook()">Add-Book</p-button>
+                    </div>
+                    <li class="nav-item">
+                        <button class="btn btn-info mx-2" href="#">UserCarts</button>
+                    </li>
+                </ul>
+             }
             <!-- Left links -->
         </div>
         <!-- Collapsible wrapper -->
 
         <!-- Right elements -->
-        <div class="d-flex align-items-center">
-            <!-- Icon -->
-             @if (userEmail!='') {
-                <button class="btn btn-success btn-sm">{{userEmail}}</button>
-                <button class="btn btn-success btn-sm mx-2" (click)="onLogOut()">LogOut</button>
-             }
-            <a class="link-secondary me-3" href="#">
-                <i class="fa fa-shopping-cart"></i>
-            </a>
-            <!-- <div class="dropdown-menu dropdown-menu-end show" style="position: absolute;
-            right: 13px;top:60px" aria-labelledby="navbarDropdownMenuAvatar">
+        
+            <div class="d-flex align-items-center">
+                @if (currentUser.email!='') {
+                <!-- Icon -->
+                <button class="btn btn-info btn-sm">{{currentUser.email}}</button>
+                <div class="card flex justify-center mx-2">
+                    <p-button  (onClick)="onLogOut()">Logout</p-button>
+                </div>
+               }
+        
+
+            @if (currentUser.role=="USER") {
+                <a class="link-secondary me-3">
+                    <i class="fa fa-shopping-cart text-white" (click)="showCartPopUp()"></i>
+                </a>
+                <div [className]="isPopUpOpen ? 'dropdown-menu dropdown-menu-end hide' : 'dropdown-menu dropdown-menu-end show'"
+                style="position: absolute;
+            right: 15px;top:60px" aria-labelledby="navbarDropdownMenuAvatar">
                 <div class="row">
                     <div class="col-8">
                         <h6>Cart Items</h6>
                     </div>
                     <div class="col-4 text-end">
-                        <i class="fa fa-close p-2"></i>
+                        <i class="fa fa-close p-2" (click)="showCartPopUp()"></i>
                     </div>
                 </div>
-
-
                 <table class="table table-sm">
                     <tbody>
+                        <!-- @for (item of cartData; track $index) {
                         <tr>
                             <td>
                                 <div class="rounded"
-                                    style="background-image: url(https://unsplash.com/photos/ZBwQ2bCbJjw/download?force=true&amp;w=640); width: 60px; height: 60px; background-size: cover;">
+                                    style="background-image: url({{item.productImageUrl}}); width: 60px; height: 60px; background-size: cover;">
                                 </div>
                             </td>
-                            <td class="align-middle text-left">Spy Suit</td>
-                            <td class="align-middle text-center">1 pieces</td>
-                            <td class="align-middle text-right">$698</td>
+                            <td class="align-middle text-left">{{item.productName}}</td>
+                            <td class="align-middle text-center">{{item.quantity}} piece(s)</td>
+                            <td class="align-middle text-right">{{item.productPrice | currency:'INR'}}</td>
                             <td class="align-middle text-center">
-                                <a href="#delete" data-toggle="modal" data-title="Delete your product ?">
+                                <a (click)="onRemoveProduct(item.cartId)" data-toggle="modal"
+                                    data-title="Delete your product ?">
                                     <i class="fa fa-trash"></i>
                                 </a>
                             </td>
                         </tr>
-                        <tr>
-                            <td>
-                                <div class="rounded"
-                                    style="background-image: url(https://unsplash.com/photos/ZBwQ2bCbJjw/download?force=true&amp;w=640); width: 60px; height: 60px; background-size: cover;">
-                                </div>
-                            </td>
-                            <td class="align-middle text-left">Spy Suit</td>
-                            <td class="align-middle text-center">1 pieces</td>
-                            <td class="align-middle text-right">$698</td>
-                            <td class="align-middle text-center">
-                                <a href="#delete" data-toggle="modal" data-title="Delete your product ?">
-                                    <i class="fa fa-trash"></i>
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="rounded"
-                                    style="background-image: url(https://unsplash.com/photos/ZBwQ2bCbJjw/download?force=true&amp;w=640); width: 60px; height: 60px; background-size: cover;">
-                                </div>
-                            </td>
-                            <td class="align-middle text-left">Spy Suit</td>
-                            <td class="align-middle text-center">1 pieces</td>
-                            <td class="align-middle text-right">$698</td>
-                            <td class="align-middle text-center">
-                                <a href="#delete" data-toggle="modal" data-title="Delete your product ?">
-                                    <i class="fa fa-trash"></i>
-                                </a>
-                            </td>
-                        </tr>
-
+                        } -->
                         <tr>
                             <td colspan="4" class="align-middle text-right">Quantity</td>
                             <td class="align-middle text-right">55</td>
@@ -110,10 +88,139 @@
                         </tr>
                     </tbody>
                 </table>
-            </div> -->
+                <div class="row">
+                    <div class="col-12 text-end">
+                        <button class="btn btn-sm btn-primary" [routerLink]="'create-order'"
+                            (click)="isPopUpOpen = !isPopUpOpen">CheckOut</button>
+                    </div>
+                </div>
+            </div>
+            }
         </div>
     </div>
 </nav>
 
-<router-outlet/>
+<router-outlet />
 
+
+<div id="myModal" class="modal" #addBook>
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">ADD BOOK</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="closeAddBookModel()"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <form [formGroup]="bookForm">
+                        <div class="col-12">
+                            <label for="">Book Id</label>
+                            <input type="text" formControlName="id"  class="form-control">
+                            @if(bookForm.controls["id"].dirty){
+                                <div class="text-danger">
+                                    @if (bookForm.controls["id"].errors?.['required']) {
+                                        <span>This is Required</span>
+                                    }
+                                    @if (bookForm.controls["id"].errors?.['pattern']) {
+                                        <span>Only numbers Required</span>
+                                    }
+                                </div>
+                            }
+                        </div>
+                        <div class="col-12">
+                            <label for="">Book Name</label>
+                            <input type="text" formControlName="name"  class="form-control">
+                            @if(bookForm.controls["name"].dirty){
+                                <div class="text-danger">
+                                    @if (bookForm.controls["name"].errors?.['required']) {
+                                        <span>This is Required</span>
+                                    }
+                                    @if (bookForm.controls["name"].errors?.['pattern']) {
+                                        <span>Min 3 Characters Required</span>
+                                    }
+                                </div>
+                            }
+                        </div>
+                        <div class="col-12">
+                            <label for="">Book Author</label>
+                            <input type="text" formControlName="author"  class="form-control">
+                            @if(bookForm.controls["author"].dirty){
+                                <div class="text-danger">
+                                    @if (bookForm.controls["author"].errors?.['required']) {
+                                        <span>This is Required</span>
+                                    }
+                                    @if (bookForm.controls["author"].errors?.['pattern']) {
+                                        <span>Min 5 Characters required</span>
+                                    }
+                                </div>
+                            }
+                        </div>
+                        <div class="col-12">
+                            <label for="">Book Description</label>
+                            <input type="text" formControlName="description"  class="form-control">
+                            @if(bookForm.controls["description"].dirty){
+                                <div class="text-danger">
+                                    @if (bookForm.controls["description"].errors?.['required']) {
+                                        <span>This is Required</span>
+                                    }
+                                    @if (bookForm.controls["description"].errors?.['pattern']) {
+                                        <span>Min 5 Characters Required</span>
+                                    }
+                                </div>
+                            }
+                        </div>
+                        <div class="col-12">
+                            <label for="">Book Price</label>
+                            <input type="text" #price formControlName="price" class="form-control">
+                            @if(bookForm.controls["price"].dirty){
+                                <div class="text-danger">
+                                    @if (bookForm.controls["price"].errors?.['pattern']) {
+                                        <span>Only Numbers are Required</span>
+                                    }
+                                    @if (bookForm.controls["price"].errors?.['required']) {
+                                        <span>This is Required</span>
+                                    }
+                                </div>
+                            }
+                        </div>
+                        <div class="col-12">
+                            <label for="">Book Quantity</label>
+                            <input type="tel" formControlName="quantity" class="form-control">
+                            @if(bookForm.controls["quantity"].dirty){
+                                <div class="text-danger">
+                                    @if (bookForm.controls["quantity"].errors?.['min']) {
+                                        <span>Min 16 books Required</span>
+                                    }
+                                    @if (bookForm.controls["quantity"].errors?.['required']) {
+                                        <span>This is Required</span>
+                                    }
+                                </div>
+                            }
+                        </div>
+                        <div class="col-12">
+                            <label for="">Book Logo</label>
+                            <input type="text" formControlName="bookLogo" class="form-control">
+                            @if(bookForm.controls["bookLogo"].dirty){
+                                <div class="text-danger">
+                                    @if (bookForm.controls["bookLogo"].errors?.['required']) {
+                                        <span>This is Required</span>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </form>
+                    
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+                    (click)="closeAddBookModel()">Close</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" [disabled]="bookForm.invalid" (click)="addNewBook()"
+                    >Add</button>
+            </div>
+        </div>
+
+    </div>
+</div>
