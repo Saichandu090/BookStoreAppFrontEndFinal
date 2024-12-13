@@ -80,11 +80,11 @@
                         }
                         <tr>
                             <td colspan="4" class="align-middle text-right">Quantity</td>
-                            <td class="align-middle text-right">{{totalQuantity}}</td>
+                            <td class="align-middle text-right">{{cartService.cartTotalQuantity}}</td>
                         </tr>
                         <tr>
                             <td colspan="4" class="align-middle text-right">Total</td>
-                            <td class="align-middle text-right">{{totalPrice | currency:'INR'}}</td>
+                            <td class="align-middle text-right">{{cartService.cartTotalPrice| currency:'INR'}}</td>
                         </tr>
                     </tbody>
                 </table>

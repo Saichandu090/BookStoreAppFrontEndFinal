@@ -102,7 +102,7 @@ export class CreateOrderComponent implements OnInit {
     })
   }
 
-  addressControl = new FormControl(null);
+  addressControl = new FormControl('',[Validators.required]);
 
   selectedAddress:Address=new Address();
 
@@ -114,7 +114,11 @@ export class CreateOrderComponent implements OnInit {
   //=====================================//
 
   onPlaceOrder() {
-    
+    if(this.selectedAddress.pinCode==0){
+      this.toaster.error("Please select atleast one address")
+    }else{
+      this.toaster.success("Order placed successfully")
+    }
   }
 
 }

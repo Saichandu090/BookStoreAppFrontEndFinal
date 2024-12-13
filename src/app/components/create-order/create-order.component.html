@@ -21,7 +21,7 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col">#</th>
+                                <th scope="col">SL.No</th>
                                 <th scope="col">Street-Name</th>
                                 <th scope="col">City</th>
                                 <th scope="col">State</th>
@@ -32,18 +32,10 @@
                         @for (item of addressList; track $index) {
                         <tbody>
                             <tr>
+                                <td>{{$index+1}}</td>
                                 <td>{{item.streetName}}</td>
-                            </tr>
-                            <tr>
-
                                 <td>{{item.city}}</td>
-                            </tr>
-                            <tr>
-
                                 <td>{{item.state}}</td>
-                            </tr>
-                            <tr>
-
                                 <td>{{item.pinCode}}</td>
                             </tr>
                         </tbody>
@@ -84,7 +76,7 @@
                         <div class="row border-top ">
                             <div class="col-12 text-center mt-2">
                                 <div class="w-100 bg-black">
-                                    <button class="btn text-white rounded-0" (click)="onPlaceOrder()">Place
+                                    <button class="btn text-white rounded-0" [disabled]="addressControl.invalid" (click)="onPlaceOrder()">Place
                                         Order</button>
                                 </div>
                             </div>

@@ -11,6 +11,7 @@ import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angu
 import { Book } from '../../model/classes/book';
 import { Cart } from '../../model/classes/cart';
 import { CartService } from '../../services/cart/cart.service';
+import { ICart } from '../../model/interfaces/cart';
 
 @Component({
   selector: 'app-homepage',
@@ -154,12 +155,24 @@ export class HomepageComponent implements OnInit {
 
     cartObj:Cart=new Cart();
 
+    cartRes:ICart={
+      cartId:0,
+      userId:0,
+      bookLogo:'',
+      bookName:'',
+      quantity:0,
+      totalPrice:0
+    }
+
     cartService:CartService=inject(CartService);
 
     onAddToCart(id:number){
       this.cartObj.bookId=id;
       this.cartService.addToCart(this.cartObj).subscribe((res:IJsonResponse)=>{
         if(res.result){
+          this.cartRes=res.data[0];
+          this.cartService.cartTotalPrice += this.cartRes.totalPrice;
+          this.cartService.cartTotalQuantity += this.cartRes.quantity;
           this.toaster.success(res.message);
           this.bookService.onBookChanged.next(true);
           this.cartService.onCartCalled.next(true);

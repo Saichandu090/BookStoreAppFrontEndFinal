@@ -51,6 +51,8 @@ export class LayoutComponent implements OnInit {
   ngOnInit(): void {
     this.getCurrentUser();
     this.getCartItems();
+    this.totalPrice
+    this.totalQuantity
     this.cartService.onCartCalled.subscribe((res: boolean) => {
       if (res) {
         this.getCartItems();
@@ -153,13 +155,11 @@ export class LayoutComponent implements OnInit {
     totalPrice: 0
   }
 
-  totalQuantity: number = 0;
-  totalPrice: number = 0;
+  totalQuantity: number = this.cartService.cartTotalQuantity;
+  totalPrice: number = this.cartService.cartTotalPrice;
 
   getDetails() {
     this.cartData.map(ele => {
-      this.totalPrice = this.totalPrice + ele.totalPrice;
-      this.totalQuantity = this.totalQuantity + ele.quantity;
     })
   }
 
@@ -168,16 +168,24 @@ export class LayoutComponent implements OnInit {
     this.cartService.getUserCartById(cartId).subscribe((res: IJsonResponse) => {
       if (res.result) {
         this.cartObj = res.data[0]
+        console.log(this.cartObj)
       }
     })
+  }
+
+  cartRes:ICart={
+    cartId:0,
+    userId:0,
+    bookLogo:'',
+    bookName:'',
+    quantity:0,
+    totalPrice:0
   }
 
   onRemoveProduct(cartId: number) {
     const rs = confirm("Do you want to remove this item from the cart ?");
     if (rs) {
       this.getCart(cartId);
-      this.totalPrice = this.totalPrice - this.cartObj.totalPrice;
-      this.totalQuantity = this.totalQuantity - this.cartObj.quantity;
       this.cartService.removeCart(cartId).subscribe((res: IJsonResponse) => {
         if (res.result) {
           this.toastr.success(res.message)
