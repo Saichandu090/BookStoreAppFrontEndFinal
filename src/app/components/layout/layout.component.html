@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary" style="background-color: #e65757b6 !important ">
+<nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary" style="background-color: #e4e81fb6 !important ">
     <!-- Container wrapper -->
     <div class="container-fluid">
         <!-- Toggle button -->
@@ -45,7 +45,7 @@
 
             @if (currentUser.role=="USER") {
                 <a class="link-secondary me-3">
-                    <i class="fa fa-shopping-cart text-white" (click)="showCartPopUp()"></i>
+                    <i class="fa fa-shopping-cart text-red" (click)="showCartPopUp()"></i>
                 </a>
                 <div [className]="isPopUpOpen ? 'dropdown-menu dropdown-menu-end hide' : 'dropdown-menu dropdown-menu-end show'"
                 style="position: absolute;
@@ -88,14 +88,13 @@
                         </tr>
                     </tbody>
                 </table>
-                @if (cartData!=[]) {
+                
                     <div class="row">
                         <div class="col-12 text-end">
                             <button class="btn btn-sm btn-primary" [routerLink]="'create-order'"
                                 (click)="isPopUpOpen = !isPopUpOpen">CheckOut</button>
                         </div>
                     </div>
-                }
             </div>
             }
         </div>

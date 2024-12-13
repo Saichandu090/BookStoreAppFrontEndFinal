@@ -1,4 +1,3 @@
-import { Book } from "../classes/book";
 
 export interface ICart{
     cartId:number;
@@ -7,4 +6,13 @@ export interface ICart{
     totalPrice:number;
     bookName:string;
     bookLogo:string;
+}
+
+
+export interface IAddress{
+    streetName:string,
+    city:string,
+    state:string,
+    pinCode:number,
+    userId:number;
 }

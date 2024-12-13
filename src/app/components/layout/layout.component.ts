@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { IJsonResponse } from '../../model/interfaces/jsonresponse';
 import { Book } from '../../model/classes/book';
 import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -7,7 +7,7 @@ import { LoggedInUser } from '../../model/classes/user';
 import { ToastrService } from 'ngx-toastr';
 import { BooksService } from '../../services/books/books.service';
 import { LoginService } from '../../services/login/login.service';
-import { map, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { ICart } from '../../model/interfaces/cart';
@@ -123,6 +123,7 @@ export class LayoutComponent implements OnInit {
 
   subscriptionList: Subscription[] = [];
 
+
   //=============================================//
 
   showSuccess() {
@@ -133,18 +134,12 @@ export class LayoutComponent implements OnInit {
 
   cartService: CartService = inject(CartService);
 
-  totalQuantity: number = 0;
-  totalPrice: number = 0;
-
 
   getCartItems() {
     this.cartService.getUserCart().subscribe((res: IJsonResponse) => {
       if (res.result) {
         this.cartData = res.data;
-        this.cartData.forEach(element => {
-          this.totalPrice = element.totalPrice + this.totalPrice;
-          this.totalQuantity = element.quantity + this.totalQuantity
-        });
+        this.getDetails();
       }
     })
   }
@@ -157,6 +152,17 @@ export class LayoutComponent implements OnInit {
     bookLogo: '',
     totalPrice: 0
   }
+
+  totalQuantity: number = 0;
+  totalPrice: number = 0;
+
+  getDetails() {
+    this.cartData.map(ele => {
+      this.totalPrice = this.totalPrice + ele.totalPrice;
+      this.totalQuantity = this.totalQuantity + ele.quantity;
+    })
+  }
+
 
   getCart(cartId: number) {
     this.cartService.getUserCartById(cartId).subscribe((res: IJsonResponse) => {

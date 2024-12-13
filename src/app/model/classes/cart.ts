@@ -7,3 +7,20 @@ export class Cart{
         this.quantity=1
     }
 }
+
+
+export class Address{
+    streetName:string
+    city:string
+    state:string
+    pinCode:number
+    userId:number
+
+    constructor(){
+        this.streetName='',
+        this.city='',
+        this.state='',
+        this.pinCode=0,
+        this.userId=0
+    }
+}
