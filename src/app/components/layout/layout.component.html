@@ -60,16 +60,16 @@
                 </div>
                 <table class="table table-sm">
                     <tbody>
-                        <!-- @for (item of cartData; track $index) {
+                        @for (item of cartData; track $index) {
                         <tr>
                             <td>
                                 <div class="rounded"
-                                    style="background-image: url({{item.productImageUrl}}); width: 60px; height: 60px; background-size: cover;">
+                                    style="background-image: url({{item.bookLogo}}); width: 60px; height: 60px; background-size: cover;">
                                 </div>
                             </td>
-                            <td class="align-middle text-left">{{item.productName}}</td>
+                            <td class="align-middle text-left">{{item.bookName}}</td>
                             <td class="align-middle text-center">{{item.quantity}} piece(s)</td>
-                            <td class="align-middle text-right">{{item.productPrice | currency:'INR'}}</td>
+                            <td class="align-middle text-right">{{item.totalPrice | currency:'INR'}}</td>
                             <td class="align-middle text-center">
                                 <a (click)="onRemoveProduct(item.cartId)" data-toggle="modal"
                                     data-title="Delete your product ?">
@@ -77,23 +77,25 @@
                                 </a>
                             </td>
                         </tr>
-                        } -->
+                        }
                         <tr>
                             <td colspan="4" class="align-middle text-right">Quantity</td>
-                            <td class="align-middle text-right">55</td>
+                            <td class="align-middle text-right">{{totalQuantity}}</td>
                         </tr>
                         <tr>
                             <td colspan="4" class="align-middle text-right">Total</td>
-                            <td class="align-middle text-right">3600</td>
+                            <td class="align-middle text-right">{{totalPrice | currency:'INR'}}</td>
                         </tr>
                     </tbody>
                 </table>
-                <div class="row">
-                    <div class="col-12 text-end">
-                        <button class="btn btn-sm btn-primary" [routerLink]="'create-order'"
-                            (click)="isPopUpOpen = !isPopUpOpen">CheckOut</button>
+                @if (cartData!=[]) {
+                    <div class="row">
+                        <div class="col-12 text-end">
+                            <button class="btn btn-sm btn-primary" [routerLink]="'create-order'"
+                                (click)="isPopUpOpen = !isPopUpOpen">CheckOut</button>
+                        </div>
                     </div>
-                </div>
+                }
             </div>
             }
         </div>

@@ -1,12 +1,12 @@
 .product-card {
-    border: 2px solid #007bff; /* Blue border highlight */
-    border-radius: 10px;
+    border: 2px solid #d48104; /* Blue border highlight */
+    border-radius: 7px;
     overflow: hidden;
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .product-card:hover {
-    transform: scale(1.05); /* Slightly enlarge on hover */
+    transform: scale(1.03); /* Slightly enlarge on hover */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
 }
 

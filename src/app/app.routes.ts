@@ -3,9 +3,9 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { HomepageComponent } from './components/homepage/homepage.component';
 import { loginGuard } from './guards/login.guard';
-import { AdminLoginComponent } from './components/admin-login/admin-login.component';
 import { AdminRegisterComponent } from './components/admin-register/admin-register.component';
 import { LayoutComponent } from './components/layout/layout.component';
+import { CreateOrderComponent } from './components/create-order/create-order.component';
 
 export const routes: Routes = [
     {
@@ -22,10 +22,6 @@ export const routes: Routes = [
         component: RegisterComponent
     },
     {
-        path:"adminLogin",
-        component:AdminLoginComponent
-    },
-    {
         path:"adminRegister",
         component:AdminRegisterComponent
     },
@@ -37,6 +33,12 @@ export const routes: Routes = [
             path: 'homepage',
             component: HomepageComponent,
             canActivate: [loginGuard]
-        }]
+        },
+        {
+            path:'create-order',
+            component:CreateOrderComponent,
+            canActivate:[loginGuard]
+        }
+    ]
     }
 ];

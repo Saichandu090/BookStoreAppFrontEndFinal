@@ -22,7 +22,7 @@
                                     <button class="add-to-cart-btn mx-2" (click)="onEditBook(item.bookId)">Update</button>
                                     <button class="add-to-cart-btn mx-2" (click)="onDeleteBook(item.bookId)">Delete</button>
                                 }@else {
-                                    <button class="btn add-to-cart-btn">Add to Cart</button>
+                                    <button class="btn add-to-cart-btn" (click)="onAddToCart(item.bookId)">Add to Cart</button>
                                 }
                             </div>
                         </div>

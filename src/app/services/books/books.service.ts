@@ -55,4 +55,13 @@ export class BooksService {
     return this.http.put<IJsonResponse>(`${this.baseURL}updateBook/${id}`,obj,{headers})
   }
 
+  getBookById(id:number):Observable<IJsonResponse>{
+    let token = localStorage.getItem(Constant.LOGIN_TOKEN);
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get<IJsonResponse>(`${this.baseURL}byBookId/${id}`,{headers})
+  }
+
 }

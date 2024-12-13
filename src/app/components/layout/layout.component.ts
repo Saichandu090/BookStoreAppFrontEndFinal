@@ -7,31 +7,34 @@ import { LoggedInUser } from '../../model/classes/user';
 import { ToastrService } from 'ngx-toastr';
 import { BooksService } from '../../services/books/books.service';
 import { LoginService } from '../../services/login/login.service';
-import { Subscription } from 'rxjs';
+import { map, Subscription } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
+import { ICart } from '../../model/interfaces/cart';
+import { CartService } from '../../services/cart/cart.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [RouterLink, FormsModule, RouterOutlet,ReactiveFormsModule,ButtonModule,ConfirmPopupModule],
+  imports: [RouterLink, FormsModule, RouterOutlet, ReactiveFormsModule, ButtonModule, ConfirmPopupModule, CommonModule],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.css'
 })
-export class LayoutComponent implements OnInit{
+export class LayoutComponent implements OnInit {
 
   @ViewChild("addBook") addBook: ElementRef | undefined;
 
   private loginService = inject(LoginService);
 
-  private bookService=inject(BooksService);
+  private bookService = inject(BooksService);
 
   //=========================================//
 
   constructor(private toastr: ToastrService) {
   }
 
-  currentUser: LoggedInUser =new LoggedInUser();
+  currentUser: LoggedInUser = new LoggedInUser();
 
   getCurrentUser() {
     const user = localStorage.getItem("UserDetails");
@@ -47,6 +50,12 @@ export class LayoutComponent implements OnInit{
 
   ngOnInit(): void {
     this.getCurrentUser();
+    this.getCartItems();
+    this.cartService.onCartCalled.subscribe((res: boolean) => {
+      if (res) {
+        this.getCartItems();
+      }
+    })
   }
 
 
@@ -54,8 +63,8 @@ export class LayoutComponent implements OnInit{
 
 
   onLogOut() {
-    const msg=confirm("Do you want to Logout?");
-    if(msg){
+    const msg = confirm("Do you want to Logout?");
+    if (msg) {
       this.showSuccess()
       localStorage.removeItem("appToken")
       localStorage.removeItem("UserDetails")
@@ -73,45 +82,37 @@ export class LayoutComponent implements OnInit{
 
   //====================================//
 
-  //cartData:ICart[]=[];
-
-  getCartItems() {
-
-  }
-
-  //=============================================//
-
   openAddBook() {
     if (this.addBook) {
       this.addBook.nativeElement.style.display = "block"
     }
   }
 
-  closeAddBookModel(){
+  closeAddBookModel() {
     if (this.addBook) {
       this.bookForm.reset()
       this.addBook.nativeElement.style.display = "none"
     }
   }
 
-  book:Book=new Book();
+  book: Book = new Book();
 
-  fb:FormBuilder=inject(FormBuilder);
+  fb: FormBuilder = inject(FormBuilder);
 
-  bookForm=this.fb.group({
-    name:new FormControl('',[Validators.required,Validators.pattern("^[a-zA-Z ]{3,}$")]),
-    author:new FormControl('',[Validators.required,Validators.pattern("^[a-zA-Z ]{5,}$")]),
-    description:new FormControl('',[Validators.required,Validators.pattern("^[a-zA-Z ]{5,}$")]),
-    price:new FormControl('',[Validators.required,Validators.pattern("^[0-9.]+$")]),
-    quantity:new FormControl('',[Validators.required,Validators.min(16)]),
-    bookLogo:new FormControl('',[Validators.required])
+  bookForm = this.fb.group({
+    name: new FormControl('', [Validators.required, Validators.pattern("^[a-zA-Z ]{3,}$")]),
+    author: new FormControl('', [Validators.required, Validators.pattern("^[a-zA-Z ]{5,}$")]),
+    description: new FormControl('', [Validators.required, Validators.pattern("^[a-zA-Z ]{5,}$")]),
+    price: new FormControl('', [Validators.required, Validators.pattern("^[0-9.]+$")]),
+    quantity: new FormControl('', [Validators.required, Validators.min(16)]),
+    bookLogo: new FormControl('', [Validators.required])
   })
 
-  addNewBook(){
+  addNewBook() {
     this.book = Object.assign(new Book(), this.bookForm.value);
     console.log(this.book)
-    this.bookService.addNewBook(this.book).subscribe((res:IJsonResponse)=>{
-      if(res.result){
+    this.bookService.addNewBook(this.book).subscribe((res: IJsonResponse) => {
+      if (res.result) {
         console.log(res.message)
         this.toastr.success("Book added Successfully")
         this.bookService.onBookChanged.next(true);
@@ -120,12 +121,67 @@ export class LayoutComponent implements OnInit{
     })
   }
 
-  subscriptionList:Subscription[]=[];
+  subscriptionList: Subscription[] = [];
 
   //=============================================//
 
   showSuccess() {
     this.toastr.show('Logout Success');
   }
-  
+
+  cartData: ICart[] = [];
+
+  cartService: CartService = inject(CartService);
+
+  totalQuantity: number = 0;
+  totalPrice: number = 0;
+
+
+  getCartItems() {
+    this.cartService.getUserCart().subscribe((res: IJsonResponse) => {
+      if (res.result) {
+        this.cartData = res.data;
+        this.cartData.forEach(element => {
+          this.totalPrice = element.totalPrice + this.totalPrice;
+          this.totalQuantity = element.quantity + this.totalQuantity
+        });
+      }
+    })
+  }
+
+  cartObj: ICart = {
+    userId: 0,
+    cartId: 0,
+    bookName: '',
+    quantity: 0,
+    bookLogo: '',
+    totalPrice: 0
+  }
+
+  getCart(cartId: number) {
+    this.cartService.getUserCartById(cartId).subscribe((res: IJsonResponse) => {
+      if (res.result) {
+        this.cartObj = res.data[0]
+      }
+    })
+  }
+
+  onRemoveProduct(cartId: number) {
+    const rs = confirm("Do you want to remove this item from the cart ?");
+    if (rs) {
+      this.getCart(cartId);
+      this.totalPrice = this.totalPrice - this.cartObj.totalPrice;
+      this.totalQuantity = this.totalQuantity - this.cartObj.quantity;
+      this.cartService.removeCart(cartId).subscribe((res: IJsonResponse) => {
+        if (res.result) {
+          this.toastr.success(res.message)
+          this.cartService.onCartCalled.next(true);
+          this.bookService.onBookChanged.next(true);
+        }
+      })
+    }
+  }
+
+  //=============================================//
+
 }
