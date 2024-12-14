@@ -34,6 +34,15 @@ export class AddressService {
     return this.http.get<IJsonResponse>(this.baseURL + 'allAddress', { headers });
   }
 
+  getAddressById(id:number): Observable<IJsonResponse> {
+    let token = localStorage.getItem(Constant.LOGIN_TOKEN);
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get<IJsonResponse>(`${this.baseURL}getAddressById/${id}`, { headers });
+  }
+
   deleteAddress(id: number): Observable<IJsonResponse> {
     let token = localStorage.getItem(Constant.LOGIN_TOKEN);
     const headers = new HttpHeaders({

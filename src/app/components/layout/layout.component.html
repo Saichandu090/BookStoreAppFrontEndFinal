@@ -13,41 +13,45 @@
             <a class="navbar-brand mt-2 mt-lg-0" routerLink="/homepage">
                 Book Store Application
             </a>
-            
+
 
             <!-- Left links -->
-             @if(currentUser.role=="ADMIN")
-             {
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <div class="card flex justify-center mx-2">
-                        <p-button (onClick)="openAddBook()">Add-Book</p-button>
-                    </div>
-                    <li class="nav-item">
-                        <button class="btn btn-info mx-2" href="#">UserCarts</button>
-                    </li>
-                </ul>
-             }
+            @if(currentUser.role=="ADMIN")
+            {
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <div class="card flex justify-center mx-2">
+                    <p-button (onClick)="openAddBook()">Add-Book</p-button>
+                </div>
+                <li class="nav-item">
+                    <button class="btn btn-info mx-2" href="#">User-Orders</button>
+                </li>
+            </ul>
+            }
             <!-- Left links -->
         </div>
         <!-- Collapsible wrapper -->
 
         <!-- Right elements -->
-        
-            <div class="d-flex align-items-center">
-                @if (currentUser.email!='') {
-                <!-- Icon -->
-                <button class="btn btn-info btn-sm">{{currentUser.email}}</button>
+
+        <div class="d-flex align-items-center">
+            @if (currentUser.email!='') {
+            <button class="btn btn-info btn-sm mx-2">{{currentUser.email}}</button>
+            <!-- Icon -->
+             @if (currentUser.role=='USER') {
                 <div class="card flex justify-center mx-2">
-                    <p-button  (onClick)="onLogOut()">Logout</p-button>
+                    <p-button routerLink="/orders">Orders</p-button>
                 </div>
-               }
-        
+             }
+            <div class="card flex justify-center mx-2">
+                <p-button (onClick)="onLogOut()">Logout</p-button>
+            </div>
+            }
 
             @if (currentUser.role=="USER") {
-                <a class="link-secondary me-3">
-                    <i class="fa fa-shopping-cart text-red" (click)="showCartPopUp()"></i>
-                </a>
-                <div [className]="isPopUpOpen ? 'dropdown-menu dropdown-menu-end hide' : 'dropdown-menu dropdown-menu-end show'"
+            <a class="link-secondary me-3">
+                <i class="fa fa-shopping-cart text-red" (click)="showCartPopUp()"></i>
+            </a>
+            <div [className]="isPopUpOpen ? 'dropdown-menu dropdown-menu-end hide' : 'dropdown-menu dropdown-menu-end show'"
                 style="position: absolute;
             right: 15px;top:60px" aria-labelledby="navbarDropdownMenuAvatar">
                 <div class="row">
@@ -88,13 +92,13 @@
                         </tr>
                     </tbody>
                 </table>
-                
-                    <div class="row">
-                        <div class="col-12 text-end">
-                            <button class="btn btn-sm btn-primary" [routerLink]="'create-order'"
-                                (click)="isPopUpOpen = !isPopUpOpen">CheckOut</button>
-                        </div>
+
+                <div class="row">
+                    <div class="col-12 text-end">
+                        <button class="btn btn-sm btn-primary" [routerLink]="'create-order'"
+                            (click)="isPopUpOpen = !isPopUpOpen">CheckOut</button>
                     </div>
+                </div>
             </div>
             }
         </div>
@@ -118,94 +122,94 @@
                     <form [formGroup]="bookForm">
                         <div class="col-12">
                             <label for="">Book Name</label>
-                            <input type="text" formControlName="name"  class="form-control">
+                            <input type="text" formControlName="name" class="form-control">
                             @if(bookForm.controls["name"].dirty){
-                                <div class="text-danger">
-                                    @if (bookForm.controls["name"].errors?.['required']) {
-                                        <span>This is Required</span>
-                                    }
-                                    @if (bookForm.controls["name"].errors?.['pattern']) {
-                                        <span>Min 3 Characters Required</span>
-                                    }
-                                </div>
+                            <div class="text-danger">
+                                @if (bookForm.controls["name"].errors?.['required']) {
+                                <span>This is Required</span>
+                                }
+                                @if (bookForm.controls["name"].errors?.['pattern']) {
+                                <span>Min 3 Characters Required</span>
+                                }
+                            </div>
                             }
                         </div>
                         <div class="col-12">
                             <label for="">Book Author</label>
-                            <input type="text" formControlName="author"  class="form-control">
+                            <input type="text" formControlName="author" class="form-control">
                             @if(bookForm.controls["author"].dirty){
-                                <div class="text-danger">
-                                    @if (bookForm.controls["author"].errors?.['required']) {
-                                        <span>This is Required</span>
-                                    }
-                                    @if (bookForm.controls["author"].errors?.['pattern']) {
-                                        <span>Min 5 Characters required</span>
-                                    }
-                                </div>
+                            <div class="text-danger">
+                                @if (bookForm.controls["author"].errors?.['required']) {
+                                <span>This is Required</span>
+                                }
+                                @if (bookForm.controls["author"].errors?.['pattern']) {
+                                <span>Min 5 Characters required</span>
+                                }
+                            </div>
                             }
                         </div>
                         <div class="col-12">
                             <label for="">Book Description</label>
-                            <input type="text" formControlName="description"  class="form-control">
+                            <input type="text" formControlName="description" class="form-control">
                             @if(bookForm.controls["description"].dirty){
-                                <div class="text-danger">
-                                    @if (bookForm.controls["description"].errors?.['required']) {
-                                        <span>This is Required</span>
-                                    }
-                                    @if (bookForm.controls["description"].errors?.['pattern']) {
-                                        <span>Min 5 Characters Required</span>
-                                    }
-                                </div>
+                            <div class="text-danger">
+                                @if (bookForm.controls["description"].errors?.['required']) {
+                                <span>This is Required</span>
+                                }
+                                @if (bookForm.controls["description"].errors?.['pattern']) {
+                                <span>Min 5 Characters Required</span>
+                                }
+                            </div>
                             }
                         </div>
                         <div class="col-12">
                             <label for="">Book Price</label>
                             <input type="text" #price formControlName="price" class="form-control">
                             @if(bookForm.controls["price"].dirty){
-                                <div class="text-danger">
-                                    @if (bookForm.controls["price"].errors?.['pattern']) {
-                                        <span>Only Numbers are Required</span>
-                                    }
-                                    @if (bookForm.controls["price"].errors?.['required']) {
-                                        <span>This is Required</span>
-                                    }
-                                </div>
+                            <div class="text-danger">
+                                @if (bookForm.controls["price"].errors?.['pattern']) {
+                                <span>Only Numbers are Required</span>
+                                }
+                                @if (bookForm.controls["price"].errors?.['required']) {
+                                <span>This is Required</span>
+                                }
+                            </div>
                             }
                         </div>
                         <div class="col-12">
                             <label for="">Book Quantity</label>
                             <input type="tel" formControlName="quantity" class="form-control">
                             @if(bookForm.controls["quantity"].dirty){
-                                <div class="text-danger">
-                                    @if (bookForm.controls["quantity"].errors?.['min']) {
-                                        <span>Min 16 books Required</span>
-                                    }
-                                    @if (bookForm.controls["quantity"].errors?.['required']) {
-                                        <span>This is Required</span>
-                                    }
-                                </div>
+                            <div class="text-danger">
+                                @if (bookForm.controls["quantity"].errors?.['min']) {
+                                <span>Min 16 books Required</span>
+                                }
+                                @if (bookForm.controls["quantity"].errors?.['required']) {
+                                <span>This is Required</span>
+                                }
+                            </div>
                             }
                         </div>
                         <div class="col-12">
                             <label for="">Book Logo</label>
                             <input type="text" formControlName="bookLogo" class="form-control">
                             @if(bookForm.controls["bookLogo"].dirty){
-                                <div class="text-danger">
-                                    @if (bookForm.controls["bookLogo"].errors?.['required']) {
-                                        <span>This is Required</span>
-                                    }
-                                </div>
+                            <div class="text-danger">
+                                @if (bookForm.controls["bookLogo"].errors?.['required']) {
+                                <span>This is Required</span>
+                                }
+                            </div>
                             }
                         </div>
                     </form>
-                    
+
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
                     (click)="closeAddBookModel()">Close</button>
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" [disabled]="bookForm.invalid" (click)="addNewBook()"
-                    >Add</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" [disabled]="bookForm.invalid"
+                    (click)="addNewBook()">Add</button>
             </div>
         </div>
 

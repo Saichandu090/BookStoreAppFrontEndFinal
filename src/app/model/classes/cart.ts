@@ -10,6 +10,7 @@ export class Cart{
 
 
 export class Address{
+    addressId:number
     streetName:string
     city:string
     state:string
@@ -17,6 +18,7 @@ export class Address{
     userId:number
 
     constructor(){
+        this.addressId=0,
         this.streetName='',
         this.city='',
         this.state='',

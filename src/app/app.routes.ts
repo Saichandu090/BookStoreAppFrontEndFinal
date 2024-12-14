@@ -6,6 +6,7 @@ import { loginGuard } from './guards/login.guard';
 import { AdminRegisterComponent } from './components/admin-register/admin-register.component';
 import { LayoutComponent } from './components/layout/layout.component';
 import { CreateOrderComponent } from './components/create-order/create-order.component';
+import { OrdersComponent } from './components/orders/orders.component';
 
 export const routes: Routes = [
     {
@@ -37,6 +38,11 @@ export const routes: Routes = [
         {
             path:'create-order',
             component:CreateOrderComponent,
+            canActivate:[loginGuard]
+        },
+        {
+            path:'orders',
+            component:OrdersComponent,
             canActivate:[loginGuard]
         }
     ]

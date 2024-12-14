@@ -26,7 +26,8 @@
                                 <th scope="col">City</th>
                                 <th scope="col">State</th>
                                 <th scope="col">PinCode</th>
-                                <th scope="col">Action</th>
+                                <th scope="col">Edit</th>
+                                <th scope="col">Delete</th>
                             </tr>
                         </thead>
                         @for (item of addressList; track $index) {
@@ -37,6 +38,22 @@
                                 <td>{{item.city}}</td>
                                 <td>{{item.state}}</td>
                                 <td>{{item.pinCode}}</td>
+                                <td>
+                                    <div class="d-flex gap-3">
+                                        <a class="edit btn">
+                                            <i class="material-icons" (click)="editOldAddress(item.addressId)">edit</i>
+                                        </a>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-3">
+                                        <a class="delete btn">
+                                            <i class="material-icons" (click)="deleteAddress(item.addressId)">delete</i>
+                                        </a>
+                                    </div>
+                                </td>
+
+
                             </tr>
                         </tbody>
                         }
@@ -76,7 +93,7 @@
                         <div class="row border-top ">
                             <div class="col-12 text-center mt-2">
                                 <div class="w-100 bg-black">
-                                    <button class="btn text-white rounded-0" [disabled]="addressControl.invalid" (click)="onPlaceOrder()">Place
+                                    <button class="btn text-white rounded-0" (click)="onPlaceOrder()">Place
                                         Order</button>
                                 </div>
                             </div>
@@ -88,6 +105,7 @@
     </div>
 </div>
 
+<!-- This view child modal is for adding the address -->
 
 <div class="modal" tabindex="-1" #addAddress>
     <div class="modal-dialog">
@@ -134,7 +152,7 @@
                     </div>
                     <div class="col-12">
                         <label for="">Pin-code</label>
-                        <input type="text" #price formControlName="pinCode" class="form-control">
+                        <input type="text" formControlName="pinCode" class="form-control">
                         @if(newAddress.controls["pinCode"].dirty){
                         <div class="text-danger">
                             @if (newAddress.controls["pinCode"].errors?.['pattern']) {
@@ -149,6 +167,73 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
                     (click)="closeAddAddress()">Close</button>
                 <button type="button" class="btn btn-primary" (click)="addNewAddress()">Save Address</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- This View Child modal is for editing the address -->
+
+<div class="modal" tabindex="-1" #editAddress>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit your Address</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                    (click)="closeEditAddress()"></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="newEditAddress">
+                    <div class="col-12">
+                        <label for="">Street Address</label>
+                        <input type="text" formControlName="streetName" class="form-control">
+                        @if(newEditAddress.controls["streetName"].dirty){
+                        <div class="text-danger">
+                            @if (newEditAddress.controls["streetName"].errors?.['required']) {
+                            <span>This is Required</span>
+                            }
+                        </div>
+                        }
+                    </div>
+                    <div class="col-12">
+                        <label for="">City</label>
+                        <input type="text" formControlName="city" class="form-control">
+                        @if(newEditAddress.controls["city"].dirty){
+                        <div class="text-danger">
+                            @if (newEditAddress.controls["city"].errors?.['required']) {
+                            <span>This is Required</span>
+                            }
+                        </div>
+                        }
+                    </div>
+                    <div class="col-12">
+                        <label for="">State</label>
+                        <input type="text" formControlName="state" class="form-control">
+                        @if(newEditAddress.controls["state"].dirty){
+                        <div class="text-danger">
+                            @if (newEditAddress.controls["state"].errors?.['required']) {
+                            <span>This is Required</span>
+                            }
+                        </div>
+                        }
+                    </div>
+                    <div class="col-12">
+                        <label for="">Pin-code</label>
+                        <input type="text" formControlName="pinCode" class="form-control">
+                        @if(newEditAddress.controls["pinCode"].dirty){
+                        <div class="text-danger">
+                            @if (newEditAddress.controls["pinCode"].errors?.['pattern']) {
+                            <span>Only Numbers are Required</span>
+                            }
+                        </div>
+                        }
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                    (click)="closeEditAddress()">Close</button>
+                <button type="button" class="btn btn-primary" (click)="saveNewAddress()">Save Address</button>
             </div>
         </div>
     </div>

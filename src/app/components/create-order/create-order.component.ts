@@ -10,6 +10,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ToastrService } from 'ngx-toastr';
+import { IOrder } from '../../model/interfaces/order';
+import { OrderService } from '../../services/order/order.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-order',
@@ -42,8 +45,8 @@ export class CreateOrderComponent implements OnInit {
   ngOnInit(): void {
     this.getUserCart();
     this.getAllUserAddress();
-    this.addressService.onAddressChange.subscribe((res:boolean)=>{
-      if(res){
+    this.addressService.onAddressChange.subscribe((res: boolean) => {
+      if (res) {
         this.getAllUserAddress();
       }
     })
@@ -102,23 +105,122 @@ export class CreateOrderComponent implements OnInit {
     })
   }
 
-  addressControl = new FormControl('',[Validators.required]);
 
-  selectedAddress:Address=new Address();
+  //=====================================//
+
+
+  @ViewChild("editAddress") editAddress: ElementRef | undefined;
+
+  closeEditAddress() {
+    if (this.editAddress) {
+      this.editAddress.nativeElement.style.display = "none";
+    }
+  }
+
+
+
+  editableAddress: Address = new Address();
+
+  getEditAddress() {
+    this.addressService.getAddressById(this.editAddressId).subscribe((res: IJsonResponse) => {
+      if (res.result) {
+        this.editableAddress = res.data[0]
+
+        this.newEditAddress.patchValue({
+          streetName: this.editableAddress.streetName,
+          city: this.editableAddress.city,
+          state: this.editableAddress.state,
+          pinCode: this.editableAddress.pinCode
+        })
+        console.log(this.editableAddress)
+      } else {
+        this.toaster.error(res.message)
+      }
+    })
+  }
+
+  newEditAddress: FormGroup = this.fb.group({
+    streetName: new FormControl('', [Validators.required]),
+    city: new FormControl('', [Validators.required]),
+    state: new FormControl('', [Validators.required]),
+    pinCode: new FormControl('', [Validators.required])
+  })
+
+  editAddressId: number = 0;
+
+  editOldAddress(id: number) {
+    this.editAddressId = id;
+    if (this.editAddress) {
+      this.editAddress.nativeElement.style.display = "block";
+      this.getEditAddress();
+    }
+  }
+
+  saveNewAddress() {
+    this.editableAddress = Object.assign(new Address(), this.newEditAddress.value);
+    this.editableAddress.addressId=this.editAddressId;
+    console.log(this.editableAddress)
+    this.addressService.editAddress(this.editableAddress.addressId,this.editableAddress).subscribe((res: IJsonResponse) => {
+      if (res.result) {
+        this.toaster.success("Address edited successfully")
+        this.addressService.onAddressChange.next(true);
+        this.closeEditAddress();
+      }console.error(res.message);
+    })
+  }
+
+
+  deleteAddress(id:number){
+    const rs=confirm("Do you want to delete the address ?");
+    if(rs){
+      this.addressService.deleteAddress(id).subscribe((res:IJsonResponse)=>{
+        if(res.result){
+          this.toaster.success(res.message);
+          this.addressService.onAddressChange.next(true);
+        }else{
+          this.toaster.error(res.message)
+        }
+      })
+    }
+  }
+
+  //===================================================//
+
+  addressControl = new FormControl('', [Validators.required]);
+
+  selectedAddress: Address = new Address();
 
   onAddressSelect(event: any) {
     this.selectedAddress = event.value;
     console.log('Selected Address:', this.selectedAddress);
   }
 
-  //=====================================//
+  createOrder:IOrder={
+    price:0,
+    quantity:0,
+    addressId:0
+  }
+
+  orderService:OrderService=inject(OrderService);
+
+  router:Router=inject(Router);
 
   onPlaceOrder() {
-    if(this.selectedAddress.pinCode==0){
+    if (this.addressControl.invalid) {
       this.toaster.error("Please select atleast one address")
-    }else{
-      this.toaster.success("Order placed successfully")
+    } else {
+      this.createOrder.addressId=this.selectedAddress.addressId;
+      this.createOrder.price=this.totalPrice;
+      this.createOrder.quantity=this.totalQuantity;
+      this.orderService.placeOrder(this.createOrder).subscribe((res:IJsonResponse)=>{
+        if(res.result){
+          this.toaster.success(res.message);
+          this.router.navigateByUrl("/homepage");
+          this.cartService.onCartCalled.next(true);
+        }
+      })
     }
   }
+
 
 }

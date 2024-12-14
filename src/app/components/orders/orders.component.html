@@ -1,0 +1,30 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">SL.No</th>
+            <th scope="col">Order Id</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Price</th>
+            <th scope="col">Status</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    @for (item of orderList; track $index) {
+    <tbody>
+        <tr>
+            <td>{{$index+1}}</td>
+            <td>{{item.orderId}}</td>
+            <td>{{item.orderQuantity}}</td>
+            <td>{{item.orderPrice}}</td>
+            <td>{{item.cancelOrder}}</td>
+            <td>
+                <div class="d-flex gap-3">
+                    <a class="edit btn">
+                        <i class="material-icons" (click)="editOldAddress(item.orderId)">edit</i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+    }
+</table>

@@ -10,6 +10,7 @@ export interface ICart{
 
 
 export interface IAddress{
+    addressId:number,
     streetName:string,
     city:string,
     state:string,
