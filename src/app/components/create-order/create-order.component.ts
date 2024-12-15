@@ -212,15 +212,22 @@ export class CreateOrderComponent implements OnInit {
       this.createOrder.addressId=this.selectedAddress.addressId;
       this.createOrder.price=this.totalPrice;
       this.createOrder.quantity=this.totalQuantity;
-      this.orderService.placeOrder(this.createOrder).subscribe((res:IJsonResponse)=>{
-        if(res.result){
-          this.toaster.success(res.message);
-          this.router.navigateByUrl("/homepage");
-          this.cartService.onCartCalled.next(true);
-        }
-      })
+      if(this.createOrder.quantity<=0)
+        this.toaster.error("Select atleast one product to place order");
+      else{
+        this.orderService.placeOrder(this.createOrder).subscribe((res:IJsonResponse)=>{
+          if(res.result){
+            this.toaster.success(res.message);
+            this.router.navigateByUrl("/homepage");
+            this.cartService.onCartCalled.next(true);
+          }
+        })
+      }
     }
-  }
+  }// onPlaceOrder ending
+
+
+
 
 
 }

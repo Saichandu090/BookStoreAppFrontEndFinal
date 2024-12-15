@@ -16,12 +16,30 @@ export class OrderService {
 
   onOrderChanged: Subject<boolean> = new Subject<boolean>();
 
-  placeOrder(obj:IOrder) {
+  placeOrder(obj: IOrder) {
     let token = localStorage.getItem(Constant.LOGIN_TOKEN);
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
     });
     return this.http.post<IJsonResponse>(this.baseURL + 'placeOrder', obj, { headers })
+  }
+
+  cancelOrder(id: number) {
+    let token = localStorage.getItem(Constant.LOGIN_TOKEN);
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.delete<IJsonResponse>(`${this.baseURL}cancelOrder/${id}`, { headers })
+  }
+
+  getOrders() {
+    let token = localStorage.getItem(Constant.LOGIN_TOKEN);
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get<IJsonResponse>(`${this.baseURL}getAllUserOrders`, { headers })
   }
 }

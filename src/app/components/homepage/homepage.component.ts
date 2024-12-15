@@ -171,8 +171,8 @@ export class HomepageComponent implements OnInit {
       this.cartService.addToCart(this.cartObj).subscribe((res:IJsonResponse)=>{
         if(res.result){
           this.cartRes=res.data[0];
-          this.cartService.cartTotalPrice += this.cartRes.totalPrice;
-          this.cartService.cartTotalQuantity += this.cartRes.quantity;
+          //this.cartService.cartTotalPrice += this.cartRes.totalPrice;
+          //this.cartService.cartTotalQuantity += this.cartRes.quantity;
           this.toaster.success(res.message);
           this.bookService.onBookChanged.next(true);
           this.cartService.onCartCalled.next(true);

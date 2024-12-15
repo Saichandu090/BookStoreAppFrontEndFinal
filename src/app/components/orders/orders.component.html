@@ -16,13 +16,21 @@
             <td>{{item.orderId}}</td>
             <td>{{item.orderQuantity}}</td>
             <td>{{item.orderPrice}}</td>
-            <td>{{item.cancelOrder}}</td>
             <td>
-                <div class="d-flex gap-3">
-                    <a class="edit btn">
-                        <i class="material-icons" (click)="editOldAddress(item.orderId)">edit</i>
-                    </a>
-                </div>
+                @if (item.cancelOrder) {
+                    <div class="text-danger">
+                        <span>Order Cancelled</span>
+                    </div>
+                }@else {
+                    <div class="text-success">
+                        <span>Order placed Successfully!!</span>
+                    </div>
+                }
+            </td>
+            <td>
+                @if (!item.cancelOrder) {
+                    <p-button (onClick)="cancelOrder(item.orderId)">Cancel-Order</p-button>
+                }
             </td>
         </tr>
     </tbody>
