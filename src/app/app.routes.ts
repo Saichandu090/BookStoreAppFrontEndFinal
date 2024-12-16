@@ -7,6 +7,7 @@ import { AdminRegisterComponent } from './components/admin-register/admin-regist
 import { LayoutComponent } from './components/layout/layout.component';
 import { CreateOrderComponent } from './components/create-order/create-order.component';
 import { OrdersComponent } from './components/orders/orders.component';
+import { WishListComponent } from './components/wish-list/wish-list.component';
 
 export const routes: Routes = [
     {
@@ -43,6 +44,11 @@ export const routes: Routes = [
         {
             path:'orders',
             component:OrdersComponent,
+            canActivate:[loginGuard]
+        },
+        {
+            path:'wishlist',
+            component:WishListComponent,
             canActivate:[loginGuard]
         }
     ]

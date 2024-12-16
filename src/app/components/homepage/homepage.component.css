@@ -50,3 +50,8 @@
     border-radius: 12px;
     font-size: 0.8em;
 } 
+
+
+.active{
+    color: red;
+}

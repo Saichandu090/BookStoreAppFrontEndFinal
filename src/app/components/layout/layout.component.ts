@@ -198,4 +198,8 @@ export class LayoutComponent implements OnInit {
 
   //=============================================//
 
+  getWishList(){
+    
+  }
+
 }

@@ -23,6 +23,7 @@
                                     <button class="add-to-cart-btn mx-2" (click)="onDeleteBook(item.bookId)">Delete</button>
                                 }@else {
                                     <button class="btn add-to-cart-btn" (click)="onAddToCart(item.bookId)">Add to Cart</button>
+                                    <button class="btn btn-link"  (click)="onWishListClick(item)"><i class="bi bi-heart-fill fa-2x mx-2"></i></button>
                                 }
                             </div>
                         </div>
