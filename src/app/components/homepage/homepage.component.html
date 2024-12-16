@@ -9,128 +9,136 @@
         <div class="col-12">
             <div class="row mt-3">
                 @for (item of bookList; track $index) {
-                    <div class="col-3 mt-3">
-                        <div class="card product-card">
-                            <img [src]="item.bookLogo" class="card-img-top product-image" alt="Product Image">
-                            <span class="category-badge">{{item.quantity}}</span>
-                            <!-- <span class="category-badge">{{item.author}}</span> -->
-                            <div class="card-body">
-                                <h3 class="card-title">{{item.bookName | titlecase}}</h3> 
-                                <h6 class="card-title">{{item.author | titlecase}}</h6>
-                                <p class="product-price">{{item.price | currency:"INR"}}</p>
-                                @if (currentUser.role=="ADMIN") {
-                                    <button class="add-to-cart-btn mx-2" (click)="onEditBook(item.bookId)">Update</button>
-                                    <button class="add-to-cart-btn mx-2" (click)="onDeleteBook(item.bookId)">Delete</button>
-                                }@else {
-                                    <button class="btn add-to-cart-btn" (click)="onAddToCart(item.bookId)">Add to Cart</button>
-                                    <button class="btn btn-link"  (click)="onWishListClick(item)"><i class="bi bi-heart-fill fa-2x mx-2"></i></button>
-                                }
-                            </div>
+                <div class="col-3 mt-3">
+                    <div class="card product-card">
+                        <img [src]="item.bookLogo" class="card-img-top product-image" alt="Product Image" />
+                        <span class="category-badge">{{ item.quantity }}</span>
+                        <!-- <span class="category-badge">{{item.author}}</span> -->
+                        <div class="card-body">
+                            <h3 class="card-title">{{ item.bookName | titlecase }}</h3>
+                            <h6 class="card-title">{{ item.author | titlecase }}</h6>
+                            <p class="product-price">{{ item.price | currency : "INR" }}</p>
+                            @if (currentUser.role=="ADMIN") {
+                            <button class="add-to-cart-btn mx-2" (click)="onEditBook(item.bookId)">
+                                Update
+                            </button>
+                            <button class="add-to-cart-btn mx-2" (click)="onDeleteBook(item.bookId)">
+                                Delete
+                            </button>
+                            }@else {
+                            <button class="btn add-to-cart-btn" (click)="onAddToCart(item.bookId)">
+                                Add to Cart
+                            </button>
+                            <button [ngClass]="{ active: isBookPresent(item.bookId) }" class="btn btn-link"
+                                (click)="onWishListClick(item)">
+                                <i class="bi bi-heart-fill fa-2x mx-2"></i>
+                            </button>
+                            }
                         </div>
                     </div>
+                </div>
                 }
             </div>
         </div>
     </div>
 </div>
 
-
 <div class="modal" tabindex="-1" #editBook>
     <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Edit Book Details</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="onEditClose()"></button>
-        </div>
-        <div class="modal-body">
-            <form [formGroup]="bookForm">
-                <div class="col-12">
-                    <label for="">Book Name</label>
-                    <input type="text" formControlName="name"  class="form-control">
-                    @if(bookForm.controls["name"].dirty){
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Book Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                    (click)="onEditClose()"></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="bookForm">
+                    <div class="col-12">
+                        <label for="">Book Name</label>
+                        <input type="text" formControlName="name" class="form-control" />
+                        @if(bookForm.controls["name"].dirty){
                         <div class="text-danger">
                             @if (bookForm.controls["name"].errors?.['required']) {
-                                <span>This is Required</span>
-                            }
-                            @if (bookForm.controls["name"].errors?.['pattern']) {
-                                <span>Min 3 Characters Required</span>
+                            <span>This is Required</span>
+                            } @if (bookForm.controls["name"].errors?.['pattern']) {
+                            <span>Min 3 Characters Required</span>
                             }
                         </div>
-                    }
-                </div>
-                <div class="col-12">
-                    <label for="">Book Author</label>
-                    <input type="text" formControlName="author"  class="form-control">
-                    @if(bookForm.controls["author"].dirty){
+                        }
+                    </div>
+                    <div class="col-12">
+                        <label for="">Book Author</label>
+                        <input type="text" formControlName="author" class="form-control" />
+                        @if(bookForm.controls["author"].dirty){
                         <div class="text-danger">
                             @if (bookForm.controls["author"].errors?.['required']) {
-                                <span>This is Required</span>
-                            }
-                            @if (bookForm.controls["author"].errors?.['pattern']) {
-                                <span>Min 5 Characters required</span>
+                            <span>This is Required</span>
+                            } @if (bookForm.controls["author"].errors?.['pattern']) {
+                            <span>Min 5 Characters required</span>
                             }
                         </div>
-                    }
-                </div>
-                <div class="col-12">
-                    <label for="">Book Description</label>
-                    <input type="text" formControlName="description"  class="form-control">
-                    @if(bookForm.controls["description"].dirty){
+                        }
+                    </div>
+                    <div class="col-12">
+                        <label for="">Book Description</label>
+                        <input type="text" formControlName="description" class="form-control" />
+                        @if(bookForm.controls["description"].dirty){
                         <div class="text-danger">
                             @if (bookForm.controls["description"].errors?.['required']) {
-                                <span>This is Required</span>
-                            }
-                            @if (bookForm.controls["description"].errors?.['pattern']) {
-                                <span>Min 5 Characters Required</span>
+                            <span>This is Required</span>
+                            } @if (bookForm.controls["description"].errors?.['pattern']) {
+                            <span>Min 5 Characters Required</span>
                             }
                         </div>
-                    }
-                </div>
-                <div class="col-12">
-                    <label for="">Book Price</label>
-                    <input type="text" #price formControlName="price" class="form-control">
-                    @if(bookForm.controls["price"].dirty){
+                        }
+                    </div>
+                    <div class="col-12">
+                        <label for="">Book Price</label>
+                        <input type="text" #price formControlName="price" class="form-control" />
+                        @if(bookForm.controls["price"].dirty){
                         <div class="text-danger">
                             @if (bookForm.controls["price"].errors?.['pattern']) {
-                                <span>Only Numbers are Required</span>
-                            }
-                            @if (bookForm.controls["price"].errors?.['required']) {
-                                <span>This is Required</span>
+                            <span>Only Numbers are Required</span>
+                            } @if (bookForm.controls["price"].errors?.['required']) {
+                            <span>This is Required</span>
                             }
                         </div>
-                    }
-                </div>
-                <div class="col-12">
-                    <label for="">Book Quantity</label>
-                    <input type="tel" formControlName="quantity" class="form-control">
-                    @if(bookForm.controls["quantity"].dirty){
+                        }
+                    </div>
+                    <div class="col-12">
+                        <label for="">Book Quantity</label>
+                        <input type="tel" formControlName="quantity" class="form-control" />
+                        @if(bookForm.controls["quantity"].dirty){
                         <div class="text-danger">
                             @if (bookForm.controls["quantity"].errors?.['min']) {
-                                <span>Min 16 books Required</span>
-                            }
-                            @if (bookForm.controls["quantity"].errors?.['required']) {
-                                <span>This is Required</span>
+                            <span>Min 16 books Required</span>
+                            } @if (bookForm.controls["quantity"].errors?.['required']) {
+                            <span>This is Required</span>
                             }
                         </div>
-                    }
-                </div>
-                <div class="col-12">
-                    <label for="">Book Logo</label>
-                    <input type="text" formControlName="bookLogo" class="form-control">
-                    @if(bookForm.controls["bookLogo"].dirty){
+                        }
+                    </div>
+                    <div class="col-12">
+                        <label for="">Book Logo</label>
+                        <input type="text" formControlName="bookLogo" class="form-control" />
+                        @if(bookForm.controls["bookLogo"].dirty){
                         <div class="text-danger">
                             @if (bookForm.controls["bookLogo"].errors?.['required']) {
-                                <span>This is Required</span>
+                            <span>This is Required</span>
                             }
                         </div>
-                    }
-                </div>
-            </form>
+                        }
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="onEditClose()">
+                    Close
+                </button>
+                <button type="button" class="btn btn-success" (click)="onUpdateBook()">
+                    Update
+                </button>
+            </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="onEditClose()">Close</button>
-          <button type="button" class="btn btn-success" (click)="onUpdateBook()">Update</button>
-        </div>
-      </div>
     </div>
-  </div>
+</div>

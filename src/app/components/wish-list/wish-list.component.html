@@ -1,1 +1,35 @@
-<p>wish-list works!</p>
+<div class="container-fluid">
+    <div class="row">
+        <!-- <div class="col-2">
+            <h5>Category</h5>
+            @for (item of categoryList$ | async; track $index) {
+                <button class="btn btn-success mt-2" (click)="getProductByCategoryId(item.categoryId)">{{item.categoryName}}</button>
+            }
+        </div> -->
+        <div class="col-12">
+            <div class="row mt-3">
+                @for (item of wishListBooks; track $index) {
+                <div class="col-3 mt-3">
+                    <div class="card product-card">
+                        <img [src]="item.bookLogo" class="card-img-top product-image" alt="Product Image" />
+                        <span class="category-badge">{{ item.quantity }}</span>
+                        <!-- <span class="category-badge">{{item.author}}</span> -->
+                        <div class="card-body">
+                            <h3 class="card-title">{{ item.bookName | titlecase }}</h3>
+                            <h6 class="card-title">{{ item.author | titlecase }}</h6>
+                            <p class="product-price">{{ item.price | currency : "INR" }}</p>
+                            <button class="btn add-to-cart-btn" (click)="onAddToCart(item.bookId)">
+                                Add to Cart
+                            </button>
+                            <button [ngClass]="{ active: isBookPresent(item.bookId) }" class="btn btn-link"
+                                (click)="onWishListClick(item)">
+                                <i class="bi bi-heart-fill fa-2x mx-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { IJsonResponse } from '../../model/interfaces/jsonresponse';
 import { Constant } from '../../constants/constant';
 import { IBookResponse } from '../../model/interfaces/books';
@@ -14,6 +14,8 @@ export class WishlistService {
   private baseURL: string = "http://localhost:8080/wishList/";
 
   private http: HttpClient = inject(HttpClient);
+
+  onWishListChanged:Subject<boolean> =new Subject<boolean>();
 
   addToWishList(book: WishListReq): Observable<IJsonResponse> {
     let token = localStorage.getItem(Constant.LOGIN_TOKEN);

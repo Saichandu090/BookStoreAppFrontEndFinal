@@ -35,17 +35,6 @@ export class HomepageComponent implements OnInit {
     }));
   }
 
-  ngOnInit(): void {
-    this.getAllBooks();
-    this.getCurrentUser();
-    this.getWishListBooks();
-    this.bookService.onBookChanged.subscribe((res: boolean) => {
-      if (res) {
-        this.getAllBooks();
-      }
-    })
-  }
-
   currentUser: LoggedInUser = {
     email: '',
     role: ''
@@ -209,6 +198,7 @@ export class HomepageComponent implements OnInit {
     this.wishListService.removeFromWishList(bookId).subscribe((res: IJsonResponse) => {
       if (res.result) {
         this.toaster.success(res.message)
+        this.wishListService.onWishListChanged.next(true);
       }
     })
   }// end of removeFromWishList
@@ -218,6 +208,7 @@ export class HomepageComponent implements OnInit {
     this.wishListService.addToWishList(wishList).subscribe((res: IJsonResponse) => {
       if (res.result) {
         this.toaster.success(res.message)
+        this.wishListService.onWishListChanged.next(true);
       }
     })
   } // end of addToWishList
@@ -232,5 +223,30 @@ export class HomepageComponent implements OnInit {
     })
   } // end of getWishListBooks
 
+
+  ngOnInit(): void {
+    this.getAllBooks();
+    this.getCurrentUser();
+    this.getWishListBooks();
+    this.bookService.onBookChanged.subscribe((res: boolean) => {
+      if (res) {
+        this.getAllBooks();
+      }
+    });
+    this.wishListService.onWishListChanged.subscribe((res: boolean) => {
+      if (res) {
+        this.getWishListBooks();
+      }
+    })
+  } // end of ngOnInit
+
+
+  isBookPresent(id: number): boolean {
+    const index = this.wishListBooks.findIndex(item => item.bookId === id);
+    if (index != -1)
+      return true;
+    else
+      return false;
+  }
 
 }
