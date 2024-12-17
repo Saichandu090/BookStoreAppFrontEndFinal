@@ -13,7 +13,7 @@ import { Cart, WishListReq } from '../../model/classes/cart';
 import { CartService } from '../../services/cart/cart.service';
 import { ICart } from '../../model/interfaces/cart';
 import { WishlistService } from '../../services/wishList/wishlist.service';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-homepage',
@@ -28,7 +28,7 @@ export class HomepageComponent implements OnInit {
 
   bookList: IBookResponse[] = [];
 
-  private bookService = inject(BooksService);
+  private bookService: BooksService = inject(BooksService);
 
   private snackBar = inject(MatSnackBar);
 
@@ -81,7 +81,7 @@ export class HomepageComponent implements OnInit {
     if (rs) {
       this.bookService.deleteBook(id).subscribe((res: IJsonResponse) => {
         if (res.result) {
-          this.snackBar.open(res.message,'Undo',{duration : 3000});
+          this.snackBar.open(res.message, 'Undo', { duration: 3000 });
           this.bookService.onBookChanged.next(true);
         } else {
           this.toaster.error(res.message)
@@ -108,26 +108,26 @@ export class HomepageComponent implements OnInit {
 
   getBookById() {
     this.bookService.getBookById(this.editableBook).subscribe({
-      next:(res: IJsonResponse) =>{
-      if (res.result) {
-        console.log(res.data)
-        this.updatableBook = res.data[0];
-        console.log(this.updatableBook);
+      next: (res: IJsonResponse) => {
+        if (res.result) {
+          console.log(res.data)
+          this.updatableBook = res.data[0];
+          console.log(this.updatableBook);
 
-        this.bookForm.patchValue({
-          name: this.updatableBook.name,
-          author: this.updatableBook.author,
-          description: this.updatableBook.description,
-          price: this.updatableBook.price,
-          quantity: this.updatableBook.quantity,
-          bookLogo: this.updatableBook.bookLogo
-        });
+          this.bookForm.patchValue({
+            name: this.updatableBook.name,
+            author: this.updatableBook.author,
+            description: this.updatableBook.description,
+            price: this.updatableBook.price,
+            quantity: this.updatableBook.quantity,
+            bookLogo: this.updatableBook.bookLogo
+          });
 
-      } else {
-        this.toaster.error(res.message)
+        } else {
+          this.toaster.error(res.message)
+        }
       }
-    }
-  })
+    })
   }
 
   onUpdateBook() {
@@ -135,7 +135,7 @@ export class HomepageComponent implements OnInit {
     console.log(this.updatableBook)
     this.bookService.updateBook(this.editableBook, this.updatableBook).subscribe((res: IJsonResponse) => {
       if (res.result) {
-        this.snackBar.open(res.message,'Undo',{duration : 3000});
+        this.snackBar.open(res.message, 'Undo', { duration: 3000 });
         this.bookService.onBookChanged.next(true);
         this.onEditClose();
         this.editableBook = 0;
@@ -165,23 +165,23 @@ export class HomepageComponent implements OnInit {
   onAddToCart(id: number) {
     this.cartObj.bookId = id;
     this.cartService.addToCart(this.cartObj).subscribe({
-      next:(res: IJsonResponse) => {
-      if (res.result) {
-        this.cartRes = res.data[0];
-        this.snackBar.open(res.message,'Undo',{duration : 3000});
-        this.bookService.onBookChanged.next(true);
-        this.cartService.onCartCalled.next(true);
-      } else {
-        this.toaster.error(res.message)
-      }
-    },
-    error:(err)=>{
-      console.error("Error from backend:", err);
+      next: (res: IJsonResponse) => {
+        if (res.result) {
+          this.cartRes = res.data[0];
+          this.snackBar.open(res.message, 'Undo', { duration: 3000 });
+          this.bookService.onBookChanged.next(true);
+          this.cartService.onCartCalled.next(true);
+        } else {
+          this.toaster.error(res.message)
+        }
+      },
+      error: (err) => {
+        console.error("Error from backend:", err);
         const message = err.error?.message || "Something went wrong!";
-        this.toaster.error(message); 
+        this.toaster.error(message);
+      }
     }
-  }
-)
+    )
   }
 
 
@@ -210,7 +210,7 @@ export class HomepageComponent implements OnInit {
   removeFromWishList(bookId: number) {
     this.wishListService.removeFromWishList(bookId).subscribe((res: IJsonResponse) => {
       if (res.result) {
-        this.snackBar.open(res.message,'Undo',{duration : 3000});
+        this.snackBar.open(res.message, 'Undo', { duration: 3000 });
         this.wishListService.onWishListChanged.next(true);
       }
     })
@@ -220,7 +220,7 @@ export class HomepageComponent implements OnInit {
   addToWishList(wishList: WishListReq) {
     this.wishListService.addToWishList(wishList).subscribe((res: IJsonResponse) => {
       if (res.result) {
-        this.snackBar.open(res.message,'Undo',{duration : 3000});
+        this.snackBar.open(res.message, 'Undo', { duration: 3000 });
         this.wishListService.onWishListChanged.next(true);
       }
     })

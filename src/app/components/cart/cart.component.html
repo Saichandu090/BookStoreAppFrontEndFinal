@@ -1,0 +1,40 @@
+<mat-dialog-content>
+    <div class="row">
+        <div class="col-8">
+            <h3 mat-dialog-title>User Cart <i class="bi bi-cart4"></i></h3>
+        </div>
+        <div class="col-4 text-end">
+            <i class="fa fa-close p-2" mat-dialog-close></i>
+        </div>
+    </div>
+    <table class="table table-sm">
+        <tbody>
+            @for (item of cartData; track $index) {
+            <tr>
+                <td>
+                    <div class="rounded"
+                        style="background-image: url({{item.bookLogo}}); width: 60px; height: 60px; background-size: cover;">
+                    </div>
+                </td>
+                <td class="align-middle text-left">{{item.bookName}}</td>
+                <td class="align-middle text-center">{{item.quantity}} piece(s)</td>
+                <td class="align-middle text-right">{{item.totalPrice | currency:'INR'}}</td>
+                <td class="align-middle text-center">
+                    <a (click)="onRemoveProduct(item.cartId)" data-toggle="modal" data-title="Delete your product ?">
+                        <i class="fa fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</mat-dialog-content>
+<mat-dialog-actions>
+    @if (cartData.length!=0) {
+    <button mat-button [routerLink]="'create-order'" mat-dialog-close>CheckOut</button>
+    <button mat-button mat-dialog-close>Close</button>
+    }@else {
+        <span>Please do some shopping to place order!!</span>
+    }
+
+</mat-dialog-actions>
