@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { IJsonResponse } from '../../model/interfaces/jsonresponse';
 import { ILogin, IUserRegister } from '../../model/interfaces/userRegister';
-import { LoggedInUser } from '../../model/classes/user';
+import { LoggedInUser, UserRegister } from '../../model/classes/user';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,7 @@ export class LoginService {
 
   private http: HttpClient = inject(HttpClient);
 
-  registerUser(user: IUserRegister): Observable<IJsonResponse> {
+  registerUser(user: UserRegister): Observable<IJsonResponse> {
     return this.http.post<IJsonResponse>(this.baseURL + "register", user)
   }
 

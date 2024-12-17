@@ -111,16 +111,21 @@ export class LayoutComponent implements OnInit {
   })
 
   addNewBook() {
-    this.book = Object.assign(new Book(), this.bookForm.value);
-    console.log(this.book)
-    this.bookService.addNewBook(this.book).subscribe((res: IJsonResponse) => {
-      if (res.result) {
-        console.log(res.message)
-        this.toastr.success("Book added Successfully")
-        this.bookService.onBookChanged.next(true);
-        this.closeAddBookModel();
-      }
-    })
+
+    if(this.bookForm.invalid){
+      this.toastr.error("Please fill the form to submit")
+    }else{
+      this.book = Object.assign(new Book(), this.bookForm.value);
+      console.log(this.book)
+      this.bookService.addNewBook(this.book).subscribe((res: IJsonResponse) => {
+        if (res.result) {
+          console.log(res.message)
+          this.toastr.success("Book added Successfully")
+          this.bookService.onBookChanged.next(true);
+          this.closeAddBookModel();
+        }
+      })
+    } 
   }
 
   subscriptionList: Subscription[] = [];
@@ -197,9 +202,4 @@ export class LayoutComponent implements OnInit {
   }
 
   //=============================================//
-
-  getWishList(){
-    
-  }
-
 }

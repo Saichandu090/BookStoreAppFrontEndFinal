@@ -104,7 +104,8 @@ export class HomepageComponent implements OnInit {
 
 
   getBookById() {
-    this.bookService.getBookById(this.editableBook).subscribe((res: IJsonResponse) => {
+    this.bookService.getBookById(this.editableBook).subscribe({
+      next:(res: IJsonResponse) =>{
       if (res.result) {
         console.log(res.data)
         this.updatableBook = res.data[0];
@@ -122,7 +123,8 @@ export class HomepageComponent implements OnInit {
       } else {
         this.toaster.error(res.message)
       }
-    })
+    }
+  })
   }
 
   onUpdateBook() {
@@ -159,7 +161,8 @@ export class HomepageComponent implements OnInit {
 
   onAddToCart(id: number) {
     this.cartObj.bookId = id;
-    this.cartService.addToCart(this.cartObj).subscribe((res: IJsonResponse) => {
+    this.cartService.addToCart(this.cartObj).subscribe({
+      next:(res: IJsonResponse) => {
       if (res.result) {
         this.cartRes = res.data[0];
         this.toaster.success(res.message);
@@ -168,7 +171,14 @@ export class HomepageComponent implements OnInit {
       } else {
         this.toaster.error(res.message)
       }
-    })
+    },
+    error:(err)=>{
+      console.error("Error from backend:", err);
+        const message = err.error?.message || "Something went wrong!";
+        this.toaster.error(message); 
+    }
+  }
+)
   }
 
 

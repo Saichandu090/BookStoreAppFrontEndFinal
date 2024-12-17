@@ -13,9 +13,13 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+.bgc-center{
+    margin: 5%;
+}
+
 .header {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
 .header h1 {
@@ -66,7 +70,7 @@ button:hover {
     opacity: 1;
 }
 
-.signup {
+.login {
     width: 250px;
     padding: 0 7.5px;
     text-align: center;
@@ -75,12 +79,12 @@ button:hover {
     justify-content: space-between;
 }
 
-.signup a {
+.login a {
     font-weight: 800;
     color: #8c0000;
     text-decoration: none;
 }
 
-.signup a:hover {
+.login a:hover {
     text-decoration: underline;
 }

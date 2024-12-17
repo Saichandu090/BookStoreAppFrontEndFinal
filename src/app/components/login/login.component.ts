@@ -27,21 +27,29 @@ export class LoginComponent {
   private router=inject(Router);
 
   currentUser:LoggedInUser=new LoggedInUser();
-  
-  onLogin(){
-    this.loginService.loginUser(this.loginObj).subscribe((res:IJsonResponse)=>{
-      if(res.result){
-        this.showSuccess()
-        console.log(res.data)
-        this.currentUser=res.data;
-        localStorage.setItem(Constant.LOGIN_TOKEN,res.message);
-        localStorage.setItem("UserDetails",JSON.stringify(res.data));
-        this.router.navigateByUrl("/homepage");
-      }else{
-        alert("Login Failure")
+
+  onLogin() {
+    this.loginService.loginUser(this.loginObj).subscribe({
+      next: (res: IJsonResponse) => {
+        if (res.result) {
+          this.showSuccess();
+          console.log(res.data);
+          this.currentUser = res.data;
+          localStorage.setItem(Constant.LOGIN_TOKEN, res.message);
+          localStorage.setItem("UserDetails", JSON.stringify(res.data));
+          this.router.navigateByUrl("/homepage");
+        } else {
+          this.toastr.error(res.message); 
+        }
+      },
+      error: (err) => { 
+        console.error("Error from backend:", err);
+        const message = err.error?.message || "Something went wrong!";
+        this.toastr.error(message); 
       }
-    })
+    });
   }
+  
 
   constructor(private toastr: ToastrService) {}
   

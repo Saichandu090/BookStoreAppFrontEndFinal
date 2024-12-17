@@ -10,9 +10,9 @@
         <!-- Collapsible wrapper -->
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Navbar brand -->
-            <i class="bi bi-book fa-2x mx-2"></i> 
+            <i class="bi bi-book fa-2x mx-2"></i>
             <a class="navbar-brand mt-2 mt-lg-0" routerLink="/homepage">
-                 Book Store Application
+                Book Store Application
             </a>
 
 
@@ -38,14 +38,15 @@
             @if (currentUser.email!='') {
             <button class="btn btn-info btn-sm mx-2">{{currentUser.email}}</button>
             <!-- Icon -->
-             @if (currentUser.role=='USER') {
-                <div class="card flex justify-center mx-2">
-                    <p-button routerLink="/orders">My Orders</p-button>
-                </div>
-             }
-             <div class="card flex justify-center mx-2">
-                <p-button (onClick)="getWishList()" routerLink="/wishlist">WishList</p-button>
+            @if (currentUser.role=='USER') {
+            <div class="card flex justify-center mx-2">
+                <p-button routerLink="/orders">My Orders</p-button>
             </div>
+
+            <div class="card flex justify-center mx-2">
+                <p-button routerLink="/wishlist">WishList</p-button>
+            </div>
+            }
             <div class="card flex justify-center mx-2">
                 <p-button (onClick)="onLogOut()">Logout</p-button>
             </div>
@@ -127,7 +128,7 @@
                         <div class="col-12">
                             <label for="">Book Name</label>
                             <input type="text" formControlName="name" class="form-control">
-                            @if(bookForm.controls["name"].dirty){
+                            @if(bookForm.controls["name"].touched){
                             <div class="text-danger">
                                 @if (bookForm.controls["name"].errors?.['required']) {
                                 <span>This is Required</span>
@@ -141,7 +142,7 @@
                         <div class="col-12">
                             <label for="">Book Author</label>
                             <input type="text" formControlName="author" class="form-control">
-                            @if(bookForm.controls["author"].dirty){
+                            @if(bookForm.controls["author"].touched){
                             <div class="text-danger">
                                 @if (bookForm.controls["author"].errors?.['required']) {
                                 <span>This is Required</span>
@@ -155,7 +156,7 @@
                         <div class="col-12">
                             <label for="">Book Description</label>
                             <input type="text" formControlName="description" class="form-control">
-                            @if(bookForm.controls["description"].dirty){
+                            @if(bookForm.controls["description"].touched){
                             <div class="text-danger">
                                 @if (bookForm.controls["description"].errors?.['required']) {
                                 <span>This is Required</span>
@@ -169,7 +170,7 @@
                         <div class="col-12">
                             <label for="">Book Price</label>
                             <input type="text" #price formControlName="price" class="form-control">
-                            @if(bookForm.controls["price"].dirty){
+                            @if(bookForm.controls["price"].touched){
                             <div class="text-danger">
                                 @if (bookForm.controls["price"].errors?.['pattern']) {
                                 <span>Only Numbers are Required</span>
@@ -183,7 +184,7 @@
                         <div class="col-12">
                             <label for="">Book Quantity</label>
                             <input type="tel" formControlName="quantity" class="form-control">
-                            @if(bookForm.controls["quantity"].dirty){
+                            @if(bookForm.controls["quantity"].touched){
                             <div class="text-danger">
                                 @if (bookForm.controls["quantity"].errors?.['min']) {
                                 <span>Min 16 books Required</span>
@@ -197,7 +198,7 @@
                         <div class="col-12">
                             <label for="">Book Logo</label>
                             <input type="text" formControlName="bookLogo" class="form-control">
-                            @if(bookForm.controls["bookLogo"].dirty){
+                            @if(bookForm.controls["bookLogo"].touched){
                             <div class="text-danger">
                                 @if (bookForm.controls["bookLogo"].errors?.['required']) {
                                 <span>This is Required</span>
@@ -212,7 +213,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
                     (click)="closeAddBookModel()">Close</button>
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" [disabled]="bookForm.invalid"
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
                     (click)="addNewBook()">Add</button>
             </div>
         </div>
