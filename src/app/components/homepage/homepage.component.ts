@@ -13,6 +13,7 @@ import { Cart, WishListReq } from '../../model/classes/cart';
 import { CartService } from '../../services/cart/cart.service';
 import { ICart } from '../../model/interfaces/cart';
 import { WishlistService } from '../../services/wishList/wishlist.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-homepage',
@@ -28,6 +29,8 @@ export class HomepageComponent implements OnInit {
   bookList: IBookResponse[] = [];
 
   private bookService = inject(BooksService);
+
+  private snackBar = inject(MatSnackBar);
 
   getAllBooks() {
     this.subscriptionList.push(this.bookService.getAllBooks().subscribe((res: IJsonResponse) => {
@@ -78,7 +81,7 @@ export class HomepageComponent implements OnInit {
     if (rs) {
       this.bookService.deleteBook(id).subscribe((res: IJsonResponse) => {
         if (res.result) {
-          this.toaster.success(res.message);
+          this.snackBar.open(res.message,'Undo',{duration : 3000});
           this.bookService.onBookChanged.next(true);
         } else {
           this.toaster.error(res.message)
@@ -132,7 +135,7 @@ export class HomepageComponent implements OnInit {
     console.log(this.updatableBook)
     this.bookService.updateBook(this.editableBook, this.updatableBook).subscribe((res: IJsonResponse) => {
       if (res.result) {
-        this.toaster.success(res.message);
+        this.snackBar.open(res.message,'Undo',{duration : 3000});
         this.bookService.onBookChanged.next(true);
         this.onEditClose();
         this.editableBook = 0;
@@ -165,7 +168,7 @@ export class HomepageComponent implements OnInit {
       next:(res: IJsonResponse) => {
       if (res.result) {
         this.cartRes = res.data[0];
-        this.toaster.success(res.message);
+        this.snackBar.open(res.message,'Undo',{duration : 3000});
         this.bookService.onBookChanged.next(true);
         this.cartService.onCartCalled.next(true);
       } else {
@@ -207,7 +210,7 @@ export class HomepageComponent implements OnInit {
   removeFromWishList(bookId: number) {
     this.wishListService.removeFromWishList(bookId).subscribe((res: IJsonResponse) => {
       if (res.result) {
-        this.toaster.success(res.message)
+        this.snackBar.open(res.message,'Undo',{duration : 3000});
         this.wishListService.onWishListChanged.next(true);
       }
     })
@@ -217,7 +220,7 @@ export class HomepageComponent implements OnInit {
   addToWishList(wishList: WishListReq) {
     this.wishListService.addToWishList(wishList).subscribe((res: IJsonResponse) => {
       if (res.result) {
-        this.toaster.success(res.message)
+        this.snackBar.open(res.message,'Undo',{duration : 3000});
         this.wishListService.onWishListChanged.next(true);
       }
     })
@@ -253,10 +256,7 @@ export class HomepageComponent implements OnInit {
 
   isBookPresent(id: number): boolean {
     const index = this.wishListBooks.findIndex(item => item.bookId === id);
-    if (index != -1)
-      return true;
-    else
-      return false;
+    return index != -1;
   }
 
 }

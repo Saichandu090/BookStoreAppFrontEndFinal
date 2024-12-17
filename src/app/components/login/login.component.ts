@@ -7,6 +7,7 @@ import { Constant } from '../../constants/constant';
 import { LoginService } from '../../services/login/login.service';
 import { ToastrService } from 'ngx-toastr';
 import { LoggedInUser } from '../../model/classes/user';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
@@ -16,6 +17,8 @@ import { LoggedInUser } from '../../model/classes/user';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
+
+  private snackBar = inject(MatSnackBar);
 
   loginObj:ILogin={
     email:"",
@@ -32,7 +35,7 @@ export class LoginComponent {
     this.loginService.loginUser(this.loginObj).subscribe({
       next: (res: IJsonResponse) => {
         if (res.result) {
-          this.showSuccess();
+          this.snackBar.open("Welcome to BookStore, Login Success!!",'Undo',{duration : 3000});
           console.log(res.data);
           this.currentUser = res.data;
           localStorage.setItem(Constant.LOGIN_TOKEN, res.message);
@@ -52,9 +55,4 @@ export class LoginComponent {
   
 
   constructor(private toastr: ToastrService) {}
-  
-    showSuccess() {
-      this.toastr.success('Login Successfull');
-    }
-
 }

@@ -13,11 +13,14 @@ import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { ICart } from '../../model/interfaces/cart';
 import { CartService } from '../../services/cart/cart.service';
 import { CommonModule } from '@angular/common';
+import {MatIconModule} from '@angular/material/icon';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatButtonModule} from '@angular/material/button';
 
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [RouterLink, FormsModule, RouterOutlet, ReactiveFormsModule, ButtonModule, ConfirmPopupModule, CommonModule],
+  imports: [RouterLink, FormsModule, RouterOutlet, ReactiveFormsModule, ButtonModule, ConfirmPopupModule, CommonModule,MatButtonModule, MatMenuModule, MatIconModule],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.css'
 })

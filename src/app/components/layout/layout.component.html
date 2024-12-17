@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary" style="background-color: #db510cb6 !important ">
+<nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary" style="background-color: #2ddae3b6 !important ">
     <!-- Container wrapper -->
     <div class="container-fluid">
         <!-- Toggle button -->
@@ -39,18 +39,29 @@
             <button class="btn btn-info btn-sm mx-2">{{currentUser.email}}</button>
             <!-- Icon -->
             @if (currentUser.role=='USER') {
-            <div class="card flex justify-center mx-2">
-                <p-button routerLink="/orders">My Orders</p-button>
+            <!-- <div class="card flex justify-center mx-2">
+                <p-button routerLink="/orders"></p-button>
             </div>
 
             <div class="card flex justify-center mx-2">
                 <p-button routerLink="/wishlist">WishList</p-button>
-            </div>
+            </div> -->
+            <button mat-button [matMenuTriggerFor]="menu">Options</button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item routerLink="/orders">My Orders</button>
+                <button mat-menu-item routerLink="/wishlist">WishList</button>
+                <button mat-menu-item routerLink="/homepage">Home</button>
+                <button mat-menu-item (click)="onLogOut()">Logout</button>
+            </mat-menu>
+            } @else if (currentUser.role==='ADMIN') {
+                <button mat-button [matMenuTriggerFor]="menu">Menu</button>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item (onClick)="onLogOut()">Logout</button>
+                </mat-menu>
             }
-            <div class="card flex justify-center mx-2">
-                <p-button (onClick)="onLogOut()">Logout</p-button>
-            </div>
+            
             }
+            
 
             @if (currentUser.role=="USER") {
             <a class="link-secondary me-3">
@@ -213,8 +224,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
                     (click)="closeAddBookModel()">Close</button>
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
-                    (click)="addNewBook()">Add</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="addNewBook()">Add</button>
             </div>
         </div>
 
