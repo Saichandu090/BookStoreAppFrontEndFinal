@@ -13,7 +13,7 @@
                     <div class="card product-card">
                         <img [src]="item.bookLogo" class="card-img-top product-image" alt="Product Image" />
                         @if (currentUser.role==='ADMIN') {
-                            <span class="category-badge">{{ item.quantity }}</span>
+                            <span class="heart-badge">{{ item.quantity }}</span>
                         }@else {
                             <button [ngClass]="{ active: isBookPresent(item.bookId) }" class="btn btn-link"
                             (click)="onWishListClick(item)">
@@ -29,7 +29,7 @@
                             <button class="add-to-cart-btn mx-2" (click)="onEditBook(item.bookId)">
                                 Update
                             </button>
-                            <button class="add-to-cart-btn mx-2" (click)="onDeleteBook(item.bookId)">
+                            <button class="add-to-cart-btn mx-2 mt-2" (click)="onDeleteBook(item.bookId)">
                                 Delete
                             </button>
                             }@else {

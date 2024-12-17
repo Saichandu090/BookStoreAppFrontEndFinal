@@ -16,6 +16,8 @@ import { CommonModule } from '@angular/common';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatButtonModule} from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
+import { CartComponent } from '../cart/cart.component';
 
 @Component({
   selector: 'app-layout',
@@ -149,7 +151,6 @@ export class LayoutComponent implements OnInit {
     this.cartService.getUserCart().subscribe((res: IJsonResponse) => {
       if (res.result) {
         this.cartData = res.data;
-        this.getDetails();
       }
     })
   }
@@ -166,10 +167,6 @@ export class LayoutComponent implements OnInit {
   totalQuantity: number = this.cartService.cartTotalQuantity;
   totalPrice: number = this.cartService.cartTotalPrice;
 
-  getDetails() {
-    this.cartData.map(ele => {
-    })
-  }
 
 
   getCart(cartId: number) {
@@ -205,4 +202,16 @@ export class LayoutComponent implements OnInit {
   }
 
   //=============================================//
+  readonly dialog = inject(MatDialog);
+
+  openDialog() {
+    this.dialog.open(CartComponent,{
+      panelClass: 'right-dialog-container',
+      width: '600px',
+      position: { 
+        right: '30px', /* Align to the right */
+        top: '60px',    /* Optional: Align to the top */
+      }
+  });
+  }
 }

@@ -8,6 +8,7 @@ import { OrderRes } from '../../model/classes/order';
 import { OrderService } from '../../services/order/order.service';
 import { IJsonResponse } from '../../model/interfaces/jsonresponse';
 import { Toast, ToastrService } from 'ngx-toastr';
+import { ICart } from '../../model/interfaces/cart';
 
 
 @Component({
@@ -24,6 +25,8 @@ export class OrdersComponent implements OnInit{
   private orderService = inject(OrderService);
 
   orderList:OrderRes[]=[];
+
+  carts:ICart[]=[];
 
   toaster=inject(ToastrService);
 
