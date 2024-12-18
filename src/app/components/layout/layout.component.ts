@@ -18,6 +18,7 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatButtonModule} from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { CartComponent } from '../cart/cart.component';
+import { UserEditComponent } from '../user-edit/user-edit.component';
 
 @Component({
   selector: 'app-layout',
@@ -55,14 +56,6 @@ export class LayoutComponent implements OnInit {
 
   ngOnInit(): void {
     this.getCurrentUser();
-    this.getCartItems();
-    this.totalPrice
-    this.totalQuantity
-    this.cartService.onCartCalled.subscribe((res: boolean) => {
-      if (res) {
-        this.getCartItems();
-      }
-    })
   }
 
 
@@ -142,65 +135,6 @@ export class LayoutComponent implements OnInit {
     this.toastr.show('Logout Success');
   }
 
-  cartData: ICart[] = [];
-
-  cartService: CartService = inject(CartService);
-
-
-  getCartItems() {
-    this.cartService.getUserCart().subscribe((res: IJsonResponse) => {
-      if (res.result) {
-        this.cartData = res.data;
-      }
-    })
-  }
-
-  cartObj: ICart = {
-    userId: 0,
-    cartId: 0,
-    bookName: '',
-    quantity: 0,
-    bookLogo: '',
-    totalPrice: 0
-  }
-
-  totalQuantity: number = this.cartService.cartTotalQuantity;
-  totalPrice: number = this.cartService.cartTotalPrice;
-
-
-
-  getCart(cartId: number) {
-    this.cartService.getUserCartById(cartId).subscribe((res: IJsonResponse) => {
-      if (res.result) {
-        this.cartObj = res.data[0]
-        console.log(this.cartObj)
-      }
-    })
-  }
-
-  cartRes:ICart={
-    cartId:0,
-    userId:0,
-    bookLogo:'',
-    bookName:'',
-    quantity:0,
-    totalPrice:0
-  }
-
-  onRemoveProduct(cartId: number) {
-    const rs = confirm("Do you want to remove this item from the cart ?");
-    if (rs) {
-      this.getCart(cartId);
-      this.cartService.removeCart(cartId).subscribe((res: IJsonResponse) => {
-        if (res.result) {
-          this.toastr.success(res.message)
-          this.cartService.onCartCalled.next(true);
-          this.bookService.onBookChanged.next(true);
-        }
-      })
-    }
-  }
-
   //=============================================//
   readonly dialog = inject(MatDialog);
 
@@ -213,5 +147,13 @@ export class LayoutComponent implements OnInit {
         top: '60px',    /* Optional: Align to the top */
       }
   });
+  }
+
+  openDialogForEdit(){
+    this.dialog.open(UserEditComponent,{
+      panelClass: 'right-dialog-container',
+      width: '400px',
+      //height: '500px'
+    })
   }
 }

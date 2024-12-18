@@ -22,18 +22,12 @@
             <button class="btn btn-info btn-sm mx-2">{{currentUser.email}}</button>
             <!-- Icon -->
             @if (currentUser.role=='USER') {
-            <!-- <div class="card flex justify-center mx-2">
-                <p-button routerLink="/orders"></p-button>
-            </div>
-
-            <div class="card flex justify-center mx-2">
-                <p-button routerLink="/wishlist">WishList</p-button>
-            </div> -->
             <button mat-button [matMenuTriggerFor]="menu">Options</button>
             <mat-menu #menu="matMenu">
                 <button mat-menu-item routerLink="/orders">My Orders</button>
                 <button mat-menu-item routerLink="/wishlist">WishList</button>
                 <button mat-menu-item routerLink="/homepage">Home</button>
+                <button mat-menu-item (click)="openDialogForEdit()">Edit-UserDetails</button>
                 <button mat-menu-item (click)="onLogOut()">Logout</button>
             </mat-menu>
             } @else if (currentUser.role==='ADMIN') {
@@ -52,55 +46,6 @@
                 <a class="link-secondary me-3">
                     <i class="bi bi-cart3 fa-2x mx-2 text-white" (click)="openDialog()"></i>
                 </a>
-                <div [className]="isPopUpOpen ? 'dropdown-menu dropdown-menu-end hide' : 'dropdown-menu dropdown-menu-end show'"
-                    style="position: absolute;
-               right: 15px;top:60px" aria-labelledby="navbarDropdownMenuAvatar">
-                    <div class="row">
-                        <div class="col-8">
-                            <h6>Cart Items</h6>
-                        </div>
-                        <div class="col-4 text-end">
-                            <i class="fa fa-close p-2" (click)="showCartPopUp()"></i>
-                        </div>
-                    </div>
-                    <table class="table table-sm">
-                        <tbody>
-                            @for (item of cartData; track $index) {
-                            <tr>
-                                <td>
-                                    <div class="rounded"
-                                        style="background-image: url({{item.bookLogo}}); width: 60px; height: 60px; background-size: cover;">
-                                    </div>
-                                </td>
-                                <td class="align-middle text-left">{{item.bookName}}</td>
-                                <td class="align-middle text-center">{{item.quantity}} piece(s)</td>
-                                <td class="align-middle text-right">{{item.totalPrice | currency:'INR'}}</td>
-                                <td class="align-middle text-center">
-                                    <a (click)="onRemoveProduct(item.cartId)" data-toggle="modal"
-                                        data-title="Delete your product ?">
-                                        <i class="fa fa-trash"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                            }
-                            <tr>
-                                <td colspan="4" class="align-middle text-right">Quantity</td>
-                                <td class="align-middle text-right">{{cartService.cartTotalQuantity}}</td>
-                            </tr>
-                            <tr>
-                                <td colspan="4" class="align-middle text-right">Total</td>
-                                <td class="align-middle text-right">{{cartService.cartTotalPrice| currency:'INR'}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <div class="row">
-                        <div class="col-12 text-end">
-                            <button class="btn btn-sm btn-primary" [routerLink]="'create-order'"
-                                (click)="isPopUpOpen = !isPopUpOpen">CheckOut</button>
-                        </div>
-                    </div>
-                </div>
                 }
         </div>
     </div>

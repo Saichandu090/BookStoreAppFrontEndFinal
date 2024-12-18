@@ -9,12 +9,15 @@ import { OrderService } from '../../services/order/order.service';
 import { IJsonResponse } from '../../model/interfaces/jsonresponse';
 import { Toast, ToastrService } from 'ngx-toastr';
 import { ICart } from '../../model/interfaces/cart';
+import {MatTableModule} from '@angular/material/table';
+import {MatButtonModule} from '@angular/material/button';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
   selector: 'app-orders',
   standalone: true,
-  imports: [PopoverModule, TableModule, ButtonModule, TagModule],
+  imports: [PopoverModule, TableModule, ButtonModule, TagModule,MatTableModule,MatButtonModule,CommonModule],
   templateUrl: './orders.component.html',
   styleUrl: './orders.component.css',
   providers: [MessageService]
@@ -23,6 +26,8 @@ export class OrdersComponent implements OnInit{
 
   private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
   private orderService = inject(OrderService);
+
+  displayedColumns: string[] = [ 'order-Id', 'quantity', 'price','status','action'];
 
   orderList:OrderRes[]=[];
 

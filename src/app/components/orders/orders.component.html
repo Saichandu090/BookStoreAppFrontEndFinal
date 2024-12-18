@@ -1,38 +1,46 @@
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">SL.No</th>
-            <th scope="col">Order Id</th>
-            <th scope="col">Quantity</th>
-            <th scope="col">Price</th>
-            <th scope="col">Status</th>
-            <th scope="col">Action</th>
-        </tr>
-    </thead>
-    @for (item of orderList; track $index) {
-    <tbody>
-        <tr>
-            <td>{{$index+1}}</td>
-            <td>{{item.orderId}}</td>
-            <td>{{item.orderQuantity}}</td>
-            <td>{{item.orderPrice}}</td>
-            <td>
-                @if (item.cancelOrder) {
+<table mat-table [dataSource]="orderList" class="mat-elevation-z8">
+
+        <ng-container matColumnDef="order-Id">
+            <th mat-header-cell *matHeaderCellDef> Order Id </th>
+            <td mat-cell *matCellDef="let element"> {{element.orderId}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef> Quantity</th>
+            <td mat-cell *matCellDef="let element"> {{element.orderQuantity}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef> Price</th>
+            <td mat-cell *matCellDef="let element"> {{element.orderPrice | currency : 'INR' : true : '1.2-2'}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef> Status </th>
+            <td mat-cell *matCellDef="let element">
+                @if (element.cancelOrder) {
                     <div class="text-danger">
-                        <span>Order Cancelled</span>
+                        <span>Order Cancelled.</span>
                     </div>
-                }@else {
+                } @else {
                     <div class="text-success">
-                        <span>Order placed Successfully!!</span>
+                        <span>
+                            Order Placed Successfully.
+                        </span>
                     </div>
                 }
-            </td>
-            <td>
-                @if (!item.cancelOrder) {
-                    <p-button (onClick)="cancelOrder(item.orderId)">Cancel-Order</p-button>
+                 </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef> Action </th>
+            <td mat-cell *matCellDef="let element">
+                @if (!element.cancelOrder) {
+                    <button mat-raised-button (click)="cancelOrder(element.orderId)">Cancel Order</button>
                 }
-            </td>
-        </tr>
-    </tbody>
-    }
+                </td>
+        </ng-container>
+    
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>

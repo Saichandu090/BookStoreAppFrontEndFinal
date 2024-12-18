@@ -1,0 +1,49 @@
+<mat-dialog-content>
+    <div class="parent">
+        <div class="bgc-center">
+            <div class="container">
+              <form [formGroup]="registerForm">
+                <label for="firstName">FirstName</label>
+                <input type="text" class="inp" formControlName="firstName" name="firstName">
+                @if (registerForm.controls['firstName'].touched) {
+                  <div class="text-danger">
+                    @if (registerForm.controls['firstName'].errors?.['required']) {
+                      <span>This is required</span>
+                    }
+                    @if (registerForm.controls['firstName'].errors?.['pattern']) {
+                      <span>First Name Should start with Capital and AtLeast contain 3 characters</span>
+                    }
+                  </div>
+                }
+      
+                <label for="lastName">LastName</label>
+                <input type="text" class="inp" formControlName="lastName" name="lastName">
+                @if (registerForm.controls['lastName'].touched) {
+                  <div class="text-danger">
+                    @if (registerForm.controls['lastName'].errors?.['required']) {
+                      <span>This is required</span>
+                    }
+                    @if (registerForm.controls['lastName'].errors?.['pattern']) {
+                      <span>Last Name Should start with Capital and AtLeast contain 3 characters</span>
+                    }
+                  </div>
+                }
+      
+                <label for="dob">Date Of Birth</label>
+                <mat-form-field>
+                  <mat-label>Choose a date</mat-label>
+                  <input matInput [matDatepicker]="picker" formControlName="dob" name="dob"> 
+                  <mat-hint>MM/DD/YYYY</mat-hint>
+                  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+      
+              </form>
+            </div>
+          </div>
+      </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button mat-dialog-close (click)="onSubmit()">Submit</button>
+    <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>

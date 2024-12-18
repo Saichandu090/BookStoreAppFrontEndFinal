@@ -26,3 +26,18 @@ export class UserRegister{
         this.role=''
     }
 }
+
+export class UserEdit{
+    firstName:string
+    lastName:string
+    dob:string
+    email:string
+
+    constructor(){
+        this.firstName='',
+        this.lastName='',
+        this.dob='',
+        this.email=''
+    }
+}
+
