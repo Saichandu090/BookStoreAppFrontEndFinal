@@ -2,10 +2,11 @@
   <div class="bgc-center">
       <div class="container">
         <div class="header">
+          <h1><span class="l">A</span>dmin</h1>
           <h1><span class="l">R</span>EGISTER</h1>
         </div>
         <form [formGroup]="registerForm">
-          <label for="firstName">FirstName</label>
+          <label for="firstName">FName</label>
           <input type="text" class="inp" formControlName="firstName" name="firstName">
           @if (registerForm.controls['firstName'].touched) {
             <div class="text-danger">
@@ -13,7 +14,7 @@
                 <span>This is required</span>
               }
               @if (registerForm.controls['firstName'].errors?.['pattern']) {
-                <span>First Name Should start with Capital and AtLeast contain 3 characters</span>
+                <span>First Should start with Capital and AtLeast contain 3 characters</span>
               }
             </div>
           }
@@ -34,7 +35,7 @@
           <label for="dob">Date Of Birth</label>
           <mat-form-field>
             <mat-label>Choose a date</mat-label>
-            <input matInput [matDatepicker]="picker" formControlName="dob" name="dob"> 
+            <input matInput [matDatepicker]="picker" formControlName="dob" name="dob">
             <mat-hint>MM/DD/YYYY</mat-hint>
             <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>

@@ -19,13 +19,30 @@ export class BooksService {
 
 
   getAllBooks():Observable<IJsonResponse>{
-
     let token = localStorage.getItem(Constant.LOGIN_TOKEN);
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
     });
     return this.http.get<IJsonResponse>(this.baseURL+"allBooks",{ headers })
+  }
+
+  sortByBookPriceASC():Observable<IJsonResponse>{
+    let token = localStorage.getItem(Constant.LOGIN_TOKEN);
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get<IJsonResponse>(this.baseURL+"sortByBookPriceASC",{ headers })
+  }
+
+  sortByBookNameASC():Observable<IJsonResponse>{
+    let token = localStorage.getItem(Constant.LOGIN_TOKEN);
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get<IJsonResponse>(this.baseURL+"sortByBookNameASC",{ headers })
   }
 
 

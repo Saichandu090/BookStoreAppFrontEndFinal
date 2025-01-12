@@ -25,14 +25,6 @@ export class CartService {
 
   toaster=inject(ToastrService);
 
-  // constructor(){
-  //   const storedWishListItems=localStorage.getItem(this.storageWishListItemsKey);
-
-  //   if(storedWishListItems){
-  //     this.wishListItems=JSON.parse(storedWishListItems);
-  //   }
-  // }
-
   cartTotalQuantity!: number;
   cartTotalPrice!: number;
 
@@ -72,24 +64,4 @@ export class CartService {
     });
     return this.http.delete<IJsonResponse>(`${this.baseURL}removeFromCart/${cartId}`, { headers })
   }
-
-  // isInWishList(book: IBookResponse): boolean {
-  //   return this.wishListItems.some(item => item.bookId === book.bookId);
-  // }
-
-  // addToWishList(book: IBookResponse): void {
-  //   this.wishListItems.push(book);
-  //   localStorage.setItem(this.storageWishListItemsKey,JSON.stringify(this.wishListItems));
-  //   this.toaster.success(`${book.bookName} has added to wishlist successfully!!`);
-  // }
-
-  // removeFromWishList(book:IBookResponse):void{
-  //   const index=this.wishListItems.findIndex(item=>item.bookId===book.bookId);
-  //   if(index!==-1)
-  //   {
-  //     this.wishListItems.splice(index,1);
-  //     localStorage.setItem(this.storageWishListItemsKey,JSON.stringify(this.wishListItems));
-  //     this.toaster.success(`${book.bookName} has removed from wishlist successfully!!`)
-  //   }
-  // }
 }

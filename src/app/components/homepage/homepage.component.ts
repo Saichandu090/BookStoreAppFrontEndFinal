@@ -14,11 +14,14 @@ import { CartService } from '../../services/cart/cart.service';
 import { ICart } from '../../model/interfaces/cart';
 import { WishlistService } from '../../services/wishList/wishlist.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-homepage',
   standalone: true,
-  imports: [ButtonModule, CommonModule, ReactiveFormsModule],
+  imports: [ButtonModule, CommonModule, ReactiveFormsModule,MatButtonModule, MatMenuModule, MatIconModule],
   templateUrl: './homepage.component.html',
   styleUrl: './homepage.component.css'
 })
@@ -31,6 +34,18 @@ export class HomepageComponent implements OnInit {
   private bookService: BooksService = inject(BooksService);
 
   private snackBar = inject(MatSnackBar);
+
+  sortByBookNameASC(){
+    this.subscriptionList.push(this.bookService.sortByBookNameASC().subscribe((res: IJsonResponse) => {
+      this.bookList = res.data;
+    }));
+  }
+
+  sortByPriceASC(){
+    this.subscriptionList.push(this.bookService.sortByBookPriceASC().subscribe((res: IJsonResponse) => {
+      this.bookList = res.data;
+    }));
+  }
 
   getAllBooks() {
     this.subscriptionList.push(this.bookService.getAllBooks().subscribe((res: IJsonResponse) => {
@@ -169,7 +184,7 @@ export class HomepageComponent implements OnInit {
         if (res.result) {
           this.cartRes = res.data[0];
           this.snackBar.open(res.message, 'Undo', { duration: 3000 });
-          this.bookService.onBookChanged.next(true);
+          //this.bookService.onBookChanged.next(true);
           this.cartService.onCartCalled.next(true);
         } else {
           this.toaster.error(res.message)

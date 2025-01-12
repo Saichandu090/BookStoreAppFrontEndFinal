@@ -74,7 +74,10 @@
                         <div class="ps-3">
                             <p class="p-0 m-0 fw-semibold">{{item.bookName}}</p>
                             <p class="p-0 m-0">{{item.totalPrice | currency:'INR'}}</p>
-                            <p class="text-start mt-4"><button class="btn">QTY : <b>{{item.quantity}}</b> </button></p>
+                            <p class="text-start mt-4"><button class="btn">QTY : <b>{{item.quantity}}</b> </button>
+                              <button class="btn ms-3 text-danger" (click)="onRemoveCart(item.cartId)">
+                                <i class="bi bi-trash"></i>
+                              </button></p>
                         </div>
                     </div>
                     }

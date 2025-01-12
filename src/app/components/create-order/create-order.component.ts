@@ -13,6 +13,8 @@ import { ToastrService } from 'ngx-toastr';
 import { IOrder } from '../../model/interfaces/order';
 import { OrderService } from '../../services/order/order.service';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { BooksService } from '../../services/books/books.service';
 
 @Component({
   selector: 'app-create-order',
@@ -25,7 +27,43 @@ export class CreateOrderComponent implements OnInit {
 
   private cartService: CartService = inject(CartService);
 
+  private snackbar: MatSnackBar = inject(MatSnackBar);
+
+  private bookService = inject(BooksService);
+
   cartData: ICart[] = [];
+
+  onRemoveCart(cartId: number) {
+    const rs = confirm("Do you want to remove this item from the cart ?");
+    if (rs) {
+      this.getCart(cartId);
+      this.cartService.removeCart(cartId).subscribe((res: IJsonResponse) => {
+        if (res.result) {
+          this.snackbar.open(res.message, '', { duration: 3000 })
+          this.cartService.onCartCalled.next(true);
+          this.bookService.onBookChanged.next(true);
+        }
+      })
+    }
+  }
+
+  getCart(cartId: number) {
+    this.cartService.getUserCartById(cartId).subscribe((res: IJsonResponse) => {
+      if (res.result) {
+        this.cartObj = res.data[0]
+        console.log(this.cartObj)
+      }
+    })
+  }
+
+  cartObj: ICart = {
+    userId: 0,
+    cartId: 0,
+    bookName: '',
+    quantity: 0,
+    bookLogo: '',
+    totalPrice: 0
+  }
 
   totalQuantity: number = 0;
   totalPrice: number = 0;
@@ -34,6 +72,8 @@ export class CreateOrderComponent implements OnInit {
     this.cartService.getUserCart().subscribe((res: IJsonResponse) => {
       if (res.result) {
         this.cartData = res.data;
+        this.totalPrice = 0;
+        this.totalQuantity = 0;
         this.cartData.forEach(element => {
           this.totalPrice = element.totalPrice + this.totalPrice;
           this.totalQuantity = element.quantity + this.totalQuantity;
@@ -48,6 +88,11 @@ export class CreateOrderComponent implements OnInit {
     this.addressService.onAddressChange.subscribe((res: boolean) => {
       if (res) {
         this.getAllUserAddress();
+      }
+    })
+    this.cartService.onCartCalled.subscribe((res: boolean) => {
+      if (res) {
+        this.getUserCart();
       }
     })
   }
@@ -158,26 +203,26 @@ export class CreateOrderComponent implements OnInit {
 
   saveNewAddress() {
     this.editableAddress = Object.assign(new Address(), this.newEditAddress.value);
-    this.editableAddress.addressId=this.editAddressId;
+    this.editableAddress.addressId = this.editAddressId;
     console.log(this.editableAddress)
-    this.addressService.editAddress(this.editableAddress.addressId,this.editableAddress).subscribe((res: IJsonResponse) => {
+    this.addressService.editAddress(this.editableAddress.addressId, this.editableAddress).subscribe((res: IJsonResponse) => {
       if (res.result) {
         this.toaster.success("Address edited successfully")
         this.addressService.onAddressChange.next(true);
         this.closeEditAddress();
-      }console.error(res.message);
+      } console.error(res.message);
     })
   }
 
 
-  deleteAddress(id:number){
-    const rs=confirm("Do you want to delete the address ?");
-    if(rs){
-      this.addressService.deleteAddress(id).subscribe((res:IJsonResponse)=>{
-        if(res.result){
+  deleteAddress(id: number) {
+    const rs = confirm("Do you want to delete the address ?");
+    if (rs) {
+      this.addressService.deleteAddress(id).subscribe((res: IJsonResponse) => {
+        if (res.result) {
           this.toaster.success(res.message);
           this.addressService.onAddressChange.next(true);
-        }else{
+        } else {
           this.toaster.error(res.message)
         }
       })
@@ -195,28 +240,28 @@ export class CreateOrderComponent implements OnInit {
     console.log('Selected Address:', this.selectedAddress);
   }
 
-  createOrder:IOrder={
-    price:0,
-    quantity:0,
-    addressId:0
+  createOrder: IOrder = {
+    price: 0,
+    quantity: 0,
+    addressId: 0
   }
 
-  orderService:OrderService=inject(OrderService);
+  orderService: OrderService = inject(OrderService);
 
-  router:Router=inject(Router);
+  router: Router = inject(Router);
 
   onPlaceOrder() {
     if (this.addressControl.invalid) {
       this.toaster.error("Please select atleast one address")
     } else {
-      this.createOrder.addressId=this.selectedAddress.addressId;
-      this.createOrder.price=this.totalPrice;
-      this.createOrder.quantity=this.totalQuantity;
-      if(this.createOrder.quantity<=0)
+      this.createOrder.addressId = this.selectedAddress.addressId;
+      this.createOrder.price = this.totalPrice;
+      this.createOrder.quantity = this.totalQuantity;
+      if (this.createOrder.quantity <= 0)
         this.toaster.error("Select atleast one product to place order");
-      else{
-        this.orderService.placeOrder(this.createOrder).subscribe((res:IJsonResponse)=>{
-          if(res.result){
+      else {
+        this.orderService.placeOrder(this.createOrder).subscribe((res: IJsonResponse) => {
+          if (res.result) {
             this.toaster.success(res.message);
             this.router.navigateByUrl("/homepage");
             this.cartService.onCartCalled.next(true);

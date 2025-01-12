@@ -15,5 +15,5 @@ export const appConfig: ApplicationConfig = {
     theme: {
         preset: Aura
     }
-}),provideToastr(),provideAnimations(), provideAnimationsAsync(),provideNativeDateAdapter()]
+}),provideToastr(),provideAnimations(), provideAnimationsAsync(),provideNativeDateAdapter(), provideAnimationsAsync()]
 };
