@@ -17,51 +17,39 @@ export class CartService {
 
   private wishListItems: IBookResponse[] = [];
 
-  //private storageWishListItemsKey='wishListItems';
-
   private http: HttpClient = inject(HttpClient);
 
   onCartCalled: Subject<boolean> = new Subject<boolean>();
 
   toaster=inject(ToastrService);
 
-  cartTotalQuantity!: number;
-  cartTotalPrice!: number;
-
-  addToCart(obj: Cart): Observable<IJsonResponse> {
+  getHeaders():HttpHeaders{
     let token = localStorage.getItem(Constant.LOGIN_TOKEN);
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
     });
+    return headers;
+  }
+
+  addToCart(obj: Cart): Observable<IJsonResponse> {
+    const headers=this.getHeaders();
     return this.http.post<IJsonResponse>(this.baseURL + 'addToCart', obj, { headers })
   }
 
   getUserCart(): Observable<IJsonResponse> {
-    let token = localStorage.getItem(Constant.LOGIN_TOKEN);
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    });
+    const headers=this.getHeaders();
     return this.http.get<IJsonResponse>(this.baseURL + 'getCart', { headers })
   }
 
 
   getUserCartById(cartId: number): Observable<IJsonResponse> {
-    let token = localStorage.getItem(Constant.LOGIN_TOKEN);
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    });
+    const headers=this.getHeaders();
     return this.http.get<IJsonResponse>(`${this.baseURL}getCartById/${cartId}`, { headers })
   }
 
   removeCart(cartId: number): Observable<IJsonResponse> {
-    let token = localStorage.getItem(Constant.LOGIN_TOKEN);
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    });
+    const headers=this.getHeaders();
     return this.http.delete<IJsonResponse>(`${this.baseURL}removeFromCart/${cartId}`, { headers })
   }
 }

@@ -40,7 +40,7 @@ export class UserEditComponent implements OnInit {
 
   snackBar = inject(MatSnackBar);
 
-  toaster = inject(ToastrService);
+  //toaster = inject(ToastrService);
 
   registerForm: FormGroup = this.fb.group({
     firstName: new FormControl('', [Validators.required, Validators.pattern("^[A-Z][A-Za-z .]{2,}$")]),
@@ -76,7 +76,7 @@ export class UserEditComponent implements OnInit {
         }
       },
       error: (res: IJsonResponse) => {
-        this.toaster.error(res.message);
+        this.snackBar.open(res.message, '', { duration: 3000 });
       }
     })
   }
@@ -84,22 +84,22 @@ export class UserEditComponent implements OnInit {
 
   onSubmit() {
     if (this.registerForm.invalid) {
-      this.toaster.error("Form Invalid");
+      this.snackBar.open("Form Invalid", '', { duration: 3000 });
       console.log(this.registerForm.value)
     } else {
       this.userEdit = this.registerForm.value;
       this.userEdit.dob = this.formatDate(this.userEdit.dob);
       console.log(this.userEdit);
       this.loginService.editUser(this.userEdit).subscribe({
-        next:(res:IJsonResponse)=>{
+        next: (res: IJsonResponse) => {
           if (res.result) {
             this.snackBar.open(res.message, '', { duration: 3000 })
           }
         },
-        error:(res:IJsonResponse)=>{
-          this.toaster.error(res.message)
+        error: (res: IJsonResponse) => {
+          this.snackBar.open(res.message, '', { duration: 3000 });
         }
-        
+
       })
     }
   }

@@ -17,68 +17,48 @@ export class BooksService {
 
   onBookChanged: Subject<boolean> = new Subject<boolean>();
 
-
-  getAllBooks():Observable<IJsonResponse>{
+  getHeaders():HttpHeaders{
     let token = localStorage.getItem(Constant.LOGIN_TOKEN);
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
     });
+    return headers;
+  }
+
+  getAllBooks():Observable<IJsonResponse>{
+    const headers=this.getHeaders();
     return this.http.get<IJsonResponse>(this.baseURL+"allBooks",{ headers })
   }
 
   sortByBookPriceASC():Observable<IJsonResponse>{
-    let token = localStorage.getItem(Constant.LOGIN_TOKEN);
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    });
+    const headers=this.getHeaders();
     return this.http.get<IJsonResponse>(this.baseURL+"sortByBookPriceASC",{ headers })
   }
 
   sortByBookNameASC():Observable<IJsonResponse>{
-    let token = localStorage.getItem(Constant.LOGIN_TOKEN);
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    });
+    const headers=this.getHeaders();
     return this.http.get<IJsonResponse>(this.baseURL+"sortByBookNameASC",{ headers })
   }
 
 
   addNewBook(obj:Book):Observable<IJsonResponse>{
-    let token = localStorage.getItem(Constant.LOGIN_TOKEN);
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    });
+    const headers=this.getHeaders();
     return this.http.post<IJsonResponse>(this.baseURL+'addBook',obj,{headers})
   }
 
   deleteBook(id:number):Observable<IJsonResponse>{
-    let token = localStorage.getItem(Constant.LOGIN_TOKEN);
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    });
+    const headers=this.getHeaders();
     return this.http.delete<IJsonResponse>(`${this.baseURL}deleteBook/${id}`,{headers})
   }
 
   updateBook(id:number,obj:Book):Observable<IJsonResponse>{
-    let token = localStorage.getItem(Constant.LOGIN_TOKEN);
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    });
+    const headers=this.getHeaders();
     return this.http.put<IJsonResponse>(`${this.baseURL}updateBook/${id}`,obj,{headers})
   }
 
   getBookById(id:number):Observable<IJsonResponse>{
-    let token = localStorage.getItem(Constant.LOGIN_TOKEN);
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    });
+    const headers=this.getHeaders();
     return this.http.get<IJsonResponse>(`${this.baseURL}byBookId/${id}`,{headers})
   }
 

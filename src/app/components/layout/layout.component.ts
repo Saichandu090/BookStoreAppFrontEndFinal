@@ -13,17 +13,18 @@ import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { ICart } from '../../model/interfaces/cart';
 import { CartService } from '../../services/cart/cart.service';
 import { CommonModule } from '@angular/common';
-import {MatIconModule} from '@angular/material/icon';
-import {MatMenuModule} from '@angular/material/menu';
-import {MatButtonModule} from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { CartComponent } from '../cart/cart.component';
 import { UserEditComponent } from '../user-edit/user-edit.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [RouterLink, FormsModule, RouterOutlet, ReactiveFormsModule, ButtonModule, ConfirmPopupModule, CommonModule,MatButtonModule, MatMenuModule, MatIconModule],
+  imports: [RouterLink, FormsModule, RouterOutlet, ReactiveFormsModule, ButtonModule, ConfirmPopupModule, CommonModule, MatButtonModule, MatMenuModule, MatIconModule],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.css'
 })
@@ -37,8 +38,7 @@ export class LayoutComponent implements OnInit {
 
   //=========================================//
 
-  constructor(private toastr: ToastrService) {
-  }
+  snackbar: MatSnackBar = inject(MatSnackBar);
 
   currentUser: LoggedInUser = new LoggedInUser();
 
@@ -110,20 +110,20 @@ export class LayoutComponent implements OnInit {
 
   addNewBook() {
 
-    if(this.bookForm.invalid){
-      this.toastr.error("Please fill the form to submit")
-    }else{
+    if (this.bookForm.invalid) {
+      this.snackbar.open("Please fill the form to submit", '', { duration: 3000 })
+    } else {
       this.book = Object.assign(new Book(), this.bookForm.value);
       console.log(this.book)
       this.bookService.addNewBook(this.book).subscribe((res: IJsonResponse) => {
         if (res.result) {
           console.log(res.message)
-          this.toastr.success("Book added Successfully")
+          this.snackbar.open("Book added Successfully", '', { duration: 3000 })
           this.bookService.onBookChanged.next(true);
           this.closeAddBookModel();
         }
       })
-    } 
+    }
   }
 
   subscriptionList: Subscription[] = [];
@@ -132,25 +132,25 @@ export class LayoutComponent implements OnInit {
   //=============================================//
 
   showSuccess() {
-    this.toastr.show('Logout Success');
+    this.snackbar.open('Logout Success', '', { duration: 3000 });
   }
 
   //=============================================//
   readonly dialog = inject(MatDialog);
 
   openDialog() {
-    this.dialog.open(CartComponent,{
+    this.dialog.open(CartComponent, {
       panelClass: 'right-dialog-container',
       width: '600px',
-      position: { 
+      position: {
         right: '30px', /* Align to the right */
         top: '60px',    /* Optional: Align to the top */
       }
-  });
+    });
   }
 
-  openDialogForEdit(){
-    this.dialog.open(UserEditComponent,{
+  openDialogForEdit() {
+    this.dialog.open(UserEditComponent, {
       panelClass: 'right-dialog-container',
       width: '400px',
       //height: '500px'

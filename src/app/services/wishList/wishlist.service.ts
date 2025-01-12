@@ -17,39 +17,32 @@ export class WishlistService {
 
   onWishListChanged:Subject<boolean> =new Subject<boolean>();
 
-  addToWishList(book: WishListReq): Observable<IJsonResponse> {
+  getHeaders():HttpHeaders{
     let token = localStorage.getItem(Constant.LOGIN_TOKEN);
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
     });
+    return headers;
+  }
+
+  addToWishList(book: WishListReq): Observable<IJsonResponse> {
+    const headers=this.getHeaders();
     return this.http.post<IJsonResponse>(this.baseURL + "addToWishList", book, { headers })
   }
 
   removeFromWishList(bookId: number): Observable<IJsonResponse> {
-    let token = localStorage.getItem(Constant.LOGIN_TOKEN);
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    });
+    const headers=this.getHeaders();
     return this.http.delete<IJsonResponse>(`${this.baseURL}removeFromWishList/${bookId}`, { headers })
   }
 
   getWishList(): Observable<IJsonResponse> {
-    let token = localStorage.getItem(Constant.LOGIN_TOKEN);
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    });
+    const headers=this.getHeaders();
     return this.http.get<IJsonResponse>(`${this.baseURL}getWishList`, { headers })
   }
 
   isInWishList(bookId: number): Observable<IJsonResponse> {
-    let token = localStorage.getItem(Constant.LOGIN_TOKEN);
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    });
+    const headers=this.getHeaders();
     return this.http.get<IJsonResponse>(`${this.baseURL}isInWishList/${bookId}`,{headers})
   }
 }

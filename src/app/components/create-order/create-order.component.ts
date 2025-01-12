@@ -136,14 +136,14 @@ export class CreateOrderComponent implements OnInit {
 
   address = new Address();
 
-  toaster = inject(ToastrService);
+  //toaster = inject(ToastrService);
 
   addNewAddress() {
     this.address = Object.assign(new Address(), this.newAddress.value);
     console.log(this.address)
     this.addressService.addAddress(this.address).subscribe((res: IJsonResponse) => {
       if (res.result) {
-        this.toaster.success("Address added successfully")
+        this.snackbar.open("Address added successfully", '', { duration: 3000 })
         this.addressService.onAddressChange.next(true);
         this.closeAddAddress();
       }
@@ -179,7 +179,7 @@ export class CreateOrderComponent implements OnInit {
         })
         console.log(this.editableAddress)
       } else {
-        this.toaster.error(res.message)
+        this.snackbar.open(res.message, '', { duration: 3000 })
       }
     })
   }
@@ -207,7 +207,7 @@ export class CreateOrderComponent implements OnInit {
     console.log(this.editableAddress)
     this.addressService.editAddress(this.editableAddress.addressId, this.editableAddress).subscribe((res: IJsonResponse) => {
       if (res.result) {
-        this.toaster.success("Address edited successfully")
+        this.snackbar.open("Address edited successfully", '', { duration: 3000 })
         this.addressService.onAddressChange.next(true);
         this.closeEditAddress();
       } console.error(res.message);
@@ -220,10 +220,10 @@ export class CreateOrderComponent implements OnInit {
     if (rs) {
       this.addressService.deleteAddress(id).subscribe((res: IJsonResponse) => {
         if (res.result) {
-          this.toaster.success(res.message);
+          this.snackbar.open(res.message, '', { duration: 3000 });
           this.addressService.onAddressChange.next(true);
         } else {
-          this.toaster.error(res.message)
+          this.snackbar.open(res.message, '', { duration: 3000 });
         }
       })
     }
@@ -252,17 +252,17 @@ export class CreateOrderComponent implements OnInit {
 
   onPlaceOrder() {
     if (this.addressControl.invalid) {
-      this.toaster.error("Please select atleast one address")
+      this.snackbar.open("Please select atleast one address", '', { duration: 3000 })
     } else {
       this.createOrder.addressId = this.selectedAddress.addressId;
       this.createOrder.price = this.totalPrice;
       this.createOrder.quantity = this.totalQuantity;
       if (this.createOrder.quantity <= 0)
-        this.toaster.error("Select atleast one product to place order");
+        this.snackbar.open("Select atleast one product to place order", '', { duration: 3000 });
       else {
         this.orderService.placeOrder(this.createOrder).subscribe((res: IJsonResponse) => {
           if (res.result) {
-            this.toaster.success(res.message);
+            this.snackbar.open(res.message, '', { duration: 3000 });
             this.router.navigateByUrl("/homepage");
             this.cartService.onCartCalled.next(true);
           }

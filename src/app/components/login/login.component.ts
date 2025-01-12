@@ -35,24 +35,24 @@ export class LoginComponent {
     this.loginService.loginUser(this.loginObj).subscribe({
       next: (res: IJsonResponse) => {
         if (res.result) {
-          this.snackBar.open("Welcome to BookStore, Login Success!!",'Undo',{duration : 3000});
+          this.snackBar.open("Welcome to BookStore, Login Success!!",'',{duration : 3000});
           console.log(res.data);
           this.currentUser = res.data;
           localStorage.setItem(Constant.LOGIN_TOKEN, res.message);
           localStorage.setItem("UserDetails", JSON.stringify(res.data));
           this.router.navigateByUrl("/homepage");
         } else {
-          this.toastr.error(res.message); 
+          this.toastr.error(res.message);
         }
       },
-      error: (err) => { 
+      error: (err) => {
         console.error("Error from backend:", err);
         const message = err.error?.message || "Something went wrong!";
-        this.toastr.error(message); 
+        this.toastr.error(message);
       }
     });
   }
-  
+
 
   constructor(private toastr: ToastrService) {}
 }

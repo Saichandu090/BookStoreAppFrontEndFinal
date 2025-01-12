@@ -8,6 +8,7 @@ import { ICart } from '../../model/interfaces/cart';
 import { CartService } from '../../services/cart/cart.service';
 import { BooksService } from '../../services/books/books.service';
 import { ToastrService } from 'ngx-toastr';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-wish-list',
@@ -22,7 +23,8 @@ export class WishListComponent implements OnInit {
 
   bookService: BooksService = inject(BooksService);
 
-  toaster: ToastrService = inject(ToastrService);
+  snackbar: MatSnackBar = inject(MatSnackBar);
+  //toaster: ToastrService = inject(ToastrService);
 
   wishListService: WishlistService = inject(WishlistService);
 
@@ -61,7 +63,7 @@ export class WishListComponent implements OnInit {
   removeFromWishList(bookId: number) {
     this.wishListService.removeFromWishList(bookId).subscribe((res: IJsonResponse) => {
       if (res.result) {
-        this.toaster.success(res.message)
+        this.snackbar.open(res.message, '', { duration: 3000 });
         this.wishListService.onWishListChanged.next(true);
       }
     })
@@ -71,7 +73,7 @@ export class WishListComponent implements OnInit {
   addToWishList(wishList: WishListReq) {
     this.wishListService.addToWishList(wishList).subscribe((res: IJsonResponse) => {
       if (res.result) {
-        this.toaster.success(res.message)
+        this.snackbar.open(res.message, '', { duration: 3000 });
         this.wishListService.onWishListChanged.next(true);
       }
     })
@@ -97,17 +99,17 @@ export class WishListComponent implements OnInit {
       next: (res: IJsonResponse) => {
         if (res.result) {
           this.cartRes = res.data[0];
-          this.toaster.success(res.message);
+          this.snackbar.open(res.message, '', { duration: 3000 });
           this.bookService.onBookChanged.next(true);
           this.cartService.onCartCalled.next(true);
         } else {
-          this.toaster.error(res.message)
+          this.snackbar.open(res.message, '', { duration: 3000 });
         }
       },
       error: (err) => {
         console.error("Error from backend:", err);
         const message = err.error?.message || "Something went wrong!";
-        this.toaster.error(message);
+        this.snackbar.open(message, '', { duration: 3000 });
       }
     }
     )

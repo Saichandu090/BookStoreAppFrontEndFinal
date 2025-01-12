@@ -21,7 +21,7 @@ import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-homepage',
   standalone: true,
-  imports: [ButtonModule, CommonModule, ReactiveFormsModule,MatButtonModule, MatMenuModule, MatIconModule],
+  imports: [ButtonModule, CommonModule, ReactiveFormsModule, MatButtonModule, MatMenuModule, MatIconModule],
   templateUrl: './homepage.component.html',
   styleUrl: './homepage.component.css'
 })
@@ -35,13 +35,13 @@ export class HomepageComponent implements OnInit {
 
   private snackBar = inject(MatSnackBar);
 
-  sortByBookNameASC(){
+  sortByBookNameASC() {
     this.subscriptionList.push(this.bookService.sortByBookNameASC().subscribe((res: IJsonResponse) => {
       this.bookList = res.data;
     }));
   }
 
-  sortByPriceASC(){
+  sortByPriceASC() {
     this.subscriptionList.push(this.bookService.sortByBookPriceASC().subscribe((res: IJsonResponse) => {
       this.bookList = res.data;
     }));
@@ -87,8 +87,6 @@ export class HomepageComponent implements OnInit {
 
   //======================================//
 
-  toaster = inject(ToastrService);
-
   subscriptionList: Subscription[] = [];
 
   onDeleteBook(id: number) {
@@ -96,10 +94,10 @@ export class HomepageComponent implements OnInit {
     if (rs) {
       this.bookService.deleteBook(id).subscribe((res: IJsonResponse) => {
         if (res.result) {
-          this.snackBar.open(res.message, 'Undo', { duration: 3000 });
+          this.snackBar.open(res.message, '', { duration: 3000 });
           this.bookService.onBookChanged.next(true);
         } else {
-          this.toaster.error(res.message)
+          this.snackBar.open(res.message, '', { duration: 3000 })
         }
       })
     }
@@ -137,9 +135,8 @@ export class HomepageComponent implements OnInit {
             quantity: this.updatableBook.quantity,
             bookLogo: this.updatableBook.bookLogo
           });
-
         } else {
-          this.toaster.error(res.message)
+          this.snackBar.open(res.message, '', { duration: 3000 })
         }
       }
     })
@@ -150,14 +147,13 @@ export class HomepageComponent implements OnInit {
     console.log(this.updatableBook)
     this.bookService.updateBook(this.editableBook, this.updatableBook).subscribe((res: IJsonResponse) => {
       if (res.result) {
-        this.snackBar.open(res.message, 'Undo', { duration: 3000 });
+        this.snackBar.open(res.message, '', { duration: 3000 });
         this.bookService.onBookChanged.next(true);
         this.onEditClose();
         this.editableBook = 0;
         this.updatableBook = new Book();
       } else {
         console.log(this.updatableBook)
-        this.toaster.error(res.message);
       }
     })
   }
@@ -183,17 +179,16 @@ export class HomepageComponent implements OnInit {
       next: (res: IJsonResponse) => {
         if (res.result) {
           this.cartRes = res.data[0];
-          this.snackBar.open(res.message, 'Undo', { duration: 3000 });
-          //this.bookService.onBookChanged.next(true);
+          this.snackBar.open(res.message, '', { duration: 3000 });
           this.cartService.onCartCalled.next(true);
         } else {
-          this.toaster.error(res.message)
+          this.snackBar.open(res.message, '', { duration: 3000 })
         }
       },
       error: (err) => {
         console.error("Error from backend:", err);
         const message = err.error?.message || "Something went wrong!";
-        this.toaster.error(message);
+        this.snackBar.open(message, '', { duration: 3000 });
       }
     }
     )
@@ -225,7 +220,7 @@ export class HomepageComponent implements OnInit {
   removeFromWishList(bookId: number) {
     this.wishListService.removeFromWishList(bookId).subscribe((res: IJsonResponse) => {
       if (res.result) {
-        this.snackBar.open(res.message, 'Undo', { duration: 3000 });
+        this.snackBar.open(res.message, '', { duration: 3000 });
         this.wishListService.onWishListChanged.next(true);
       }
     })
@@ -235,7 +230,7 @@ export class HomepageComponent implements OnInit {
   addToWishList(wishList: WishListReq) {
     this.wishListService.addToWishList(wishList).subscribe((res: IJsonResponse) => {
       if (res.result) {
-        this.snackBar.open(res.message, 'Undo', { duration: 3000 });
+        this.snackBar.open(res.message, '', { duration: 3000 });
         this.wishListService.onWishListChanged.next(true);
       }
     })

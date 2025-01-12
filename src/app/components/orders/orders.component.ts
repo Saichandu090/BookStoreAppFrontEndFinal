@@ -12,6 +12,7 @@ import { ICart } from '../../model/interfaces/cart';
 import {MatTableModule} from '@angular/material/table';
 import {MatButtonModule} from '@angular/material/button';
 import { CommonModule } from '@angular/common';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -33,7 +34,8 @@ export class OrdersComponent implements OnInit{
 
   carts:ICart[]=[];
 
-  toaster=inject(ToastrService);
+  snackbar:MatSnackBar=inject(MatSnackBar);
+  //toaster=inject(ToastrService);
 
   getOrders(){
     this.orderService.getOrders().subscribe((res:IJsonResponse)=>{
@@ -48,10 +50,10 @@ export class OrdersComponent implements OnInit{
     if(rs){
       this.orderService.cancelOrder(id).subscribe((res:IJsonResponse)=>{
         if(res.result){
-          this.toaster.success(res.message);
+          this.snackbar.open(res.message,'',{duration:3000});
           this.orderService.onOrderChanged.next(true);
         }else{
-          this.toaster.error(res.message)
+          this.snackbar.open(res.message,'',{duration:3000});
         }
       })
     }

@@ -15,6 +15,15 @@ export class LoginService {
 
   private http: HttpClient = inject(HttpClient);
 
+  getHeaders():HttpHeaders{
+    let token = localStorage.getItem(Constant.LOGIN_TOKEN);
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+    return headers;
+  }
+
   registerUser(user: UserRegister): Observable<IJsonResponse> {
     return this.http.post<IJsonResponse>(this.baseURL + "register", user)
   }
@@ -24,20 +33,12 @@ export class LoginService {
   }
 
   editUser(user: UserEdit): Observable<IJsonResponse> {
-    let token = localStorage.getItem(Constant.LOGIN_TOKEN);
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    });
+    const headers=this.getHeaders();
     return this.http.put<IJsonResponse>(this.baseURL + 'editUserDetails',user, { headers });
   }
 
   getUser(email: string): Observable<IJsonResponse> {
-    let token = localStorage.getItem(Constant.LOGIN_TOKEN);
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    });
+    const headers=this.getHeaders();
     return this.http.get<IJsonResponse>(`${this.baseURL}getUser/${email}`, { headers });
   }
 }
