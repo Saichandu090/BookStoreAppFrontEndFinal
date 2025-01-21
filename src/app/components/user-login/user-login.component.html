@@ -1,11 +1,55 @@
-<div class="parent">
-    <div class="bgc-center">
-        <div class="container">
-          <div class="header">
-            <h1><span class="l">R</span>EGISTER</h1>
+<div class="container">
+  <div class="left-section">
+    <img src="assets/BookStroreLogin.png" alt="Shopping Image" />
+    <h2>ONLINE BOOK SHOPPING</h2>
+  </div>
+  <div class="right-section">
+    <div class="form-header">
+      <h2 [class.active]="isLogin" (click)="toggleForm()">
+        LOGIN
+      </h2>
+      <h2 [class.active]="!isLogin" (click)="toggleForm()">
+        SIGNUP
+      </h2>
+    </div>
+    <div class="form-body">
+      <form *ngIf="isLogin" [formGroup]="loginForm" (ngSubmit)="handleLogin()">
+
+        <label for="uname">Email</label>
+        <input type="email" class="inp" formControlName="email" name="uname">
+        @if (registerForm.controls['email'].touched) {
+          <div class="text-danger">
+            @if (registerForm.controls['email'].errors?.['required']) {
+              <span>This is required</span>
+            }
+            @if (registerForm.controls['email'].errors?.['email']) {
+              <span>Should be an Email</span>
+            }
           </div>
-          <form [formGroup]="registerForm">
-            <label for="firstName">FirstName</label>
+        }
+
+        <label for="uname">Password</label>
+            <input type="password" class="inp" formControlName="password" name="uname">
+            @if (registerForm.controls['password'].touched) {
+              <div class="text-danger">
+                @if (registerForm.controls['password'].errors?.['required']) {
+                  <span>This is required</span>
+                }
+                @if (registerForm.controls['password'].errors?.['pattern']) {
+                  <span>Password should be atleast 8 Characters</span>
+                }
+              </div>
+            }
+
+        <label class="forgot-password">Forgot Password?</label>
+
+        <button mat-raised-button color="primary" type="submit">
+          Login
+        </button>
+      </form>
+
+      <form *ngIf="!isLogin" [formGroup]="registerForm" (ngSubmit)="handleSignup()">
+        <label for="firstName">FirstName</label>
             <input type="text" class="inp" formControlName="firstName" name="firstName">
             @if (registerForm.controls['firstName'].touched) {
               <div class="text-danger">
@@ -32,13 +76,7 @@
             }
 
             <label for="dob">Date Of Birth</label>
-            <mat-form-field>
-              <mat-label>Choose a date</mat-label>
-              <input matInput [matDatepicker]="picker" formControlName="dob" name="dob"> 
-              <mat-hint>MM/DD/YYYY</mat-hint>
-              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-              <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
+              <input type="date" formControlName="dob" name="dob">
 
             <label for="uname">Password</label>
             <input type="password" class="inp" formControlName="password" name="uname">
@@ -65,13 +103,11 @@
                 }
               </div>
             }
-  
-            <button type="submit" (click)="onSubmit()">Enter</button>
-          </form>
-          <div class="login">
-            <b>Already Have Account?</b>
-            <a routerLink="/login">Login</a>
-          </div>
-        </div>
-      </div>
+
+        <button mat-raised-button color="primary" type="submit">
+          Signup
+        </button>
+      </form>
+    </div>
+  </div>
 </div>

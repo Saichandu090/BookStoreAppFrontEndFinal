@@ -7,6 +7,7 @@
             <mat-menu #menu="matMenu">
                 <button mat-menu-item (click)="sortByBookNameASC()">BookName</button>
                 <button mat-menu-item (click)="sortByPriceASC()">BookPrice</button>
+                <button mat-menu-item (click)="sortByPriceASC()">AuthorName</button>
                 <button mat-menu-item (click)="getAllBooks()">None</button>
             </mat-menu>
         </div>
@@ -17,18 +18,18 @@
                     <div class="card product-card">
                         <img [src]="item.bookLogo" class="card-img-top product-image" alt="Product Image" />
                         @if (currentUser.role==='ADMIN') {
-                            <span class="heart-badge">{{ item.quantity }}</span>
+                            <span class="heart-badge">{{ item.bookId }}</span>
                         }@else {
                             <button [ngClass]="{ active: isBookPresent(item.bookId) }" class="btn btn-link"
-                            (click)="onWishListClick(item)">
+                            (click)="onWishListClick(item.bookId)">
                             <i class="bi bi-heart-fill fa-2x mx-2" [ngClass]="'category-badge'"></i>
                         </button>
                         }
                         <!-- <span class="category-badge">{{item.author}}</span> -->
                         <div class="card-body">
                             <h2 class="card-title">{{ item.bookName | titlecase }}</h2>
-                            <h6 class="card-title">{{ item.author | titlecase }}</h6>
-                            <p class="product-price">{{ item.price | currency : "INR" }}</p>
+                            <h6 class="card-title">{{ item.bookAuthor| titlecase }}</h6>
+                            <p class="product-price">{{ item.bookPrice | currency : "INR" }}</p>
                             @if (currentUser.role=="ADMIN") {
                             <button class="add-to-cart-btn mx-2" (click)="onEditBook(item.bookId)">
                                 Update
@@ -50,6 +51,12 @@
     </div>
 </div>
 
+<mat-paginator [length]="100"
+              [pageSize]="10"
+              [pageSizeOptions]="[5, 10, 25, 100]"
+              aria-label="Select page">
+</mat-paginator>
+
 <div class="modal" tabindex="-1" #editBook>
     <div class="modal-dialog">
         <div class="modal-content">
@@ -62,12 +69,12 @@
                 <form [formGroup]="bookForm">
                     <div class="col-12">
                         <label for="">Book Name</label>
-                        <input type="text" formControlName="name" class="form-control" />
-                        @if(bookForm.controls["name"].dirty){
+                        <input type="text" formControlName="bookName" class="form-control" />
+                        @if(bookForm.controls["bookName"].dirty){
                         <div class="text-danger">
-                            @if (bookForm.controls["name"].errors?.['required']) {
+                            @if (bookForm.controls["bookName"].errors?.['required']) {
                             <span>This is Required</span>
-                            } @if (bookForm.controls["name"].errors?.['pattern']) {
+                            } @if (bookForm.controls["bookName"].errors?.['pattern']) {
                             <span>Min 3 Characters Required</span>
                             }
                         </div>
@@ -75,12 +82,12 @@
                     </div>
                     <div class="col-12">
                         <label for="">Book Author</label>
-                        <input type="text" formControlName="author" class="form-control" />
-                        @if(bookForm.controls["author"].dirty){
+                        <input type="text" formControlName="bookAuthor" class="form-control" />
+                        @if(bookForm.controls["bookAuthor"].dirty){
                         <div class="text-danger">
-                            @if (bookForm.controls["author"].errors?.['required']) {
+                            @if (bookForm.controls["bookAuthor"].errors?.['required']) {
                             <span>This is Required</span>
-                            } @if (bookForm.controls["author"].errors?.['pattern']) {
+                            } @if (bookForm.controls["bookAuthor"].errors?.['pattern']) {
                             <span>Min 5 Characters required</span>
                             }
                         </div>
@@ -88,12 +95,12 @@
                     </div>
                     <div class="col-12">
                         <label for="">Book Description</label>
-                        <input type="text" formControlName="description" class="form-control" />
-                        @if(bookForm.controls["description"].dirty){
+                        <input type="text" formControlName="bookDescription" class="form-control" />
+                        @if(bookForm.controls["bookDescription"].dirty){
                         <div class="text-danger">
-                            @if (bookForm.controls["description"].errors?.['required']) {
+                            @if (bookForm.controls["bookDescription"].errors?.['required']) {
                             <span>This is Required</span>
-                            } @if (bookForm.controls["description"].errors?.['pattern']) {
+                            } @if (bookForm.controls["bookDescription"].errors?.['pattern']) {
                             <span>Min 5 Characters Required</span>
                             }
                         </div>
@@ -101,12 +108,12 @@
                     </div>
                     <div class="col-12">
                         <label for="">Book Price</label>
-                        <input type="text" #price formControlName="price" class="form-control" />
-                        @if(bookForm.controls["price"].dirty){
+                        <input type="text" #price formControlName="bookPrice" class="form-control" />
+                        @if(bookForm.controls["bookPrice"].dirty){
                         <div class="text-danger">
-                            @if (bookForm.controls["price"].errors?.['pattern']) {
+                            @if (bookForm.controls["bookPrice"].errors?.['pattern']) {
                             <span>Only Numbers are Required</span>
-                            } @if (bookForm.controls["price"].errors?.['required']) {
+                            } @if (bookForm.controls["bookPrice"].errors?.['required']) {
                             <span>This is Required</span>
                             }
                         </div>
@@ -114,12 +121,12 @@
                     </div>
                     <div class="col-12">
                         <label for="">Book Quantity</label>
-                        <input type="tel" formControlName="quantity" class="form-control" />
-                        @if(bookForm.controls["quantity"].dirty){
+                        <input type="tel" formControlName="bookQuantity" class="form-control" />
+                        @if(bookForm.controls["bookQuantity"].dirty){
                         <div class="text-danger">
-                            @if (bookForm.controls["quantity"].errors?.['min']) {
+                            @if (bookForm.controls["bookQuantity"].errors?.['min']) {
                             <span>Min 16 books Required</span>
-                            } @if (bookForm.controls["quantity"].errors?.['required']) {
+                            } @if (bookForm.controls["bookQuantity"].errors?.['required']) {
                             <span>This is Required</span>
                             }
                         </div>

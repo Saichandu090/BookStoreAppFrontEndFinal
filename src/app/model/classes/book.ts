@@ -1,17 +1,19 @@
-export class Book{
-    name:string
-    author:string
-    description:string
-    price:number
-    quantity:number
-    bookLogo:string
+export class Book {
+  bookId: number
+  bookName: string
+  bookAuthor: string
+  bookDescription: string
+  bookPrice: number
+  bookQuantity: number
+  bookLogo: string
 
-    constructor(){
-        this.name='',
-        this.author='',
-        this.description='',
-        this.price=0,
-        this.quantity=0,
-        this.bookLogo=''
-    }
+  constructor() {
+    this.bookId = 0,
+      this.bookName = '',
+      this.bookAuthor = '',
+      this.bookDescription = '',
+      this.bookPrice = 0,
+      this.bookQuantity = 0,
+      this.bookLogo = ''
+  }
 }

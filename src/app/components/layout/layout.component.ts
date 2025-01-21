@@ -1,5 +1,5 @@
 import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { IJsonResponse } from '../../model/interfaces/jsonresponse';
+import { BookResponse, IJsonResponse, ResponseStructure } from '../../model/interfaces/jsonresponse';
 import { Book } from '../../model/classes/book';
 import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
@@ -20,6 +20,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CartComponent } from '../cart/cart.component';
 import { UserEditComponent } from '../user-edit/user-edit.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AddBookComponent } from '../add-book/add-book.component';
 
 @Component({
   selector: 'app-layout',
@@ -47,7 +48,7 @@ export class LayoutComponent implements OnInit {
     if (user != null) {
       debugger;
       const pardedUser = JSON.parse(user);
-      this.currentUser = pardedUser[0];
+      this.currentUser = pardedUser;
       console.log(this.currentUser.email)
       console.log(this.currentUser.role)
     }
@@ -83,16 +84,11 @@ export class LayoutComponent implements OnInit {
   //====================================//
 
   openAddBook() {
-    if (this.addBook) {
-      this.addBook.nativeElement.style.display = "block"
-    }
-  }
-
-  closeAddBookModel() {
-    if (this.addBook) {
-      this.bookForm.reset()
-      this.addBook.nativeElement.style.display = "none"
-    }
+    this.dialog.open(AddBookComponent, {
+      panelClass: 'right-dialog-container',
+      width: '400px',
+      height:'500px'
+    })
   }
 
   book: Book = new Book();
@@ -100,34 +96,14 @@ export class LayoutComponent implements OnInit {
   fb: FormBuilder = inject(FormBuilder);
 
   bookForm = this.fb.group({
-    name: new FormControl('', [Validators.required, Validators.pattern("^[a-zA-Z ]{3,}$")]),
-    author: new FormControl('', [Validators.required, Validators.pattern("^[a-zA-Z ]{5,}$")]),
-    description: new FormControl('', [Validators.required, Validators.pattern("^[a-zA-Z ]{5,}$")]),
-    price: new FormControl('', [Validators.required, Validators.pattern("^[0-9.]+$")]),
-    quantity: new FormControl('', [Validators.required, Validators.min(16)]),
+    bookId: new FormControl('', [Validators.required]),
+    bookName: new FormControl('', [Validators.required, Validators.pattern("^[a-zA-Z ]{3,}$")]),
+    bookAuthor: new FormControl('', [Validators.required, Validators.pattern("^[a-zA-Z ]{5,}$")]),
+    bookDescription: new FormControl('', [Validators.required, Validators.pattern("^[a-zA-Z ]{5,}$")]),
+    bookPrice: new FormControl('', [Validators.required, Validators.pattern("^[0-9.]+$")]),
+    bookQuantity: new FormControl('', [Validators.required, Validators.min(16)]),
     bookLogo: new FormControl('', [Validators.required])
   })
-
-  addNewBook() {
-
-    if (this.bookForm.invalid) {
-      this.snackbar.open("Please fill the form to submit", '', { duration: 3000 })
-    } else {
-      this.book = Object.assign(new Book(), this.bookForm.value);
-      console.log(this.book)
-      this.bookService.addNewBook(this.book).subscribe((res: IJsonResponse) => {
-        if (res.result) {
-          console.log(res.message)
-          this.snackbar.open("Book added Successfully", '', { duration: 3000 })
-          this.bookService.onBookChanged.next(true);
-          this.closeAddBookModel();
-        }
-      })
-    }
-  }
-
-  subscriptionList: Subscription[] = [];
-
 
   //=============================================//
 
@@ -153,7 +129,6 @@ export class LayoutComponent implements OnInit {
     this.dialog.open(UserEditComponent, {
       panelClass: 'right-dialog-container',
       width: '400px',
-      //height: '500px'
     })
   }
 }

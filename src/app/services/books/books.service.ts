@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { IBookResponse } from '../../model/interfaces/books';
-import { IJsonResponse } from '../../model/interfaces/jsonresponse';
+import { BookResponse, IJsonResponse, ResponseStructure } from '../../model/interfaces/jsonresponse';
 import { Constant } from '../../constants/constant';
 import { Book } from '../../model/classes/book';
 
@@ -11,7 +11,7 @@ import { Book } from '../../model/classes/book';
 })
 export class BooksService {
 
-  private baseURL:string="http://localhost:8080/books/";
+  private baseURL:string="http://localhost:8080/book/";
 
   private http:HttpClient=inject(HttpClient);
 
@@ -26,40 +26,28 @@ export class BooksService {
     return headers;
   }
 
-  getAllBooks():Observable<IJsonResponse>{
+  addNewBook(obj:Book):Observable<ResponseStructure<BookResponse>>{
     const headers=this.getHeaders();
-    return this.http.get<IJsonResponse>(this.baseURL+"allBooks",{ headers })
+    return this.http.post<ResponseStructure<BookResponse>>(this.baseURL+'addBook',obj,{headers})
   }
 
-  sortByBookPriceASC():Observable<IJsonResponse>{
+  getAllBooks():Observable<ResponseStructure<BookResponse[]>>{
     const headers=this.getHeaders();
-    return this.http.get<IJsonResponse>(this.baseURL+"sortByBookPriceASC",{ headers })
+    return this.http.get<ResponseStructure<BookResponse[]>>(this.baseURL+"getBooks",{ headers })
   }
 
-  sortByBookNameASC():Observable<IJsonResponse>{
+  getBookById(id:number):Observable<ResponseStructure<BookResponse>>{
     const headers=this.getHeaders();
-    return this.http.get<IJsonResponse>(this.baseURL+"sortByBookNameASC",{ headers })
+    return this.http.get<ResponseStructure<BookResponse>>(`${this.baseURL}getBookById/${id}`,{headers})
   }
 
-
-  addNewBook(obj:Book):Observable<IJsonResponse>{
+  updateBook(bookId:number,obj:Book):Observable<ResponseStructure<BookResponse>>{
     const headers=this.getHeaders();
-    return this.http.post<IJsonResponse>(this.baseURL+'addBook',obj,{headers})
+    return this.http.put<ResponseStructure<BookResponse>>(`${this.baseURL}updateBook/${bookId}`,obj,{headers})
   }
 
-  deleteBook(id:number):Observable<IJsonResponse>{
+  deleteBook(bookId:number):Observable<ResponseStructure<string>>{
     const headers=this.getHeaders();
-    return this.http.delete<IJsonResponse>(`${this.baseURL}deleteBook/${id}`,{headers})
+    return this.http.delete<ResponseStructure<string>>(`${this.baseURL}deleteBook/${bookId}`,{headers})
   }
-
-  updateBook(id:number,obj:Book):Observable<IJsonResponse>{
-    const headers=this.getHeaders();
-    return this.http.put<IJsonResponse>(`${this.baseURL}updateBook/${id}`,obj,{headers})
-  }
-
-  getBookById(id:number):Observable<IJsonResponse>{
-    const headers=this.getHeaders();
-    return this.http.get<IJsonResponse>(`${this.baseURL}byBookId/${id}`,{headers})
-  }
-
 }

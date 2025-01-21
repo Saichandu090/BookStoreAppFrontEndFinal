@@ -1,6 +1,6 @@
 .product-card {
     border: 2px solid #d6dc1b; /* Blue border highlight */
-    border-radius: 7px;
+    border-radius: 5px;
     overflow: hidden;
     transition: transform 0.2s, box-shadow 0.2s;
 }
@@ -8,6 +8,10 @@
 .product-card:hover {
     transform: scale(1.03); /* Slightly enlarge on hover */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+}
+
+.card-title{
+  font-size: medium;
 }
 
 .product-image {

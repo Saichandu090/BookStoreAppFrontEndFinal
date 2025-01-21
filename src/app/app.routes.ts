@@ -1,6 +1,4 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './components/login/login.component';
-import { RegisterComponent } from './components/register/register.component';
 import { HomepageComponent } from './components/homepage/homepage.component';
 import { loginGuard } from './guards/login.guard';
 import { AdminRegisterComponent } from './components/admin-register/admin-register.component';
@@ -8,6 +6,7 @@ import { LayoutComponent } from './components/layout/layout.component';
 import { CreateOrderComponent } from './components/create-order/create-order.component';
 import { OrdersComponent } from './components/orders/orders.component';
 import { WishListComponent } from './components/wish-list/wish-list.component';
+import { UserLoginComponent } from './components/user-login/user-login.component';
 
 export const routes: Routes = [
     {
@@ -17,11 +16,7 @@ export const routes: Routes = [
     },
     {
         path: "login",
-        component: LoginComponent
-    },
-    {
-        path: "register",
-        component: RegisterComponent
+        component: UserLoginComponent
     },
     {
         path:"adminRegister",

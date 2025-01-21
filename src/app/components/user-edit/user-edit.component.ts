@@ -66,7 +66,7 @@ export class UserEditComponent implements OnInit {
     this.loginService.getUser(this.currentUser.email).subscribe({
       next: (res: IJsonResponse) => {
         if (res.result) {
-          this.userEdit = res.data[0]
+          this.userEdit = res.data
 
           this.registerForm.patchValue({
             firstName: this.userEdit.firstName,
