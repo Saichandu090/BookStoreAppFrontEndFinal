@@ -1,9 +1,11 @@
+import { WishListResponse } from './../../model/interfaces/jsonresponse';
+import { WishListReq } from './../../model/classes/cart';
 import { Component, inject, OnInit } from '@angular/core';
 import { IBookResponse } from '../../model/interfaces/books';
-import { IJsonResponse } from '../../model/interfaces/jsonresponse';
+import { BookResponse, IJsonResponse, ResponseStructure } from '../../model/interfaces/jsonresponse';
 import { WishlistService } from '../../services/wishList/wishlist.service';
 import { CommonModule } from '@angular/common';
-import { Cart, WishListReq } from '../../model/classes/cart';
+import { Cart } from '../../model/classes/cart';
 import { ICart } from '../../model/interfaces/cart';
 import { CartService } from '../../services/cart/cart.service';
 import { BooksService } from '../../services/books/books.service';
@@ -19,7 +21,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class WishListComponent implements OnInit {
 
-  wishListBooks: IBookResponse[] = [];
+  wishListBooks: WishListResponse[] = [];
+
+  books:BookResponse[]=[];
+
+  private snackBar:MatSnackBar=inject(MatSnackBar);
 
   bookService: BooksService = inject(BooksService);
 
@@ -29,13 +35,15 @@ export class WishListComponent implements OnInit {
   wishListService: WishlistService = inject(WishlistService);
 
   getWishListBooks() {
-    this.wishListService.getWishList().subscribe((res: IJsonResponse) => {
-      if (res.result) {
-        this.wishListBooks = res.data
-        console.log(this.wishListBooks)
-      }
+    this.wishListService.getWishList().subscribe({
+      next:(response: ResponseStructure<WishListResponse[]>) => {
+        if (response.status===200) {
+          this.wishListBooks = response.data;
+          this.getBooks(this.wishListBooks);
+        }
+    }
     })
-  } // end of getWishListBooks
+  }; // end of getWishListBooks
 
   isBookPresent(id: number): boolean {
     const index = this.wishListBooks.findIndex(item => item.bookId === id);
@@ -47,34 +55,55 @@ export class WishListComponent implements OnInit {
 
   wishList: WishListReq = new WishListReq();
 
-  onWishListClick(book: IBookResponse) {
-    this.wishList.bookId = book.bookId;
-
-    this.wishListService.isInWishList(book.bookId).subscribe((res: IJsonResponse) => {
-      if (res.result) {
-        this.removeFromWishList(book.bookId);
-      } else {
-        this.addToWishList(this.wishList);
-      }
-    })
+  onWishListClick(bookId: number) {
+    this.wishList.bookId=bookId;
+    this.wishListService.isInWishList(bookId).subscribe({
+          next: (response: ResponseStructure<Boolean>) => {
+            if (response.data) {
+              this.removeFromWishList(this.wishList);
+            } else {
+              this.addToWishList(this.wishList);
+            }
+          }
+        })
   }// end of onWishListClick
 
-
-  removeFromWishList(bookId: number) {
-    this.wishListService.removeFromWishList(bookId).subscribe((res: IJsonResponse) => {
-      if (res.result) {
-        this.snackbar.open(res.message, '', { duration: 3000 });
-        this.wishListService.onWishListChanged.next(true);
+  getBooks(wishList:WishListResponse[]):void{
+    wishList.forEach(item=>this.bookService.getBookById(item.bookId).subscribe({
+      next:(response:ResponseStructure<BookResponse>)=>{
+        if(response.status===200){
+          this.books.push(response.data);
+        }
       }
-    })
+    }))
+  }
+
+
+  removeFromWishList(wishList: WishListReq) {
+    this.wishListService.addToWishList(wishList).subscribe({
+          next: (response: ResponseStructure<WishListResponse>) => {
+            if (response.status===200) {
+              this.snackBar.open(response.message, '', { duration: 3000 });
+              this.wishListService.onWishListChanged.next(true);
+            }
+          },
+          error:(error:ResponseStructure<WishListResponse>)=>{
+            this.snackBar.open(error.message,'',{duration:3000});
+          }
+        })
   }// end of removeFromWishList
 
 
   addToWishList(wishList: WishListReq) {
-    this.wishListService.addToWishList(wishList).subscribe((res: IJsonResponse) => {
-      if (res.result) {
-        this.snackbar.open(res.message, '', { duration: 3000 });
-        this.wishListService.onWishListChanged.next(true);
+    this.wishListService.addToWishList(wishList).subscribe({
+      next: (response: ResponseStructure<WishListResponse>) => {
+        if (response.status === 201) {
+          this.snackBar.open(response.message, '', { duration: 3000 });
+          this.wishListService.onWishListChanged.next(true);
+        }
+      },
+      error: (error: ResponseStructure<WishListResponse>) => {
+        this.snackBar.open(error.message, '', { duration: 3000 });
       }
     })
   } // end of addToWishList
@@ -116,10 +145,11 @@ export class WishListComponent implements OnInit {
   }// end of onAddToCart
 
   ngOnInit(): void {
+    this.wishListBooks=[];
     this.getWishListBooks();
-
     this.wishListService.onWishListChanged.subscribe((res: boolean) => {
       if (res) {
+        this.wishListBooks=[];
         this.getWishListBooks();
       }
     })

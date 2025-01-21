@@ -4,7 +4,7 @@ import { Book } from "./book"
 export class Cart{
     bookId:number
     quantity:number
-    
+
     constructor(){
         this.bookId=0,
         this.quantity=1
@@ -33,7 +33,6 @@ export class Address{
 
 export class WishListReq{
     bookId:number
-
     constructor(){
         this.bookId=0
     }

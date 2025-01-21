@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { IJsonResponse } from '../../model/interfaces/jsonresponse';
+import { IJsonResponse, ResponseStructure, WishListResponse } from '../../model/interfaces/jsonresponse';
 import { Constant } from '../../constants/constant';
 import { IBookResponse } from '../../model/interfaces/books';
 import { WishListReq } from '../../model/classes/cart';
@@ -11,7 +11,7 @@ import { WishListReq } from '../../model/classes/cart';
 })
 export class WishlistService {
 
-  private baseURL: string = "http://localhost:8080/wishList/";
+  private baseURL: string = "http://localhost:8080/wishlist/";
 
   private http: HttpClient = inject(HttpClient);
 
@@ -26,23 +26,18 @@ export class WishlistService {
     return headers;
   }
 
-  addToWishList(book: WishListReq): Observable<IJsonResponse> {
+  addToWishList(book: WishListReq): Observable<ResponseStructure<WishListResponse>> {
     const headers=this.getHeaders();
-    return this.http.post<IJsonResponse>(this.baseURL + "addToWishList", book, { headers })
+    return this.http.post<ResponseStructure<WishListResponse>>(this.baseURL + "addToWishList", book, { headers })
   }
 
-  removeFromWishList(bookId: number): Observable<IJsonResponse> {
+  getWishList(): Observable<ResponseStructure<WishListResponse[]>> {
     const headers=this.getHeaders();
-    return this.http.delete<IJsonResponse>(`${this.baseURL}removeFromWishList/${bookId}`, { headers })
+    return this.http.get<ResponseStructure<WishListResponse[]>>(`${this.baseURL}getWishList`, { headers })
   }
 
-  getWishList(): Observable<IJsonResponse> {
+  isInWishList(bookId: number): Observable<ResponseStructure<Boolean>> {
     const headers=this.getHeaders();
-    return this.http.get<IJsonResponse>(`${this.baseURL}getWishList`, { headers })
-  }
-
-  isInWishList(bookId: number): Observable<IJsonResponse> {
-    const headers=this.getHeaders();
-    return this.http.get<IJsonResponse>(`${this.baseURL}isInWishList/${bookId}`,{headers})
+    return this.http.get<ResponseStructure<Boolean>>(`${this.baseURL}isInWishList/${bookId}`,{headers})
   }
 }

@@ -21,6 +21,11 @@ export interface RegisterResponse {
   role: string;
 }
 
+export interface WishListResponse{
+  wishListId:number,
+  bookId:number
+}
+
 export interface BookResponse{
   bookId:number,
   bookName:string,
