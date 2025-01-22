@@ -2,11 +2,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Cart } from '../../model/classes/cart';
 import { Observable, Subject } from 'rxjs';
-import { IJsonResponse } from '../../model/interfaces/jsonresponse';
+import { IJsonResponse, ResponseStructure } from '../../model/interfaces/jsonresponse';
 import { Constant } from '../../constants/constant';
 import { Book } from '../../model/classes/book';
 import { IBookResponse } from '../../model/interfaces/books';
 import { ToastrService } from 'ngx-toastr';
+import { CartResponse } from '../../model/interfaces/cart';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +15,6 @@ import { ToastrService } from 'ngx-toastr';
 export class CartService {
 
   private baseURL: string = 'http://localhost:8080/cart/';
-
-  private wishListItems: IBookResponse[] = [];
 
   private http: HttpClient = inject(HttpClient);
 
@@ -32,14 +31,19 @@ export class CartService {
     return headers;
   }
 
-  addToCart(obj: Cart): Observable<IJsonResponse> {
+  addBookToCart(cartObj: Cart): Observable<ResponseStructure<CartResponse>> {
     const headers=this.getHeaders();
-    return this.http.post<IJsonResponse>(this.baseURL + 'addToCart', obj, { headers })
+    return this.http.post<ResponseStructure<CartResponse>>(this.baseURL + 'addToCart', cartObj, { headers })
   }
 
-  getUserCart(): Observable<IJsonResponse> {
+  removeBookFromCart(cartId: number): Observable<IJsonResponse> {
     const headers=this.getHeaders();
-    return this.http.get<IJsonResponse>(this.baseURL + 'getCart', { headers })
+    return this.http.delete<IJsonResponse>(`${this.baseURL}removeFromCart/${cartId}`, { headers })
+  }
+
+  getUserCart(): Observable<ResponseStructure<CartResponse[]>> {
+    const headers=this.getHeaders();
+    return this.http.get<ResponseStructure<CartResponse[]>>(this.baseURL + 'getCart', { headers })
   }
 
 
@@ -48,8 +52,5 @@ export class CartService {
     return this.http.get<IJsonResponse>(`${this.baseURL}getCartById/${cartId}`, { headers })
   }
 
-  removeCart(cartId: number): Observable<IJsonResponse> {
-    const headers=this.getHeaders();
-    return this.http.delete<IJsonResponse>(`${this.baseURL}removeFromCart/${cartId}`, { headers })
-  }
+
 }

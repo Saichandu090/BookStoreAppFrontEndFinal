@@ -3,11 +3,9 @@ import { Book } from "./book"
 
 export class Cart{
     bookId:number
-    quantity:number
 
     constructor(){
-        this.bookId=0,
-        this.quantity=1
+        this.bookId=0
     }
 }
 

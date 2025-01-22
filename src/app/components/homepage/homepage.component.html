@@ -12,7 +12,7 @@
       </mat-menu>
     </div>
     <div class="col-12">
-      <div class="row mt-3">
+      <div class="row">
         @for (item of bookList; track $index) {
         <div class="col-3 mt-3">
           <div class="card product-card">
@@ -21,7 +21,7 @@
             <span class="heart-badge">{{ item.bookQuantity }}</span>
             }@else {
             <button [ngClass]="{ active: isBookPresent(item.bookId) }" class="btn btn-link"
-              (click)="onWishListClick(item.bookId)">
+              (click)="addToWishList(item.bookId)">
               <i class="bi bi-heart-fill fa-2x mx-2" [ngClass]="'category-badge'"></i>
             </button>
             }

@@ -11,7 +11,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <!-- Navbar brand -->
       <i class="bi bi-book fa-2x mx-2"></i>
-      <a class="navbar-brand mt-2 mt-lg-0" routerLink="/homepage">
+      <a class="title" routerLink="/homepage">
         Book Store Application
       </a>
 
@@ -19,7 +19,7 @@
 
     <div class="d-flex align-items-center">
       @if (currentUser.email!='') {
-      <button class="btn btn-info btn-sm mx-2">{{currentUser.email}}</button>
+        <button mat-menu-item> <span><b>Hello, {{ currentUser.email }}</b></span> </button>
       <!-- Icon -->
       @if (currentUser.role=='USER') {
       <button mat-button [matMenuTriggerFor]="menu">Options</button>

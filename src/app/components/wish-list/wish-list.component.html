@@ -7,7 +7,7 @@
           <div class="card product-card">
             <img [src]="item.bookLogo" class="card-img-top product-image" alt="Product Image" />
             <button [ngClass]="{ active: isBookPresent(item.bookId) }" class="btn btn-link"
-              (click)="onWishListClick(item.bookId)">
+              (click)="addToWishList(item.bookId)">
               <i class="bi bi-heart-fill fa-2x mx-2" [ngClass]="'category-badge'"></i>
             </button>
             <div class="card-body">

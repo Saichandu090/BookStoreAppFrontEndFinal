@@ -9,7 +9,7 @@ import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angu
 import { Book } from '../../model/classes/book';
 import { Cart, WishListReq } from '../../model/classes/cart';
 import { CartService } from '../../services/cart/cart.service';
-import { ICart } from '../../model/interfaces/cart';
+import { CartResponse } from '../../model/interfaces/cart';
 import { WishlistService } from '../../services/wishList/wishlist.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
@@ -163,79 +163,43 @@ export class HomepageComponent implements OnInit {
 
   cartObj: Cart = new Cart();
 
-  cartRes: ICart = {
-    cartId: 0,
-    userId: 0,
-    bookLogo: '',
-    bookName: '',
-    quantity: 0,
-    totalPrice: 0
-  }
-
   cartService: CartService = inject(CartService);
 
   onAddToCart(id: number): void {
     this.cartObj.bookId = id;
-    this.cartService.addToCart(this.cartObj).subscribe({
-      next: (res: IJsonResponse) => {
-        if (res.result) {
-          this.cartRes = res.data;
-          this.snackBar.open(res.message, '', { duration: 3000 });
+    this.cartService.addBookToCart(this.cartObj).subscribe({
+      next: (response: ResponseStructure<CartResponse>) => {
+        if (response.status===200) {
+          this.snackBar.open(response.message, '', { duration: 3000 });
           this.cartService.onCartCalled.next(true);
-        } else {
-          this.snackBar.open(res.message, '', { duration: 3000 })
+        }
+        else if(response.status===209){
+          this.snackBar.open(response.message);
         }
       },
-      error: (err) => {
-        console.error("Error from backend:", err);
-        const message = err.error?.message || "Something went wrong!";
-        this.snackBar.open(message, '', { duration: 3000 });
+      error: (error: ResponseStructure<CartResponse>) => {
+        this.snackBar.open(error.message, '', { duration: 3000 });
       }
-    }
-    )
-  }
+    })
+  };
 
   //==================================//
 
   wishListService: WishlistService = inject(WishlistService);
 
-  wishList: WishListReq = new WishListReq();
+  wishListObj: WishListReq = new WishListReq();
 
   wishListBooks: WishListResponse[] = [];
 
-  onWishListClick(bookId: number): void {
-    this.wishList.bookId = bookId;
-    this.wishListService.isInWishList(bookId).subscribe({
-      next: (response: ResponseStructure<Boolean>) => {
-        if (response.data) {
-          this.removeFromWishList(this.wishList);
-        } else {
-          this.addToWishList(this.wishList);
-        }
-      }
-    })
-  }// end of onWishListClick
-
-
-  removeFromWishList(wishList: WishListReq): void {
-    this.wishListService.addToWishList(wishList).subscribe({
+  addToWishList(bookId: number): void {
+    this.wishListObj.bookId=bookId;
+    this.wishListService.addToWishList(this.wishListObj).subscribe({
       next: (response: ResponseStructure<WishListResponse>) => {
-        if (response.status===200) {
+        if (response.status === 201) {
           this.snackBar.open(response.message, '', { duration: 3000 });
           this.wishListService.onWishListChanged.next(true);
         }
-      },
-      error:(error:ResponseStructure<WishListResponse>)=>{
-        this.snackBar.open(error.message,'',{duration:3000});
-      }
-    })
-  }// end of removeFromWishList
-
-
-  addToWishList(wishList: WishListReq): void {
-    this.wishListService.addToWishList(wishList).subscribe({
-      next: (response: ResponseStructure<WishListResponse>) => {
-        if (response.status === 201) {
+        else if (response.status === 200) {
           this.snackBar.open(response.message, '', { duration: 3000 });
           this.wishListService.onWishListChanged.next(true);
         }
@@ -251,8 +215,7 @@ export class HomepageComponent implements OnInit {
     this.wishListService.getWishList().subscribe({
       next:(response: ResponseStructure<WishListResponse[]>) => {
         if (response.status===200) {
-          this.wishListBooks = response.data
-          console.log(this.wishListBooks)
+          this.wishListBooks = response.data;
         }
     }
     })

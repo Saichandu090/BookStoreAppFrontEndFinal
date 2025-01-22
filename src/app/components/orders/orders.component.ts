@@ -7,12 +7,11 @@ import { MessageService } from 'primeng/api';
 import { OrderRes } from '../../model/classes/order';
 import { OrderService } from '../../services/order/order.service';
 import { IJsonResponse } from '../../model/interfaces/jsonresponse';
-import { Toast, ToastrService } from 'ngx-toastr';
-import { ICart } from '../../model/interfaces/cart';
 import {MatTableModule} from '@angular/material/table';
 import {MatButtonModule} from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { CartD } from '../../model/interfaces/cart';
 
 
 @Component({
@@ -32,7 +31,7 @@ export class OrdersComponent implements OnInit{
 
   orderList:OrderRes[]=[];
 
-  carts:ICart[]=[];
+  carts:CartD[]=[];
 
   snackbar:MatSnackBar=inject(MatSnackBar);
   //toaster=inject(ToastrService);

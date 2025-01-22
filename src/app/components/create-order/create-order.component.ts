@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IAddress, ICart } from '../../model/interfaces/cart';
+import { CartD, CartResponse, IAddress } from '../../model/interfaces/cart';
 import { CartService } from '../../services/cart/cart.service';
-import { IJsonResponse } from '../../model/interfaces/jsonresponse';
+import { BookResponse, IJsonResponse, ResponseStructure } from '../../model/interfaces/jsonresponse';
 import { AddressService } from '../../services/address/address.service';
-import { Address } from '../../model/classes/cart';
+import { Address, Cart } from '../../model/classes/cart';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -31,13 +31,33 @@ export class CreateOrderComponent implements OnInit {
 
   private bookService = inject(BooksService);
 
-  cartData: ICart[] = [];
+  private snackBar:MatSnackBar=inject(MatSnackBar);
 
-  onRemoveCart(cartId: number) {
-    const rs = confirm("Do you want to remove this item from the cart ?");
-    if (rs) {
+  cartData: CartD[] = [];
+
+  cartObj:Cart=new Cart();
+
+  onAddToCart(bookId:number):void{
+    this.cartObj.bookId = bookId;
+    this.cartService.addBookToCart(this.cartObj).subscribe({
+      next: (response: ResponseStructure<CartResponse>) => {
+        if (response.status===200) {
+          this.snackBar.open(response.message, '', { duration: 3000 });
+          this.cartService.onCartCalled.next(true);
+        }
+        else if(response.status===209){
+          this.snackBar.open(response.message,'',{duration:3000});
+        }
+      },
+      error: (error: ResponseStructure<CartResponse>) => {
+        this.snackBar.open(error.message, '', { duration: 3000 });
+      }
+    })
+  };
+
+  onRemoveFromCart(cartId: number) {
       this.getCart(cartId);
-      this.cartService.removeCart(cartId).subscribe((res: IJsonResponse) => {
+      this.cartService.removeBookFromCart(cartId).subscribe((res: IJsonResponse) => {
         if (res.result) {
           this.snackbar.open(res.message, '', { duration: 3000 })
           this.cartService.onCartCalled.next(true);
@@ -45,41 +65,62 @@ export class CreateOrderComponent implements OnInit {
         }
       })
     }
-  }
 
   getCart(cartId: number) {
     this.cartService.getUserCartById(cartId).subscribe((res: IJsonResponse) => {
       if (res.result) {
-        this.cartObj = res.data[0]
-        console.log(this.cartObj)
+        //this.cartObj = res.data[0]
       }
     })
-  }
-
-  cartObj: ICart = {
-    userId: 0,
-    cartId: 0,
-    bookName: '',
-    quantity: 0,
-    bookLogo: '',
-    totalPrice: 0
   }
 
   totalQuantity: number = 0;
   totalPrice: number = 0;
 
-  getUserCart() {
-    this.cartService.getUserCart().subscribe((res: IJsonResponse) => {
-      if (res.result) {
-        this.cartData = res.data;
-        this.totalPrice = 0;
-        this.totalQuantity = 0;
-        this.cartData.forEach(element => {
-          this.totalPrice = element.totalPrice + this.totalPrice;
-          this.totalQuantity = element.quantity + this.totalQuantity;
+  loadCart(cartResponse:CartResponse[]){
+    cartResponse.sort((a, b) => a.cartId - b.cartId);
+    cartResponse.forEach(item => {
+      const existingCartItem = this.cartData.find(cart => cart.cartId === item.cartId);
+
+      if (existingCartItem) {
+        existingCartItem.quantity = item.cartQuantity;
+        existingCartItem.totalPrice = item.cartQuantity * existingCartItem.bookPrice;
+      } else {
+        this.bookService.getBookById(item.bookId).subscribe({
+          next: (response: ResponseStructure<BookResponse>) => {
+            if (response.status === 200) {
+              const newCart = new CartD();
+              newCart.cartId = item.cartId;
+              newCart.bookPrice = response.data.bookPrice;
+              newCart.quantity = item.cartQuantity;
+              newCart.bookName = response.data.bookName;
+              newCart.bookId = response.data.bookId;
+              newCart.bookLogo = response.data.bookLogo;
+              newCart.totalPrice = item.cartQuantity * response.data.bookPrice;
+              this.cartData.push(newCart);
+            }
+          },
+          error: (error: ResponseStructure<BookResponse>) => {
+            this.snackbar.open(error.message);
+          }
         });
       }
-    })
+    });
+    };
+
+  getUserCart() {
+    this.cartService.getUserCart().subscribe({
+          next: (response: ResponseStructure<CartResponse[]>) => {
+            if (response.status===200) {
+              this.totalPrice=0;
+              this.totalQuantity=0;
+              this.loadCart(response.data);
+            }
+          },
+          error:(error:ResponseStructure<CartResponse[]>)=>{
+            this.snackbar.open(error.message,'',{duration:3000});
+          }
+        })
   }
 
   ngOnInit(): void {
@@ -97,7 +138,7 @@ export class CreateOrderComponent implements OnInit {
     })
   }
 
-  //===================================================//
+
 
   @ViewChild("addAddress") addAddress: ElementRef | undefined;
 
@@ -136,7 +177,7 @@ export class CreateOrderComponent implements OnInit {
 
   address = new Address();
 
-  //toaster = inject(ToastrService);
+
 
   addNewAddress() {
     this.address = Object.assign(new Address(), this.newAddress.value);
@@ -151,7 +192,7 @@ export class CreateOrderComponent implements OnInit {
   }
 
 
-  //=====================================//
+
 
 
   @ViewChild("editAddress") editAddress: ElementRef | undefined;
@@ -229,7 +270,7 @@ export class CreateOrderComponent implements OnInit {
     }
   }
 
-  //===================================================//
+
 
   addressControl = new FormControl('', [Validators.required]);
 
@@ -269,10 +310,5 @@ export class CreateOrderComponent implements OnInit {
         })
       }
     }
-  }// onPlaceOrder ending
-
-
-
-
-
+  };// onPlaceOrder ending
 }
