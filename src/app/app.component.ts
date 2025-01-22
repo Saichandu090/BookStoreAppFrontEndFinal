@@ -1,6 +1,5 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
-import { Constant } from './constants/constant';
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -9,27 +8,6 @@ import { Constant } from './constants/constant';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit{
+export class AppComponent{
 
-  userEmail:string='';
-
-  router=inject(Router);
-
-  getUserMail(){
-    const userName=localStorage.getItem("UserName");
-    if(userName!=null){
-      this.userEmail=userName;
-    }
-  }
-
-  ngOnInit(): void {
-    this.getUserMail();
-  }
-
-  onLogOut(){
-    localStorage.removeItem(Constant.LOGIN_TOKEN);
-    localStorage.removeItem("UserName");
-    this.router.navigateByUrl("/login");
-  }
-  
 }

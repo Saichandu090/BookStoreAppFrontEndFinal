@@ -1,13 +1,12 @@
-import { Component, ElementRef, inject, OnInit, viewChild, ViewChild } from '@angular/core';
-import { IBookResponse } from '../../model/interfaces/books';
+import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { BooksService } from '../../services/books/books.service';
-import { BookResponse, IJsonResponse, ResponseStructure, WishListResponse } from '../../model/interfaces/jsonresponse';
+import { BookResponse, ResponseStructure, WishListResponse } from '../../model/interfaces/jsonresponse';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { LoggedInUser } from '../../model/classes/user';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Book } from '../../model/classes/book';
-import { Cart, WishListReq } from '../../model/classes/cart';
+import { Cart, WishListRequest } from '../../model/classes/cart';
 import { CartService } from '../../services/cart/cart.service';
 import { CartResponse } from '../../model/interfaces/cart';
 import { WishlistService } from '../../services/wishList/wishlist.service';
@@ -187,7 +186,9 @@ export class HomepageComponent implements OnInit {
 
   wishListService: WishlistService = inject(WishlistService);
 
-  wishListObj: WishListReq = new WishListReq();
+  wishListObj: WishListRequest={
+    bookId:0,
+  };
 
   wishListBooks: WishListResponse[] = [];
 

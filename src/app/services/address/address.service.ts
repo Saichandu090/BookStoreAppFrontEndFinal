@@ -1,9 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { IAddress } from '../../model/interfaces/cart';
 import { Observable, Subject } from 'rxjs';
 import { AddressResponse, ResponseStructure } from '../../model/interfaces/jsonresponse';
-import { Constant } from '../../constants/constant';
+import { APP_CONSTANTS } from '../../constants/constant';
 import { AddressRequest } from '../../model/classes/cart';
 
 @Injectable({
@@ -18,7 +17,7 @@ export class AddressService {
   onAddressChange:Subject<boolean>=new Subject<boolean>();
 
   getHeaders():HttpHeaders{
-    let token = localStorage.getItem(Constant.LOGIN_TOKEN);
+    let token = localStorage.getItem(APP_CONSTANTS.LOGIN_TOKEN);
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
@@ -33,12 +32,12 @@ export class AddressService {
 
   getAllAddress(): Observable<ResponseStructure<AddressResponse[]>> {
     const headers=this.getHeaders();
-    return this.http.get<ResponseStructure<AddressResponse[]>>(this.baseURL + 'allAddress', { headers });
+    return this.http.get<ResponseStructure<AddressResponse[]>>(this.baseURL + 'getAllAddress', { headers });
   }
 
   getAddressById(addressId:number): Observable<ResponseStructure<AddressResponse>> {
     const headers=this.getHeaders();
-    return this.http.get<ResponseStructure<AddressResponse>>(`${this.baseURL}getAddressById/${addressId}`, { headers });
+    return this.http.get<ResponseStructure<AddressResponse>>(`${this.baseURL}getAddress/${addressId}`, { headers });
   }
 
   deleteAddress(addressId: number): Observable<ResponseStructure<string>> {

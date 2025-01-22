@@ -1,12 +1,6 @@
 import { Book } from "../classes/book";
 import { AddressResponse } from "./jsonresponse";
 
-export interface IOrder{
-    quantity:number;
-    price:number;
-    addressId:number;
-}
-
 export class OrderRequest{
   addressId:number
 

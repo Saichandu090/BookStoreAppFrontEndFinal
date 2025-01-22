@@ -1,68 +1,74 @@
-import { ChangeDetectorRef, Component, inject, OnInit, ViewChild } from '@angular/core';
-import { Popover, PopoverModule } from 'primeng/popover';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { PopoverModule } from 'primeng/popover';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { MessageService } from 'primeng/api';
-import { OrderRes } from '../../model/classes/order';
 import { OrderService } from '../../services/order/order.service';
-import { IJsonResponse } from '../../model/interfaces/jsonresponse';
-import {MatTableModule} from '@angular/material/table';
-import {MatButtonModule} from '@angular/material/button';
+import { ResponseStructure } from '../../model/interfaces/jsonresponse';
+import { MatTableModule } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CartD } from '../../model/interfaces/cart';
+import { OrderResponse } from '../../model/interfaces/order';
 
 
 @Component({
   selector: 'app-orders',
   standalone: true,
-  imports: [PopoverModule, TableModule, ButtonModule, TagModule,MatTableModule,MatButtonModule,CommonModule],
+  imports: [PopoverModule, TableModule, ButtonModule, TagModule, MatTableModule, MatButtonModule, CommonModule],
   templateUrl: './orders.component.html',
   styleUrl: './orders.component.css',
   providers: [MessageService]
 })
-export class OrdersComponent implements OnInit{
+export class OrdersComponent implements OnInit {
 
-  private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
   private orderService = inject(OrderService);
 
-  displayedColumns: string[] = [ 'order-Id', 'quantity', 'price','status','action'];
+  displayedColumns: string[] = ['order-Id', 'quantity', 'price', 'status', 'action'];
 
-  orderList:OrderRes[]=[];
+  orderList: OrderResponse[] = [];
 
-  carts:CartD[]=[];
+  carts: CartD[] = [];
 
-  snackbar:MatSnackBar=inject(MatSnackBar);
-  //toaster=inject(ToastrService);
+  snackbar: MatSnackBar = inject(MatSnackBar);
 
-  getOrders(){
-    this.orderService.getOrders().subscribe((res:IJsonResponse)=>{
-      if(res.result){
-        this.orderList=res.data
-      }
-    })
-  }
-
-  cancelOrder(id:number){
-    const rs=confirm("Do you want to cancel the order ?");
-    if(rs){
-      this.orderService.cancelOrder(id).subscribe((res:IJsonResponse)=>{
-        if(res.result){
-          this.snackbar.open(res.message,'',{duration:3000});
-          this.orderService.onOrderChanged.next(true);
-        }else{
-          this.snackbar.open(res.message,'',{duration:3000});
+  getOrders():void {
+    this.orderService.getAllOrders().subscribe({
+      next: (response: ResponseStructure<OrderResponse[]>) => {
+        if (response.status === 200 && response.data) {
+          this.orderList = response.data
         }
-      })
+      },
+      error: (error: ResponseStructure<OrderResponse[]>) => {
+        this.snackbar.open(error.message, '', { duration: 3000 });
+      }
+    });
+  };
+
+  cancelOrder(orderId: number):void {
+    const rs = confirm("Do you want to cancel the order ?");
+    if (rs) {
+      this.orderService.cancelOrder(orderId).subscribe({
+        next: (response: ResponseStructure<OrderResponse>) => {
+          if (response.status === 200) {
+            this.snackbar.open(response.message, '', { duration: 3000 });
+            this.orderService.onOrderChanged.next(true);
+          }
+        },
+        error: (error: ResponseStructure<OrderResponse>) => {
+          this.snackbar.open(error.message, '', { duration: 3000 });
+        }
+      });
     }
-  }
+  };
 
 
   ngOnInit(): void {
     this.getOrders();
-    this.orderService.onOrderChanged.subscribe((res:boolean)=>{
-      if(res){
+    this.orderService.onOrderChanged.subscribe((res: boolean) => {
+      if (res) {
         this.getOrders();
       }
     })

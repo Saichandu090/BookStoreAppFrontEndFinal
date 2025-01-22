@@ -1,0 +1,27 @@
+<div class="confirmation-container">
+  <img src="assets/orderplaced.png" alt="orderPalced" class="img"/>
+  <div class="confirmation-content">
+    <h2>hurray!!! your order is confirmed</h2>
+    <p>
+      the order id is <strong>#{{ orderId }}</strong> save the order id for
+      further communication..
+    </p>
+
+    <table class="contact-table">
+      <tr>
+        <th>Email us</th>
+        <th>Contact us</th>
+        <th>Address</th>
+      </tr>
+      <tr>
+        <td>adminbookstore.com</td>
+        <td>+91 6301941367</td>
+        <td>{{ address }}</td>
+      </tr>
+    </table>
+
+    <button mat-button color="primary" (click)="continue()">
+      CONTINUE SHOPPING
+    </button>
+  </div>
+</div>

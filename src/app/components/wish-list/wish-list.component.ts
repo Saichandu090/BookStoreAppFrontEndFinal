@@ -1,10 +1,9 @@
 import { WishListResponse } from './../../model/interfaces/jsonresponse';
-import { WishListReq } from './../../model/classes/cart';
 import { Component, inject, OnInit } from '@angular/core';
 import { BookResponse, ResponseStructure } from '../../model/interfaces/jsonresponse';
 import { WishlistService } from '../../services/wishList/wishlist.service';
 import { CommonModule } from '@angular/common';
-import { Cart } from '../../model/classes/cart';
+import { Cart, WishListRequest } from '../../model/classes/cart';
 import { CartResponse } from '../../model/interfaces/cart';
 import { CartService } from '../../services/cart/cart.service';
 import { BooksService } from '../../services/books/books.service';
@@ -31,7 +30,9 @@ export class WishListComponent implements OnInit {
 
   wishListService: WishlistService = inject(WishlistService);
 
-  wishListObj: WishListReq = new WishListReq();
+  wishListObject: WishListRequest={
+    bookId:0
+  };
 
   getWishListBooks():void {
     this.wishListService.getWishList().subscribe({
@@ -67,8 +68,8 @@ export class WishListComponent implements OnInit {
 
 
   addToWishList(bookId: number):void {
-    this.wishListObj.bookId = bookId;
-    this.wishListService.addToWishList(this.wishListObj).subscribe({
+    this.wishListObject.bookId = bookId;
+    this.wishListService.addToWishList(this.wishListObject).subscribe({
       next: (response: ResponseStructure<WishListResponse>) => {
         if (response.status === 201) {
           this.snackBar.open(response.message, '', { duration: 3000 });

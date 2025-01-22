@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { ResponseStructure, WishListResponse } from '../../model/interfaces/jsonresponse';
-import { Constant } from '../../constants/constant';
+import { APP_CONSTANTS } from '../../constants/constant';
 import { WishListRequest } from '../../model/classes/cart';
 
 @Injectable({
@@ -17,7 +17,7 @@ export class WishlistService {
   onWishListChanged:Subject<boolean> =new Subject<boolean>();
 
   getHeaders():HttpHeaders{
-    let token = localStorage.getItem(Constant.LOGIN_TOKEN);
+    let token = localStorage.getItem(APP_CONSTANTS.LOGIN_TOKEN);
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',

@@ -20,15 +20,6 @@ export class CartD{
 }
 
 
-export interface IAddress{
-    addressId:number,
-    streetName:string,
-    city:string,
-    state:string,
-    pinCode:number,
-    userId:number;
-}
-
 export interface CartResponse{
   cartId:number,
   bookId:number,

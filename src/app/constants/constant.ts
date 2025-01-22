@@ -1,3 +1,3 @@
-export const Constant={
+export const APP_CONSTANTS={
     LOGIN_TOKEN:'appToken'
 }

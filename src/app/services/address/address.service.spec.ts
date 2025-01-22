@@ -135,7 +135,7 @@ describe('AddressService', () => {
       }
     });
 
-    const urlRequest = httpMock.expectOne(`${baseUrl}getAddressById/${addressId}`);
+    const urlRequest = httpMock.expectOne(`${baseUrl}getAddress/${addressId}`);
     expect(urlRequest.request.method).toBe('GET');
     expect(urlRequest.request.headers.get('Authorization')).toBe('Bearer mock-token');
     urlRequest.flush(mockAddressResponse);
@@ -165,7 +165,7 @@ describe('AddressService', () => {
       }
     });
 
-    const urlRequest = httpMock.expectOne(`${baseUrl}getAddressById/${addressId}`);
+    const urlRequest = httpMock.expectOne(`${baseUrl}getAddress/${addressId}`);
     expect(urlRequest.request.method).toBe('GET');
     expect(urlRequest.request.headers.get('Authorization')).toBe('Bearer mock-token');
     urlRequest.flush(mockAddressResponse);
@@ -214,7 +214,7 @@ describe('AddressService', () => {
       }
     });
 
-    const urlRequest = httpMock.expectOne(`${baseUrl}allAddress`);
+    const urlRequest = httpMock.expectOne(`${baseUrl}getAllAddress`);
     expect(urlRequest.request.method).toBe('GET');
     expect(urlRequest.request.headers.get('Authorization')).toBe('Bearer mock-token');
     urlRequest.flush(mockAddressResponse);
@@ -244,7 +244,7 @@ describe('AddressService', () => {
       }
     });
 
-    const urlRequest = httpMock.expectOne(`${baseUrl}allAddress`);
+    const urlRequest = httpMock.expectOne(`${baseUrl}getAllAddress`);
     expect(urlRequest.request.method).toBe('GET');
     expect(urlRequest.request.headers.get('Authorization')).toBe('Bearer mock-token');
     urlRequest.flush(mockAddressResponse);

@@ -1,0 +1,58 @@
+<mat-dialog-content>
+  <div class="parent">
+      <div class="bgc-center">
+          <div class="container">
+            <form [formGroup]="newAddress">
+              <div class="col-12">
+                <label for="">Street Address</label>
+                <input type="text" formControlName="streetName" class="form-control">
+                @if(newAddress.controls["streetName"].touched){
+                <div class="text-danger">
+                  @if (newAddress.controls["streetName"].errors?.['required']) {
+                  <span>This is Required</span>
+                  }
+                </div>
+                }
+              </div>
+              <div class="col-12">
+                <label for="">City</label>
+                <input type="text" formControlName="city" class="form-control">
+                @if(newAddress.controls["city"].touched){
+                <div class="text-danger">
+                  @if (newAddress.controls["city"].errors?.['required']) {
+                  <span>This is Required</span>
+                  }
+                </div>
+                }
+              </div>
+              <div class="col-12">
+                <label for="">State</label>
+                <input type="text" formControlName="state" class="form-control">
+                @if(newAddress.controls["state"].touched){
+                <div class="text-danger">
+                  @if (newAddress.controls["state"].errors?.['required']) {
+                  <span>This is Required</span>
+                  }
+                </div>
+                }
+              </div>
+              <div class="col-12">
+                <label for="">Pin-code</label>
+                <input type="text" formControlName="pinCode" class="form-control">
+                @if(newAddress.controls["pinCode"].touched){
+                <div class="text-danger">
+                  @if (newAddress.controls["pinCode"].errors?.['pattern']) {
+                  <span>Only Numbers are Required</span>
+                  }
+                </div>
+                }
+              </div>
+            </form>
+          </div>
+        </div>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close [disabled]="newAddress.invalid" (click)="addNewAddress()">Add Address</button>
+  <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>

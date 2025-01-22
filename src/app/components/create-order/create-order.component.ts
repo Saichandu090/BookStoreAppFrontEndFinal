@@ -1,19 +1,21 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CartD, CartResponse, IAddress } from '../../model/interfaces/cart';
+import { CartD, CartResponse } from '../../model/interfaces/cart';
 import { CartService } from '../../services/cart/cart.service';
-import { BookResponse, IJsonResponse, ResponseStructure } from '../../model/interfaces/jsonresponse';
+import { AddressResponse, BookResponse, IJsonResponse, ResponseStructure } from '../../model/interfaces/jsonresponse';
 import { AddressService } from '../../services/address/address.service';
 import { Address, Cart } from '../../model/classes/cart';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { IOrder } from '../../model/interfaces/order';
+import { OrderRequest, OrderResponse } from '../../model/interfaces/order';
 import { OrderService } from '../../services/order/order.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BooksService } from '../../services/books/books.service';
+import { MatDialog } from '@angular/material/dialog';
+import { AddAddressComponent } from '../add-address/add-address.component';
 
 @Component({
   selector: 'app-create-order',
@@ -54,7 +56,7 @@ export class CreateOrderComponent implements OnInit {
     })
   };
 
-  onRemoveFromCart(cartId: number):void {
+  onRemoveFromCart(cartId: number): void {
     const cartItem = this.cartData.find(item => item.cartId === cartId);
     if (cartItem) {
       if (cartItem.quantity === 1) {
@@ -157,60 +159,24 @@ export class CreateOrderComponent implements OnInit {
   };
 
 
-
-  @ViewChild("addAddress") addAddress: ElementRef | undefined;
-
-  openAddAddress() {
-    if (this.addAddress) {
-      this.addAddress.nativeElement.style.display = "block";
-    }
-  }
-
-  closeAddAddress() {
-    if (this.addAddress) {
-      this.addAddress.nativeElement.style.display = "none";
-    }
-  }
-
-  addressList: IAddress[] = [];
+  addressList: AddressResponse[] = [];
 
   private fb: FormBuilder = inject(FormBuilder);
-
-  newAddress: FormGroup = this.fb.group({
-    streetName: new FormControl('', [Validators.required]),
-    city: new FormControl('', [Validators.required]),
-    state: new FormControl('', [Validators.required]),
-    pinCode: new FormControl('', [Validators.required])
-  })
 
   private addressService: AddressService = inject(AddressService);
 
   getAllUserAddress() {
-    this.addressService.getAllAddress().subscribe((res: IJsonResponse) => {
-      if (res.result) {
-        this.addressList = res.data;
+    this.addressService.getAllAddress().subscribe({
+      next: (response: ResponseStructure<AddressResponse[]>) => {
+        if (response.status === 200 && response.data) {
+          this.addressList = response.data;
+        }
+      },
+      error: (error: ResponseStructure<AddressResponse[]>) => {
+        this.snackBar.open(error.message, '', { duration: 3000 });
       }
-    })
-  }
-
-  address = new Address();
-
-
-
-  addNewAddress() {
-    this.address = Object.assign(new Address(), this.newAddress.value);
-    console.log(this.address)
-    this.addressService.addAddress(this.address).subscribe((res: IJsonResponse) => {
-      if (res.result) {
-        this.snackbar.open("Address added successfully", '', { duration: 3000 })
-        this.addressService.onAddressChange.next(true);
-        this.closeAddAddress();
-      }
-    })
-  }
-
-
-
+    });
+  };
 
 
   @ViewChild("editAddress") editAddress: ElementRef | undefined;
@@ -221,27 +187,26 @@ export class CreateOrderComponent implements OnInit {
     }
   }
 
-
-
-  editableAddress: Address = new Address();
+  editableAddress!: AddressResponse;
 
   getEditAddress() {
-    this.addressService.getAddressById(this.editAddressId).subscribe((res: IJsonResponse) => {
-      if (res.result) {
-        this.editableAddress = res.data[0]
-
-        this.newEditAddress.patchValue({
-          streetName: this.editableAddress.streetName,
-          city: this.editableAddress.city,
-          state: this.editableAddress.state,
-          pinCode: this.editableAddress.pinCode
-        })
-        console.log(this.editableAddress)
-      } else {
-        this.snackbar.open(res.message, '', { duration: 3000 })
+    this.addressService.getAddressById(this.editAddressId).subscribe({
+      next: (response: ResponseStructure<AddressResponse>) => {
+        if (response.status === 200 && response.data) {
+          this.editableAddress = response.data
+          this.newEditAddress.patchValue({
+            streetName: this.editableAddress.streetName,
+            city: this.editableAddress.city,
+            state: this.editableAddress.state,
+            pinCode: this.editableAddress.pinCode
+          });
+        }
+      },
+      error: (error: ResponseStructure<AddressResponse>) => {
+        this.snackBar.open(error.message, '', { duration: 3000 });
       }
-    })
-  }
+    });
+  };
 
   newEditAddress: FormGroup = this.fb.group({
     streetName: new FormControl('', [Validators.required]),
@@ -263,32 +228,37 @@ export class CreateOrderComponent implements OnInit {
   saveNewAddress() {
     this.editableAddress = Object.assign(new Address(), this.newEditAddress.value);
     this.editableAddress.addressId = this.editAddressId;
-    console.log(this.editableAddress)
-    this.addressService.editAddress(this.editableAddress.addressId, this.editableAddress).subscribe((res: IJsonResponse) => {
-      if (res.result) {
-        this.snackbar.open("Address edited successfully", '', { duration: 3000 })
-        this.addressService.onAddressChange.next(true);
-        this.closeEditAddress();
-      } console.error(res.message);
-    })
-  }
+    this.addressService.editAddress(this.editableAddress.addressId, this.editableAddress).subscribe({
+      next: (response: ResponseStructure<AddressResponse>) => {
+        if (response.status === 200) {
+          this.snackbar.open("Address edited successfully", '', { duration: 3000 })
+          this.addressService.onAddressChange.next(true);
+          this.closeEditAddress();
+        }
+      },
+      error: (error: ResponseStructure<AddressResponse>) => {
+        this.snackBar.open(error.message, '', { duration: 3000 });
+      }
+    });
+  };
 
 
   deleteAddress(id: number) {
     const rs = confirm("Do you want to delete the address ?");
     if (rs) {
-      this.addressService.deleteAddress(id).subscribe((res: IJsonResponse) => {
-        if (res.result) {
-          this.snackbar.open(res.message, '', { duration: 3000 });
-          this.addressService.onAddressChange.next(true);
-        } else {
-          this.snackbar.open(res.message, '', { duration: 3000 });
+      this.addressService.deleteAddress(id).subscribe({
+        next: (response: ResponseStructure<string>) => {
+          if (response.status === 200) {
+            this.snackbar.open(response.message, '', { duration: 3000 });
+            this.addressService.onAddressChange.next(true);
+          }
+        },
+        error: (error: ResponseStructure<string>) => {
+          this.snackBar.open(error.message, '', { duration: 3000 });
         }
-      })
+      });
     }
-  }
-
-
+  };
 
   addressControl = new FormControl('', [Validators.required]);
 
@@ -299,34 +269,43 @@ export class CreateOrderComponent implements OnInit {
     console.log('Selected Address:', this.selectedAddress);
   }
 
-  createOrder: IOrder = {
-    price: 0,
-    quantity: 0,
-    addressId: 0
-  }
+  createOrder: OrderRequest = new OrderRequest();
 
   orderService: OrderService = inject(OrderService);
 
   router: Router = inject(Router);
 
-  onPlaceOrder() {
+  onPlaceOrder(): void {
     if (this.addressControl.invalid) {
-      this.snackbar.open("Please select atleast one address", '', { duration: 3000 })
-    } else {
+      this.snackbar.open("Please select atleast one address", '', { duration: 3000 });
+    }
+    else if (this.totalQuantity <= 0) {
+      this.snackBar.open('Please add atleast one book to place order :)', '', { duration: 3000 });
+    }
+    else {
       this.createOrder.addressId = this.selectedAddress.addressId;
-      this.createOrder.price = this.totalPrice;
-      this.createOrder.quantity = this.totalQuantity;
-      if (this.createOrder.quantity <= 0)
-        this.snackbar.open("Select atleast one product to place order", '', { duration: 3000 });
-      else {
-        this.orderService.placeOrder(this.createOrder).subscribe((res: IJsonResponse) => {
-          if (res.result) {
-            this.snackbar.open(res.message, '', { duration: 3000 });
-            this.router.navigateByUrl("/homepage");
+      this.orderService.placeOrder(this.createOrder).subscribe({
+        next: (response: ResponseStructure<OrderResponse>) => {
+          if (response.status === 201) {
+            this.snackbar.open(response.message, '', { duration: 3000 });
+            this.router.navigateByUrl("/order-placed");
             this.cartService.onCartCalled.next(true);
           }
-        })
-      }
+        },
+        error: (error: ResponseStructure<OrderResponse>) => {
+          this.snackBar.open(error.message, '', { duration: 3000 });
+        }
+      })
     }
   };// onPlaceOrder ending
+
+  readonly dialog = inject(MatDialog);
+
+  openAddAddress():void {
+    this.dialog.open(AddAddressComponent, {
+      panelClass: 'right-dialog-container',
+      width: '400px',
+      height: '370px'
+    })
+  };
 }

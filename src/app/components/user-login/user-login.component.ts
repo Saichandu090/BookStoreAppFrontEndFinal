@@ -10,7 +10,7 @@ import { LoggedInUser, UserRegister } from '../../model/classes/user';
 import { ToastrService } from 'ngx-toastr';
 import { LoginService } from '../../services/login/login.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Constant } from '../../constants/constant';
+import { APP_CONSTANTS } from '../../constants/constant';
 
 @Component({
   selector: 'app-user-login',
@@ -66,7 +66,7 @@ export class UserLoginComponent {
         if (response.status===200 && response.data) {
           this.snackBar.open("Welcome to BookStore, Login Success!!",'',{duration : 3000});
           this.currentUser = response.data;
-          localStorage.setItem(Constant.LOGIN_TOKEN, response.message);
+          localStorage.setItem(APP_CONSTANTS.LOGIN_TOKEN, response.message);
           localStorage.setItem("UserDetails", JSON.stringify(response.data));
           this.router.navigateByUrl("/homepage");
         } else {
