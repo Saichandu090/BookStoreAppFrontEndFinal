@@ -36,7 +36,7 @@ export class WishListComponent implements OnInit {
   getWishListBooks():void {
     this.wishListService.getWishList().subscribe({
       next: (response: ResponseStructure<WishListResponse[]>) => {
-        if (response.status === 200) {
+        if (response.status === 200 && response.data) {
           this.wishListBooks = [];
           this.wishListBooks = response.data;
           this.getBooks(this.wishListBooks);
@@ -50,7 +50,7 @@ export class WishListComponent implements OnInit {
     const sortedWishList = wishList.sort((a,b)=>a.wishListId-b.wishListId);
     sortedWishList.forEach(item => this.bookService.getBookById(item.bookId).subscribe({
       next: (response: ResponseStructure<BookResponse>) => {
-        if (response.status === 200) {
+        if (response.status === 200 && response.data) {
           this.books.push(response.data);
         }
       }

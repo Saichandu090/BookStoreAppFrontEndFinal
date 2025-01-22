@@ -63,45 +63,45 @@ export class UserEditComponent implements OnInit {
   }
 
   getUser() {
-    this.loginService.getUser(this.currentUser.email).subscribe({
-      next: (res: IJsonResponse) => {
-        if (res.result) {
-          this.userEdit = res.data
+    // this.loginService.getUser(this.currentUser.email).subscribe({
+    //   next: (res: IJsonResponse) => {
+    //     if (res.result) {
+    //       this.userEdit = res.data
 
-          this.registerForm.patchValue({
-            firstName: this.userEdit.firstName,
-            lastName: this.userEdit.lastName,
-            dob: this.userEdit.dob,
-          })
-        }
-      },
-      error: (res: IJsonResponse) => {
-        this.snackBar.open(res.message, '', { duration: 3000 });
-      }
-    })
+    //       this.registerForm.patchValue({
+    //         firstName: this.userEdit.firstName,
+    //         lastName: this.userEdit.lastName,
+    //         dob: this.userEdit.dob,
+    //       })
+    //     }
+    //   },
+    //   error: (res: IJsonResponse) => {
+    //     this.snackBar.open(res.message, '', { duration: 3000 });
+    //   }
+    // })
   }
 
 
   onSubmit() {
-    if (this.registerForm.invalid) {
-      this.snackBar.open("Form Invalid", '', { duration: 3000 });
-      console.log(this.registerForm.value)
-    } else {
-      this.userEdit = this.registerForm.value;
-      this.userEdit.dob = this.formatDate(this.userEdit.dob);
-      console.log(this.userEdit);
-      this.loginService.editUser(this.userEdit).subscribe({
-        next: (res: IJsonResponse) => {
-          if (res.result) {
-            this.snackBar.open(res.message, '', { duration: 3000 })
-          }
-        },
-        error: (res: IJsonResponse) => {
-          this.snackBar.open(res.message, '', { duration: 3000 });
-        }
+    // if (this.registerForm.invalid) {
+    //   this.snackBar.open("Form Invalid", '', { duration: 3000 });
+    //   console.log(this.registerForm.value)
+    // } else {
+    //   this.userEdit = this.registerForm.value;
+    //   this.userEdit.dob = this.formatDate(this.userEdit.dob);
+    //   console.log(this.userEdit);
+    //   this.loginService.editUser(this.userEdit).subscribe({
+    //     next: (res: IJsonResponse) => {
+    //       if (res.result) {
+    //         this.snackBar.open(res.message, '', { duration: 3000 })
+    //       }
+    //     },
+    //     error: (res: IJsonResponse) => {
+    //       this.snackBar.open(res.message, '', { duration: 3000 });
+    //     }
 
-      })
-    }
+    //   })
+    // }
   }
 
   hide = signal(true);

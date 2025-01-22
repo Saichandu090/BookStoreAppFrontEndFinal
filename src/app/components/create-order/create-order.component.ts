@@ -9,7 +9,6 @@ import { Address, Cart } from '../../model/classes/cart';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { ToastrService } from 'ngx-toastr';
 import { IOrder } from '../../model/interfaces/order';
 import { OrderService } from '../../services/order/order.service';
 import { Router } from '@angular/router';
@@ -108,7 +107,7 @@ export class CreateOrderComponent implements OnInit {
       } else {
         this.bookService.getBookById(item.bookId).subscribe({
           next: (response: ResponseStructure<BookResponse>) => {
-            if (response.status === 200) {
+            if (response.status === 200 && response.data) {
               const newCart = new CartD();
               newCart.cartId = item.cartId;
               newCart.bookPrice = response.data.bookPrice;
@@ -132,7 +131,7 @@ export class CreateOrderComponent implements OnInit {
   getUserCart() {
     this.cartService.getUserCart().subscribe({
       next: (response: ResponseStructure<CartResponse[]>) => {
-        if (response.status === 200) {
+        if (response.status === 200 && response.data) {
           this.loadCart(response.data);
         }
       },

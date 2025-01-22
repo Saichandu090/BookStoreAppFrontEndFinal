@@ -31,14 +31,4 @@ export class LoginService {
   loginUser(user: ILogin): Observable<ResponseStructure<LoginResponse>> {
     return this.http.post<ResponseStructure<LoginResponse>>(this.baseURL + "login", user);
   }
-
-  editUser(user: UserEdit): Observable<IJsonResponse> {
-    const headers=this.getHeaders();
-    return this.http.put<IJsonResponse>(this.baseURL + 'editUserDetails',user, { headers });
-  }
-
-  getUser(email: string): Observable<IJsonResponse> {
-    const headers=this.getHeaders();
-    return this.http.get<IJsonResponse>(`${this.baseURL}getUser/${email}`, { headers });
-  }
 }

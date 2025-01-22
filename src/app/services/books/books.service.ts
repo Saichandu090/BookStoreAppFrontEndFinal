@@ -1,8 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { IBookResponse } from '../../model/interfaces/books';
-import { BookResponse, IJsonResponse, ResponseStructure } from '../../model/interfaces/jsonresponse';
+import { BookResponse, ResponseStructure } from '../../model/interfaces/jsonresponse';
 import { Constant } from '../../constants/constant';
 import { Book } from '../../model/classes/book';
 

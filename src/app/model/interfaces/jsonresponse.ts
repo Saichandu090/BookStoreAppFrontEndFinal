@@ -7,7 +7,7 @@ export interface IJsonResponse{
 export interface ResponseStructure<T> {
   status: number;
   message: string;
-  data: T;
+  data: T | null;
 }
 
 export interface LoginResponse {

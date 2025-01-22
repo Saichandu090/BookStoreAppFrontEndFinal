@@ -58,7 +58,7 @@ export class CartComponent implements OnInit {
       } else {
         this.bookService.getBookById(item.bookId).subscribe({
           next: (response: ResponseStructure<BookResponse>) => {
-            if (response.status === 200) {
+            if (response.status === 200 && response.data) {
               const newCart = new CartD();
               newCart.cartId = item.cartId;
               newCart.bookPrice = response.data.bookPrice;
@@ -82,7 +82,7 @@ export class CartComponent implements OnInit {
   getCartItems() {
     this.cartService.getUserCart().subscribe({
       next: (response: ResponseStructure<CartResponse[]>) => {
-        if (response.status === 200) {
+        if (response.status === 200 && response.data) {
           this.loadCart(response.data);
         }
       },

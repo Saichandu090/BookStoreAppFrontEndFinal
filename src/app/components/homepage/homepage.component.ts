@@ -60,7 +60,7 @@ export class HomepageComponent implements OnInit {
           this.snackBar.open("No Books Available at the store", '', { duration: 3000 });
           this.bookList = [];
         }
-        else if (response.status === 200) {
+        else if (response.status === 200 && response.data) {
           this.bookList = response.data;
         }
       },
@@ -123,7 +123,7 @@ export class HomepageComponent implements OnInit {
   getBookById(): void {
     this.bookService.getBookById(this.editableBook).subscribe({
       next: (response: ResponseStructure<BookResponse>) => {
-        if (response.status === 200) {
+        if (response.status === 200 && response.data) {
           this.updatableBook = response.data;
           console.log(this.updatableBook);
 
@@ -214,7 +214,7 @@ export class HomepageComponent implements OnInit {
   getWishListBooks(): void {
     this.wishListService.getWishList().subscribe({
       next:(response: ResponseStructure<WishListResponse[]>) => {
-        if (response.status===200) {
+        if (response.status===200 && response.data) {
           this.wishListBooks = response.data;
         }
     }

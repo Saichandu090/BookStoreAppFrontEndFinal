@@ -63,7 +63,7 @@ export class UserLoginComponent {
   handleLogin(): void {
     this.loginService.loginUser(this.loginForm.value).subscribe({
       next: (response:ResponseStructure<LoginResponse>) => {
-        if (response.status===200) {
+        if (response.status===200 && response.data) {
           this.snackBar.open("Welcome to BookStore, Login Success!!",'',{duration : 3000});
           this.currentUser = response.data;
           localStorage.setItem(Constant.LOGIN_TOKEN, response.message);

@@ -4,9 +4,6 @@ import { Cart } from '../../model/classes/cart';
 import { Observable, Subject } from 'rxjs';
 import { IJsonResponse, ResponseStructure } from '../../model/interfaces/jsonresponse';
 import { Constant } from '../../constants/constant';
-import { Book } from '../../model/classes/book';
-import { IBookResponse } from '../../model/interfaces/books';
-import { ToastrService } from 'ngx-toastr';
 import { CartResponse } from '../../model/interfaces/cart';
 
 @Injectable({
@@ -19,8 +16,6 @@ export class CartService {
   private http: HttpClient = inject(HttpClient);
 
   onCartCalled: Subject<boolean> = new Subject<boolean>();
-
-  toaster=inject(ToastrService);
 
   getHeaders():HttpHeaders{
     let token = localStorage.getItem(Constant.LOGIN_TOKEN);
@@ -45,12 +40,4 @@ export class CartService {
     const headers=this.getHeaders();
     return this.http.get<ResponseStructure<CartResponse[]>>(this.baseURL + 'getCart', { headers })
   }
-
-
-  getUserCartById(cartId: number): Observable<IJsonResponse> {
-    const headers=this.getHeaders();
-    return this.http.get<IJsonResponse>(`${this.baseURL}getCartById/${cartId}`, { headers })
-  }
-
-
 }
