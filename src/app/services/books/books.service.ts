@@ -25,9 +25,9 @@ export class BooksService {
     return headers;
   }
 
-  addNewBook(obj:Book):Observable<ResponseStructure<BookResponse>>{
+  addNewBook(bookObject:Book):Observable<ResponseStructure<BookResponse>>{
     const headers=this.getHeaders();
-    return this.http.post<ResponseStructure<BookResponse>>(this.baseURL+'addBook',obj,{headers})
+    return this.http.post<ResponseStructure<BookResponse>>(this.baseURL+'addBook',bookObject,{headers})
   }
 
   getAllBooks():Observable<ResponseStructure<BookResponse[]>>{
@@ -35,9 +35,9 @@ export class BooksService {
     return this.http.get<ResponseStructure<BookResponse[]>>(this.baseURL+"getBooks",{ headers })
   }
 
-  getBookById(id:number):Observable<ResponseStructure<BookResponse>>{
+  getBookById(bookId:number):Observable<ResponseStructure<BookResponse>>{
     const headers=this.getHeaders();
-    return this.http.get<ResponseStructure<BookResponse>>(`${this.baseURL}getBookById/${id}`,{headers})
+    return this.http.get<ResponseStructure<BookResponse>>(`${this.baseURL}getBookById/${bookId}`,{headers})
   }
 
   updateBook(bookId:number,obj:Book):Observable<ResponseStructure<BookResponse>>{

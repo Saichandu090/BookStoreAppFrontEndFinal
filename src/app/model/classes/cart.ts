@@ -1,6 +1,3 @@
-import { IBookResponse } from "../interfaces/books"
-import { Book } from "./book"
-
 export class Cart{
     bookId:number
 
@@ -28,8 +25,22 @@ export class Address{
     }
 }
 
+export class AddressRequest{
+  streetName:string
+  city:string
+  state:string
+  pinCode:number
 
-export class WishListReq{
+  constructor(){
+      this.streetName='',
+      this.city='',
+      this.state='',
+      this.pinCode=0
+  }
+}
+
+
+export class WishListRequest{
     bookId:number
     constructor(){
         this.bookId=0

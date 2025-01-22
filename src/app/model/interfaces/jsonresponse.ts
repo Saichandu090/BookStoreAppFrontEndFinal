@@ -35,3 +35,11 @@ export interface BookResponse{
   bookLogo:string
   bookQuantity:number,
 }
+
+export interface AddressResponse{
+  addressId:number,
+  streetName:string,
+  city:string,
+  state:string,
+  pinCode:number
+}

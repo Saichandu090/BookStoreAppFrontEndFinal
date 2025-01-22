@@ -1,9 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { IJsonResponse, LoginResponse, RegisterResponse, ResponseStructure } from '../../model/interfaces/jsonresponse';
+import { LoginResponse, RegisterResponse, ResponseStructure } from '../../model/interfaces/jsonresponse';
 import { ILogin } from '../../model/interfaces/user';
-import { UserEdit, UserRegister } from '../../model/classes/user';
+import { UserRegister } from '../../model/classes/user';
 import { Constant } from '../../constants/constant';
 
 @Injectable({
@@ -24,11 +24,11 @@ export class LoginService {
     return headers;
   }
 
-  registerUser(user: UserRegister): Observable<ResponseStructure<RegisterResponse>> {
-    return this.http.post<ResponseStructure<RegisterResponse>>(this.baseURL + "register", user)
+  registerUser(registerObject: UserRegister): Observable<ResponseStructure<RegisterResponse>> {
+    return this.http.post<ResponseStructure<RegisterResponse>>(this.baseURL + "register", registerObject)
   }
 
-  loginUser(user: ILogin): Observable<ResponseStructure<LoginResponse>> {
-    return this.http.post<ResponseStructure<LoginResponse>>(this.baseURL + "login", user);
+  loginUser(loginObject: ILogin): Observable<ResponseStructure<LoginResponse>> {
+    return this.http.post<ResponseStructure<LoginResponse>>(this.baseURL + "login", loginObject);
   }
 }

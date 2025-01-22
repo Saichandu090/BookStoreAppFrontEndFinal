@@ -1,9 +1,10 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Constant } from '../../constants/constant';
-import { IJsonResponse } from '../../model/interfaces/jsonresponse';
-import { IOrder } from '../../model/interfaces/order';
+import { IJsonResponse, ResponseStructure } from '../../model/interfaces/jsonresponse';
+import { IOrder, OrderRequest, OrderResponse } from '../../model/interfaces/order';
+import { OrderRes } from '../../model/classes/order';
 
 @Injectable({
   providedIn: 'root'
@@ -25,18 +26,18 @@ export class OrderService {
     return headers;
   }
 
-  placeOrder(obj: IOrder) {
+  placeOrder(orderObject: OrderRequest):Observable<ResponseStructure<OrderResponse>> {
     const headers=this.getHeaders();
-    return this.http.post<IJsonResponse>(this.baseURL + 'placeOrder', obj, { headers })
+    return this.http.post<ResponseStructure<OrderResponse>>(this.baseURL + 'placeOrder', orderObject, { headers })
   }
 
-  cancelOrder(id: number) {
+  cancelOrder(orderId: number):Observable<ResponseStructure<OrderResponse>> {
     const headers=this.getHeaders();
-    return this.http.delete<IJsonResponse>(`${this.baseURL}cancelOrder/${id}`, { headers })
+    return this.http.delete<ResponseStructure<OrderResponse>>(`${this.baseURL}cancelOrder/${orderId}`, { headers })
   }
 
-  getOrders() {
+  getOrders():Observable<ResponseStructure<OrderResponse[]>> {
     const headers=this.getHeaders();
-    return this.http.get<IJsonResponse>(`${this.baseURL}getAllUserOrders`, { headers })
+    return this.http.get<ResponseStructure<OrderResponse[]>>(`${this.baseURL}getAllOrders`, { headers })
   }
 }

@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { ResponseStructure, WishListResponse } from '../../model/interfaces/jsonresponse';
 import { Constant } from '../../constants/constant';
-import { WishListReq } from '../../model/classes/cart';
+import { WishListRequest } from '../../model/classes/cart';
 
 @Injectable({
   providedIn: 'root'
@@ -25,13 +25,13 @@ export class WishlistService {
     return headers;
   }
 
-  addToWishList(book: WishListReq): Observable<ResponseStructure<WishListResponse>> {
+  addToWishList(wishListObject: WishListRequest): Observable<ResponseStructure<WishListResponse>> {
     const headers=this.getHeaders();
-    return this.http.post<ResponseStructure<WishListResponse>>(this.baseURL + "addToWishList", book, { headers })
+    return this.http.post<ResponseStructure<WishListResponse>>(this.baseURL + "addToWishList", wishListObject, { headers });
   }
 
   getWishList(): Observable<ResponseStructure<WishListResponse[]>> {
     const headers=this.getHeaders();
-    return this.http.get<ResponseStructure<WishListResponse[]>>(`${this.baseURL}getWishList`, { headers })
+    return this.http.get<ResponseStructure<WishListResponse[]>>(`${this.baseURL}getWishList`, { headers });
   }
 }
