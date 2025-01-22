@@ -33,15 +33,27 @@ export class CartComponent implements OnInit {
     this.isPopUpOpen = !this.isPopUpOpen
   }
 
-  loadCart(cartResponse: CartResponse[]) {
+  totalQuantity: number = 0;
+  totalPrice: number = 0;
 
+  updateTotals(): void {
+    this.totalPrice = 0;
+    this.totalQuantity = 0;
+    this.cartData.forEach(cart => {
+      this.totalPrice += cart.totalPrice,
+        this.totalQuantity += cart.quantity
+    });
+  };
+
+  loadCart(cartResponse: CartResponse[]):void {
     cartResponse.sort((a, b) => a.cartId - b.cartId);
     cartResponse.forEach(item => {
       const existingCartItem = this.cartData.find(cart => cart.cartId === item.cartId);
 
-      if (existingCartItem) {
+      if (existingCartItem?.quantity) {
         existingCartItem.quantity = item.cartQuantity;
         existingCartItem.totalPrice = item.cartQuantity * existingCartItem.bookPrice;
+        this.updateTotals();
 
       } else {
         this.bookService.getBookById(item.bookId).subscribe({
@@ -56,6 +68,7 @@ export class CartComponent implements OnInit {
               newCart.bookLogo = response.data.bookLogo;
               newCart.totalPrice = item.cartQuantity * response.data.bookPrice;
               this.cartData.push(newCart);
+              this.updateTotals();
             }
           },
           error: (error: ResponseStructure<BookResponse>) => {
@@ -79,17 +92,34 @@ export class CartComponent implements OnInit {
     })
   };
 
-  getCart(cartId: number) {
-    this.cartService.getUserCartById(cartId).subscribe((res: IJsonResponse) => {
-      if (res.result) {
-        //this.cartObj = res.data[0]
+
+  onRemoveFromCart(cartId: number): void {
+    const cartItem = this.cartData.find(item => item.cartId === cartId);
+    if (cartItem) {
+    if (cartItem.quantity === 1) {
+      const index = this.cartData.indexOf(cartItem);
+      if (index !== -1) {
+        this.cartData.splice(index, 1);
+        this.updateTotals();
+      }
+    }
+  }
+
+    this.cartService.removeBookFromCart(cartId).subscribe({
+      next: (response: ResponseStructure<CartResponse>) => {
+        if (response.status === 200) {
+          this.snackbar.open(response.message, '', { duration: 3000 });
+          this.cartService.onCartCalled.next(true);
+          this.bookService.onBookChanged.next(true);
+        }
+      },
+      error:(error:ResponseStructure<CartResponse>)=>{
+        this.snackbar.open(error.message,'',{duration:3000});
       }
     })
-  }
+  };
 
-  onRemoveFromCart(bookId: number): void {
 
-  }
 
   private cartObj: Cart = new Cart();
 
@@ -111,20 +141,6 @@ export class CartComponent implements OnInit {
     })
   }
 
-  onRemoveProduct(cartId: number) {
-    const rs = confirm("Do you want to remove this item from the cart ?");
-    if (rs) {
-      this.getCart(cartId);
-      this.cartService.removeBookFromCart(cartId).subscribe((res: IJsonResponse) => {
-        if (res.result) {
-          this.snackbar.open(res.message, '', { duration: 3000 })
-          this.cartService.onCartCalled.next(true);
-          this.bookService.onBookChanged.next(true);
-        }
-      })
-    }
-  }
-
   ngOnInit(): void {
     this.getCartItems();
     this.cartService.onCartCalled.subscribe((res: boolean) => {
@@ -132,7 +148,5 @@ export class CartComponent implements OnInit {
         this.getCartItems();
       }
     })
-  }
-
-
+  };
 }

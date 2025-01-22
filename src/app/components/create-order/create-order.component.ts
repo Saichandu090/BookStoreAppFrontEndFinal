@@ -31,22 +31,22 @@ export class CreateOrderComponent implements OnInit {
 
   private bookService = inject(BooksService);
 
-  private snackBar:MatSnackBar=inject(MatSnackBar);
+  private snackBar: MatSnackBar = inject(MatSnackBar);
 
   cartData: CartD[] = [];
 
-  cartObj:Cart=new Cart();
+  cartObj: Cart = new Cart();
 
-  onAddToCart(bookId:number):void{
+  onAddToCart(bookId: number): void {
     this.cartObj.bookId = bookId;
     this.cartService.addBookToCart(this.cartObj).subscribe({
       next: (response: ResponseStructure<CartResponse>) => {
-        if (response.status===200) {
+        if (response.status === 200) {
           this.snackBar.open(response.message, '', { duration: 3000 });
           this.cartService.onCartCalled.next(true);
         }
-        else if(response.status===209){
-          this.snackBar.open(response.message,'',{duration:3000});
+        else if (response.status === 209) {
+          this.snackBar.open(response.message, '', { duration: 3000 });
         }
       },
       error: (error: ResponseStructure<CartResponse>) => {
@@ -55,29 +55,48 @@ export class CreateOrderComponent implements OnInit {
     })
   };
 
-  onRemoveFromCart(cartId: number) {
-      this.getCart(cartId);
-      this.cartService.removeBookFromCart(cartId).subscribe((res: IJsonResponse) => {
-        if (res.result) {
-          this.snackbar.open(res.message, '', { duration: 3000 })
+  onRemoveFromCart(cartId: number):void {
+    const cartItem = this.cartData.find(item => item.cartId === cartId);
+    if (cartItem) {
+      if (cartItem.quantity === 1) {
+        const index = this.cartData.indexOf(cartItem);
+        if (index !== -1) {
+          this.cartData.splice(index, 1);
+          this.updateTotals();
+        }
+      }
+    }
+    this.cartService.removeBookFromCart(cartId).subscribe({
+      next: (response: ResponseStructure<CartResponse>) => {
+        if (response.status === 200) {
+          this.snackbar.open(response.message, '', { duration: 3000 });
           this.cartService.onCartCalled.next(true);
           this.bookService.onBookChanged.next(true);
         }
-      })
-    }
-
-  getCart(cartId: number) {
-    this.cartService.getUserCartById(cartId).subscribe((res: IJsonResponse) => {
-      if (res.result) {
-        //this.cartObj = res.data[0]
+      },
+      error: (error: ResponseStructure<CartResponse>) => {
+        this.snackbar.open(error.message, '', { duration: 3000 });
       }
     })
-  }
+  };
 
   totalQuantity: number = 0;
   totalPrice: number = 0;
 
-  loadCart(cartResponse:CartResponse[]){
+  updateTotals(): void {
+    this.totalPrice = 0;
+    this.totalQuantity = 0;
+    this.cartData.forEach(cart => {
+      this.totalPrice += cart.totalPrice,
+        this.totalQuantity += cart.quantity
+    });
+  };
+
+  loadCart(cartResponse: CartResponse[]) {
+    if (this.cartData.length === 0) {
+      this.totalPrice = 0;
+      this.totalQuantity = 0;
+    }
     cartResponse.sort((a, b) => a.cartId - b.cartId);
     cartResponse.forEach(item => {
       const existingCartItem = this.cartData.find(cart => cart.cartId === item.cartId);
@@ -85,6 +104,7 @@ export class CreateOrderComponent implements OnInit {
       if (existingCartItem) {
         existingCartItem.quantity = item.cartQuantity;
         existingCartItem.totalPrice = item.cartQuantity * existingCartItem.bookPrice;
+        this.updateTotals();
       } else {
         this.bookService.getBookById(item.bookId).subscribe({
           next: (response: ResponseStructure<BookResponse>) => {
@@ -98,6 +118,7 @@ export class CreateOrderComponent implements OnInit {
               newCart.bookLogo = response.data.bookLogo;
               newCart.totalPrice = item.cartQuantity * response.data.bookPrice;
               this.cartData.push(newCart);
+              this.updateTotals();
             }
           },
           error: (error: ResponseStructure<BookResponse>) => {
@@ -106,22 +127,20 @@ export class CreateOrderComponent implements OnInit {
         });
       }
     });
-    };
+  };
 
   getUserCart() {
     this.cartService.getUserCart().subscribe({
-          next: (response: ResponseStructure<CartResponse[]>) => {
-            if (response.status===200) {
-              this.totalPrice=0;
-              this.totalQuantity=0;
-              this.loadCart(response.data);
-            }
-          },
-          error:(error:ResponseStructure<CartResponse[]>)=>{
-            this.snackbar.open(error.message,'',{duration:3000});
-          }
-        })
-  }
+      next: (response: ResponseStructure<CartResponse[]>) => {
+        if (response.status === 200) {
+          this.loadCart(response.data);
+        }
+      },
+      error: (error: ResponseStructure<CartResponse[]>) => {
+        this.snackbar.open(error.message, '', { duration: 3000 });
+      }
+    })
+  }; // end of cart methods
 
   ngOnInit(): void {
     this.getUserCart();
@@ -130,13 +149,13 @@ export class CreateOrderComponent implements OnInit {
       if (res) {
         this.getAllUserAddress();
       }
-    })
+    });
     this.cartService.onCartCalled.subscribe((res: boolean) => {
       if (res) {
         this.getUserCart();
       }
-    })
-  }
+    });
+  };
 
 
 

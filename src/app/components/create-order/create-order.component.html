@@ -52,8 +52,6 @@
                     </a>
                   </div>
                 </td>
-
-
               </tr>
             </tbody>
             }
@@ -75,7 +73,7 @@
               <p class="p-0 m-0 fw-semibold">{{item.bookName}}</p>
               <p class="p-0 m-0">{{item.totalPrice | currency:'INR'}}</p>
               <p class="text-start mt-4">
-                <button class="btn" (click)="onRemoveFromCart(item.bookId)">
+                <button class="btn" (click)="onRemoveFromCart(item.cartId)">
                   <i class="bi bi-dash"></i>
                 </button>
                 <button class="btn"><b>{{item.quantity}}</b> </button>
@@ -87,8 +85,6 @@
           </div>
           }
           <div class="border-top">
-
-
             <div class=" border-top ">
               <div class="d-flex justify-content-between mt-2">
                 <p class="fw-semibold">Quantity :</p>

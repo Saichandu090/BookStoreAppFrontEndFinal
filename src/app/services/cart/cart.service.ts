@@ -36,9 +36,9 @@ export class CartService {
     return this.http.post<ResponseStructure<CartResponse>>(this.baseURL + 'addToCart', cartObj, { headers })
   }
 
-  removeBookFromCart(cartId: number): Observable<IJsonResponse> {
+  removeBookFromCart(cartId: number): Observable<ResponseStructure<CartResponse>> {
     const headers=this.getHeaders();
-    return this.http.delete<IJsonResponse>(`${this.baseURL}removeFromCart/${cartId}`, { headers })
+    return this.http.delete<ResponseStructure<CartResponse>>(`${this.baseURL}removeFromCart/${cartId}`, { headers })
   }
 
   getUserCart(): Observable<ResponseStructure<CartResponse[]>> {

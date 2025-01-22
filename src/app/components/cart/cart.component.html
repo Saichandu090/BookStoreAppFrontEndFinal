@@ -18,21 +18,27 @@
         </td>
         <td class="align-middle text-left">{{item.bookName}}</td>
         <td class="align-middle text-center">
-          <button class="btn" (click)="onRemoveFromCart(item.bookId)">
+          <button class="btn" (click)="onRemoveFromCart(item.cartId)">
             <i class="bi bi-dash"></i>
           </button>
           <button class="btn"><b>{{item.quantity}}</b> </button>
-
           <button class="btn" (click)="onAddToCart(item.bookId)">
             <i class="bi bi-plus"></i>
           </button>
         </td>
-
         <td class="align-middle text-right">{{item.totalPrice | currency:'INR'}}</td>
-
       </tr>
       }
     </tbody>
+    @if (totalQuantity!=0) {
+      <tfoot>
+        <tr>
+          <td colspan="2" class="align-middle text-right"><strong>Summary</strong></td>
+          <td class="align-middle text-center"><strong>{{ totalQuantity }}</strong></td>
+          <td class="align-middle text-right"><strong>{{ totalPrice | currency: 'INR' }}</strong></td>
+        </tr>
+      </tfoot>
+    }
   </table>
 </mat-dialog-content>
 <mat-dialog-actions>
