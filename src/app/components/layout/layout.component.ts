@@ -27,14 +27,6 @@ import { AddBookComponent } from '../add-book/add-book.component';
 })
 export class LayoutComponent implements OnInit {
 
-  @ViewChild("addBook") addBook: ElementRef | undefined;
-
-  private loginService = inject(LoginService);
-
-  private bookService = inject(BooksService);
-
-  //=========================================//
-
   snackbar: MatSnackBar = inject(MatSnackBar);
 
   currentUser: LoggedInUser = new LoggedInUser();
@@ -69,7 +61,7 @@ export class LayoutComponent implements OnInit {
     }
   }
 
-  //=====================================//
+
 
   isPopUpOpen: boolean = true;
 
@@ -77,7 +69,7 @@ export class LayoutComponent implements OnInit {
     this.isPopUpOpen = !this.isPopUpOpen
   }
 
-  //====================================//
+
 
   openAddBook() {
     this.dialog.open(AddBookComponent, {
@@ -101,13 +93,12 @@ export class LayoutComponent implements OnInit {
     bookLogo: new FormControl('', [Validators.required])
   })
 
-  //=============================================//
 
   showSuccess() {
     this.snackbar.open('Logout Success', '', { duration: 3000 });
   }
 
-  //=============================================//
+
   readonly dialog = inject(MatDialog);
 
   openDialog() {
@@ -115,8 +106,8 @@ export class LayoutComponent implements OnInit {
       panelClass: 'right-dialog-container',
       width: '600px',
       position: {
-        right: '30px', /* Align to the right */
-        top: '60px',    /* Optional: Align to the top */
+        right: '30px',
+        top: '60px',
       }
     });
   }

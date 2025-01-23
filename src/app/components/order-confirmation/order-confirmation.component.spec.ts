@@ -1,11 +1,8 @@
-import { HttpClientTestingModule, provideHttpClientTesting } from '@angular/common/http/testing';
+import { OrderService } from './../../services/order/order.service';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { OrderConfirmationComponent } from './order-confirmation.component';
-import { OrderService } from '../../services/order/order.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { provideAnimations } from '@angular/platform-browser/animations';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { of, throwError } from 'rxjs';
 import { ResponseStructure } from '../../model/interfaces/jsonresponse';
 import { OrderResponse } from '../../model/interfaces/order';
@@ -13,47 +10,42 @@ import { OrderResponse } from '../../model/interfaces/order';
 describe('OrderConfirmationComponent', () => {
   let component: OrderConfirmationComponent;
   let fixture: ComponentFixture<OrderConfirmationComponent>;
-  let orderServiceMock: jest.Mocked<OrderService>;
-  let snackBarMock: jest.Mocked<MatSnackBar>;
-  let routerMock: jest.Mocked<Router>;
+  let mockOrderService: jest.Mocked<OrderService>;
+  let mockRouter: jest.Mocked<Router>;
+  let mockSnackBar: jest.Mocked<MatSnackBar>;
 
-  beforeEach(async () => {
-    orderServiceMock = {
-      getAllOrders: jest.fn(),
+  beforeEach(() => {
+    mockOrderService = {
+      getAllOrders: jest.fn()
     } as any;
 
-    snackBarMock = {
-      open: jest.fn(),
+    mockRouter = {
+      navigateByUrl: jest.fn()
     } as any;
 
-    routerMock = {
-      navigateByUrl: jest.fn(),
+    mockSnackBar = {
+      open: jest.fn()
     } as any;
 
-    await TestBed.configureTestingModule({
-      imports: [OrderConfirmationComponent, HttpClientTestingModule],
-      providers: [provideHttpClientTesting(),
-      { provide: OrderService, useValue: orderServiceMock },
-      { provide: MatSnackBar, useValue: snackBarMock },provideAnimations()]
-    })
-      .compileComponents();
+    TestBed.configureTestingModule({
+      imports: [OrderConfirmationComponent],
+      providers: [
+        { provide: OrderService, useValue: mockOrderService },
+        { provide: Router, useValue: mockRouter },
+        { provide: MatSnackBar, useValue: mockSnackBar }
+      ]
+    });
 
     fixture = TestBed.createComponent(OrderConfirmationComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should initialize and set orderId and address correctly when order is returned', () => {
-    const mockOrderResponse: ResponseStructure<OrderResponse[]> = {
-      status: 200,
-      message: 'Orders retrieved successfully',
-      data: [
-        {
-          orderId: 1,
+  const mockOrderResponse:ResponseStructure<OrderResponse[]> = {
+    status: 200,
+    message:'Orders fetched',
+    data: [
+      {
+        orderId: 1,
           cancelOrder: false,
           orderDate: '2025-1-22',
           orderPrice: 234.45,
@@ -74,31 +66,52 @@ describe('OrderConfirmationComponent', () => {
             bookPrice: 234.45,
             bookQuantity: 1
           }]
-        },
-      ],
-    };
-    orderServiceMock.getAllOrders.mockReturnValue(of(mockOrderResponse));
+      }
+    ]
+  };
 
-    component.ngOnInit();
 
+
+  it('should initialize and fetch the last order successfully', () => {
+    mockOrderService.getAllOrders.mockReturnValue(of(mockOrderResponse));
+    fixture.detectChanges();
     expect(component.orderId).toBe(1);
-    expect(component.address).toBe('123 Main St, Test City, Test State');
+    expect(component.address).toBe('Something, Baner, MH');
+    expect(mockOrderService.getAllOrders).toHaveBeenCalled();
   });
 
-  it('should call snackBar.open when there is an error fetching orders', () => {
-    const mockErrorResponse = {
-      status: 500,
-      message: 'Failed to retrieve orders',
+
+  it('should handle empty order list', () => {
+    const emptyResponse:ResponseStructure<OrderResponse[]> = {
+      status: 200,
+      message:'No content',
+      data: []
     };
-    orderServiceMock.getAllOrders.mockReturnValue(throwError(() => mockErrorResponse));
-
-    component.ngOnInit();
-
-    expect(snackBarMock.open).toHaveBeenCalledWith('Failed to retrieve orders', '', { duration: 3000 });
+    mockOrderService.getAllOrders.mockReturnValue(of(emptyResponse));
+    fixture.detectChanges();
+    expect(component.orderId).toBeUndefined();
+    expect(component.address).toBeUndefined();
   });
 
-  it('should navigate to /homepage when continue() is called', () => {
+
+  it('should display snackbar on order retrieval error', () => {
+    const errorResponse:ResponseStructure<OrderResponse[]> = {
+      status: 500,
+      message: 'Failed to fetch orders',
+      data:null
+    };
+    mockOrderService.getAllOrders.mockReturnValue(throwError(() => errorResponse));
+    fixture.detectChanges();
+    expect(mockSnackBar.open).toHaveBeenCalledWith('Failed to fetch orders', '', { duration: 3000 });
+  });
+
+
+  it('should navigate to homepage when continue method is called', () => {
     component.continue();
-    expect(routerMock.navigateByUrl).toHaveBeenCalledWith('/homepage');
+    expect(mockRouter.navigateByUrl).toHaveBeenCalledWith('/homepage');
+  });
+
+  it('should have default email value', () => {
+    expect(component.email).toBe('chandu45@gmail.com');
   });
 });

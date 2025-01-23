@@ -124,7 +124,6 @@ export class HomepageComponent implements OnInit {
       next: (response: ResponseStructure<BookResponse>) => {
         if (response.status === 200 && response.data) {
           this.updatableBook = response.data;
-          console.log(this.updatableBook);
 
           this.bookForm.patchValue({
             bookName: this.updatableBook.bookName,
@@ -251,8 +250,6 @@ export class HomepageComponent implements OnInit {
       debugger;
       const parsedUser = JSON.parse(user);
       this.currentUser = parsedUser;
-      console.log(this.currentUser.email)
-      console.log(this.currentUser.role)
     }
   }
 }
