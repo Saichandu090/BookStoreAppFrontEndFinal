@@ -27,7 +27,7 @@ export class CartComponent implements OnInit {
 
   bookService: BooksService = inject(BooksService);
 
-  private snackbar = inject(MatSnackBar);
+  snackbar = inject(MatSnackBar);
 
   showCartPopUp() {
     this.isPopUpOpen = !this.isPopUpOpen
@@ -45,7 +45,7 @@ export class CartComponent implements OnInit {
     });
   };
 
-  loadCart(cartResponse: CartResponse[]):void {
+  loadCart(cartResponse: CartResponse[]): void {
     cartResponse.sort((a, b) => a.cartId - b.cartId);
     cartResponse.forEach(item => {
       const existingCartItem = this.cartData.find(cart => cart.cartId === item.cartId);
@@ -96,15 +96,14 @@ export class CartComponent implements OnInit {
   onRemoveFromCart(cartId: number): void {
     const cartItem = this.cartData.find(item => item.cartId === cartId);
     if (cartItem) {
-    if (cartItem.quantity === 1) {
-      const index = this.cartData.indexOf(cartItem);
-      if (index !== -1) {
-        this.cartData.splice(index, 1);
-        this.updateTotals();
+      if (cartItem.quantity === 1) {
+        const index = this.cartData.indexOf(cartItem);
+        if (index !== -1) {
+          this.cartData.splice(index, 1);
+          this.updateTotals();
+        }
       }
     }
-  }
-
     this.cartService.removeBookFromCart(cartId).subscribe({
       next: (response: ResponseStructure<CartResponse>) => {
         if (response.status === 200) {
@@ -113,10 +112,10 @@ export class CartComponent implements OnInit {
           this.bookService.onBookChanged.next(true);
         }
       },
-      error:(error:ResponseStructure<CartResponse>)=>{
-        this.snackbar.open(error.message,'',{duration:3000});
+      error: (error: ResponseStructure<CartResponse>) => {
+        this.snackbar.open(error.message, '', { duration: 3000 });
       }
-    })
+    });
   };
 
 
@@ -127,7 +126,7 @@ export class CartComponent implements OnInit {
     this.cartObj.bookId = bookId;
     this.cartService.addBookToCart(this.cartObj).subscribe({
       next: (response: ResponseStructure<CartResponse>) => {
-        if (response.status === 200) {
+        if (response.status === 200 && response.data) {
           this.snackbar.open(response.message, '', { duration: 3000 });
           this.cartService.onCartCalled.next(true);
         }
