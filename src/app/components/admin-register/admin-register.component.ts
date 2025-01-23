@@ -37,7 +37,7 @@ export class AdminRegisterComponent {
       email: new FormControl('', [Validators.required, Validators.email])
     })
 
-    onSubmit() {
+    onSubmit():void {
        if (this.registerForm.invalid) {
             this.toaster.error("Form Invalid");
           } else {

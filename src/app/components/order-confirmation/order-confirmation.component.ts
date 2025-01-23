@@ -18,6 +18,8 @@ export class OrderConfirmationComponent implements OnInit {
 
   address!:string;
 
+  email:string='chandu45@gmail.com';
+
   private router: Router = inject(Router);
 
   private orderService: OrderService = inject(OrderService);
@@ -44,5 +46,5 @@ export class OrderConfirmationComponent implements OnInit {
         this.snackBar.open(error.message, '', { duration: 3000 });
       }
     });
-  }
+  };
 }

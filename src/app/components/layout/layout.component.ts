@@ -15,7 +15,6 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { CartComponent } from '../cart/cart.component';
-import { UserEditComponent } from '../user-edit/user-edit.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AddBookComponent } from '../add-book/add-book.component';
 
@@ -120,12 +119,5 @@ export class LayoutComponent implements OnInit {
         top: '60px',    /* Optional: Align to the top */
       }
     });
-  }
-
-  openDialogForEdit() {
-    this.dialog.open(UserEditComponent, {
-      panelClass: 'right-dialog-container',
-      width: '400px',
-    })
   }
 }

@@ -22,25 +22,26 @@ export class AddBookComponent {
 
   book: Book = new Book();
 
-  private snackBar: MatSnackBar = inject(MatSnackBar);
+  snackBar: MatSnackBar = inject(MatSnackBar);
 
-  private bookService: BooksService = inject(BooksService);
+  bookService: BooksService = inject(BooksService);
 
   fb: FormBuilder = inject(FormBuilder);
 
   bookForm = this.fb.group({
-    bookId: new FormControl('', [Validators.required]),
+    bookId: new FormControl(0, [Validators.required]),
     bookName: new FormControl('', [Validators.required, Validators.pattern("^[a-zA-Z .',]{3,}$")]),
     bookAuthor: new FormControl('', [Validators.required, Validators.pattern("^[a-zA-Z .',]{5,}$")]),
     bookDescription: new FormControl('', [Validators.required, Validators.pattern("^[a-zA-Z .',]{5,}$")]),
-    bookPrice: new FormControl('', [Validators.required, Validators.pattern("^[0-9.]+$")]),
-    bookQuantity: new FormControl('', [Validators.required, Validators.min(16)]),
+    bookPrice: new FormControl(0, [Validators.required, Validators.pattern("^[0-9.]+$")]),
+    bookQuantity: new FormControl(0, [Validators.required, Validators.min(16)]),
     bookLogo: new FormControl('', [Validators.required])
   });
 
-  addNewBook() {
+  addNewBook():void {
     if (this.bookForm.invalid) {
-      this.snackBar.open("Please fill the form to submit ", '', { duration: 3000 })
+      this.snackBar.open("Please fill the form to submit ", '', { duration: 3000 });
+      return;
     } else {
       this.book = Object.assign(new Book(), this.bookForm.value);
       this.bookService.addNewBook(this.book).subscribe({
@@ -53,7 +54,7 @@ export class AddBookComponent {
         error: (error: ResponseStructure<BookResponse>) => {
           this.snackBar.open(error.message, '', { duration: 3000 });
         }
-      })
+      });
     }
   };
 }

@@ -249,7 +249,7 @@ describe('OrderService', () => {
     const mockHttpHeaders = new HttpHeaders().set('Authorization', 'Bearer token');
     jest.spyOn(service, 'getHeaders').mockReturnValue(mockHttpHeaders);
 
-    service.getOrders().subscribe({
+    service.getAllOrders().subscribe({
       next: (response: ResponseStructure<OrderResponse[]>) => {
         if(response.data){
           expect(response.status).toBe(200);
@@ -280,7 +280,7 @@ describe('OrderService', () => {
     const mockHttpHeaders = new HttpHeaders().set('Authorization', 'Bearer token');
     jest.spyOn(service, 'getHeaders').mockReturnValue(mockHttpHeaders);
 
-    service.getOrders().subscribe({
+    service.getAllOrders().subscribe({
       next: (response: ResponseStructure<OrderResponse[]>) => {
         fail('expected error in getAllOrders');
       },

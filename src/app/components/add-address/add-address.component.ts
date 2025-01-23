@@ -20,23 +20,26 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class AddAddressComponent {
 
-  private addressService: AddressService = inject(AddressService);
+  addressService: AddressService = inject(AddressService);
 
-  private snackbar: MatSnackBar = inject(MatSnackBar);
+  snackbar: MatSnackBar = inject(MatSnackBar);
 
-  private fb: FormBuilder = inject(FormBuilder);
+  fb: FormBuilder = inject(FormBuilder);
 
   newAddress: FormGroup = this.fb.group({
     streetName: new FormControl('', [Validators.required]),
     city: new FormControl('', [Validators.required]),
     state: new FormControl('', [Validators.required]),
     pinCode: new FormControl('', [Validators.required])
-  })
+  });
 
-  addNewAddress():void {
+  addNewAddress(): void {
+    if(this.newAddress.invalid){
+      return;
+    }
     this.addressService.addAddress(this.newAddress.value).subscribe({
-      next: (res: ResponseStructure<AddressResponse>) => {
-        if (res.status === 201 && res.data) {
+      next: (response: ResponseStructure<AddressResponse>) => {
+        if (response.status === 201 && response.data) {
           this.snackbar.open("Address added successfully", '', { duration: 3000 });
           this.addressService.onAddressChange.next(true);
         }

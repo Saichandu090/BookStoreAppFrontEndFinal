@@ -20,9 +20,9 @@ export class WishListComponent implements OnInit {
 
   wishListBooks: WishListResponse[] = [];
 
-  books: BookResponse[] = [];
+  booksInWishList: BookResponse[] = [];
 
-  private snackBar: MatSnackBar = inject(MatSnackBar);
+  snackBar: MatSnackBar = inject(MatSnackBar);
 
   bookService: BooksService = inject(BooksService);
 
@@ -38,24 +38,32 @@ export class WishListComponent implements OnInit {
     this.wishListService.getWishList().subscribe({
       next: (response: ResponseStructure<WishListResponse[]>) => {
         if (response.status === 200 && response.data) {
-          this.wishListBooks = [];
+          this.booksInWishList=[];
           this.wishListBooks = response.data;
           this.getBooks(this.wishListBooks);
         }
       }
-    })
+    });
   }; // end of getWishListBooks
 
 
   getBooks(wishList: WishListResponse[]): void {
-    const sortedWishList = wishList.sort((a,b)=>a.wishListId-b.wishListId);
-    sortedWishList.forEach(item => this.bookService.getBookById(item.bookId).subscribe({
-      next: (response: ResponseStructure<BookResponse>) => {
-        if (response.status === 200 && response.data) {
-          this.books.push(response.data);
+    const sortedWishList = wishList.sort((a,b)=>a.bookId-b.bookId);
+    sortedWishList.forEach(item=>{
+      const wishListBook=this.booksInWishList.find(book=>book.bookId===item.bookId);
+      if(!wishListBook){
+       this.bookService.getBookById(item.bookId).subscribe({
+        next:(response:ResponseStructure<BookResponse>)=>{
+          if(response.status===200 && response.data){
+            this.booksInWishList.push(response.data);
+          }
+        },
+        error:(error:ResponseStructure<BookResponse>)=>{
+          this.snackBar.open(error.message,'',{duration:3000});
         }
+       });
       }
-    }))
+    });
   };
 
   isBookPresent(id: number): boolean {
@@ -83,17 +91,17 @@ export class WishListComponent implements OnInit {
       error: (error: ResponseStructure<WishListResponse>) => {
         this.snackBar.open(error.message, '', { duration: 3000 });
       }
-    })
+    });
   }; // end of addToWishList
 
 
-  cartObj: Cart = new Cart();
+  cartObject: Cart = new Cart();
 
   cartService: CartService = inject(CartService);
 
   onAddToCart(id: number):void {
-    this.cartObj.bookId = id;
-    this.cartService.addBookToCart(this.cartObj).subscribe({
+    this.cartObject.bookId = id;
+    this.cartService.addBookToCart(this.cartObject).subscribe({
       next: (res: ResponseStructure<CartResponse>) => {
         if (res.status === 200) {
           this.snackbar.open(res.message, '', { duration: 3000 });
@@ -104,18 +112,16 @@ export class WishListComponent implements OnInit {
       error: (error: ResponseStructure<CartResponse>) => {
         this.snackbar.open(error.message, '', { duration: 3000 });
       }
-    }
-    )
+    });
   };// end of onAddToCart
 
 
   ngOnInit(): void {
     this.getWishListBooks();
-    this.wishListService.onWishListChanged.subscribe((res: boolean) => {
-      if (res) {
-        this.books = [];
+    this.wishListService.onWishListChanged.subscribe((response: boolean) => {
+      if (response) {
         this.getWishListBooks();
       }
-    })
+    });
   };
 }
