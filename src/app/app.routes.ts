@@ -10,48 +10,48 @@ import { UserLoginComponent } from './components/user-login/user-login.component
 import { OrderConfirmationComponent } from './components/order-confirmation/order-confirmation.component';
 
 export const routes: Routes = [
-    {
-        path: '',
-        redirectTo: "login",
-        pathMatch: "full"
-    },
-    {
-        path: "login",
-        component: UserLoginComponent
-    },
-    {
-        path:"adminRegister",
-        component:AdminRegisterComponent
-    },
-    {
-        path: '',
-        component: LayoutComponent,
-        children: [
-        {
-            path: 'homepage',
-            component: HomepageComponent,
-            canActivate: [loginGuard]
-        },
-        {
-            path:'create-order',
-            component:CreateOrderComponent,
-            canActivate:[loginGuard]
-        },
-        {
-            path:'orders',
-            component:OrdersComponent,
-            canActivate:[loginGuard]
-        },
-        {
-            path:'wishlist',
-            component:WishListComponent,
-            canActivate:[loginGuard]
-        },
-        {
-          path:'order-placed',
-          component:OrderConfirmationComponent,
-          canActivate:[loginGuard]
-        }
+  {
+    path: '',
+    redirectTo: "login",
+    pathMatch: "full"
+  },
+  {
+    path: "login",
+    component: UserLoginComponent
+  },
+  {
+    path: "adminRegister",
+    component: AdminRegisterComponent
+  },
+  {
+    path: '',
+    component: LayoutComponent,
+    children: [
+      {
+        path: 'homepage',
+        component: HomepageComponent,
+        canActivate: [loginGuard]
+      },
+      {
+        path: 'create-order',
+        component: CreateOrderComponent,
+        canActivate: [loginGuard]
+      },
+      {
+        path: 'orders',
+        component: OrdersComponent,
+        canActivate: [loginGuard]
+      },
+      {
+        path: 'wishlist',
+        component: WishListComponent,
+        canActivate: [loginGuard]
+      },
+      {
+        path: 'order-placed',
+        component: OrderConfirmationComponent,
+        canActivate: [loginGuard]
+      }
     ]
-    }
+  }
 ];

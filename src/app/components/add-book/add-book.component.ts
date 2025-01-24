@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -18,7 +18,7 @@ import { BookResponse, ResponseStructure } from '../../model/interfaces/jsonresp
   templateUrl: './add-book.component.html',
   styleUrl: './add-book.component.css'
 })
-export class AddBookComponent {
+export class AddBookComponent implements OnInit {
 
   book: Book = new Book();
 
@@ -38,7 +38,7 @@ export class AddBookComponent {
     bookLogo: new FormControl('', [Validators.required])
   });
 
-  addNewBook():void {
+  addNewBook(): void {
     if (this.bookForm.invalid) {
       this.snackBar.open("Please fill the form to submit ", '', { duration: 3000 });
       return;
@@ -57,4 +57,20 @@ export class AddBookComponent {
       });
     }
   };
+
+  resetForm(): void {
+    this.bookForm.patchValue({
+      bookId: null,
+      bookName: '',
+      bookAuthor: '',
+      bookDescription: '',
+      bookPrice: null,
+      bookQuantity: null,
+      bookLogo: ''
+    });
+  }
+
+  ngOnInit(): void {
+    this.resetForm();
+  }
 }

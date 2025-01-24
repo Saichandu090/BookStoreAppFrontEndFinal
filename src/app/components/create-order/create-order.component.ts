@@ -16,11 +16,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { BooksService } from '../../services/books/books.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AddAddressComponent } from '../add-address/add-address.component';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-create-order',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, MatInputModule, MatSelectModule, MatFormFieldModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, MatInputModule, MatSelectModule, MatFormFieldModule, MatIconModule, MatButtonModule, MatDividerModule],
   templateUrl: './create-order.component.html',
   styleUrl: './create-order.component.css'
 })
@@ -52,6 +55,9 @@ export class CreateOrderComponent implements OnInit {
 
   router: Router = inject(Router);
 
+  continue():void{
+    this.router.navigateByUrl("/homepage");
+  }
 
   onAddToCart(bookId: number): void {
     this.cartObj.bookId = bookId;
@@ -153,7 +159,7 @@ export class CreateOrderComponent implements OnInit {
         this.snackbar.open(error.message, '', { duration: 3000 });
       }
     })
-  }; // end of cart methods
+  };
 
   ngOnInit(): void {
     this.getUserCart();
@@ -174,7 +180,10 @@ export class CreateOrderComponent implements OnInit {
   getAllUserAddress(): void {
     this.addressService.getAllAddress().subscribe({
       next: (response: ResponseStructure<AddressResponse[]>) => {
-        if (response.status === 200 && response.data) {
+        if (response === null) {
+          this.addressList = [];
+        }
+        else if (response.status === 200 && response.data) {
           this.addressList = response.data;
         }
       },
@@ -300,7 +309,7 @@ export class CreateOrderComponent implements OnInit {
         }
       })
     }
-  };// onPlaceOrder ending
+  };
 
   readonly dialog = inject(MatDialog);
 
@@ -308,7 +317,7 @@ export class CreateOrderComponent implements OnInit {
     this.dialog.open(AddAddressComponent, {
       panelClass: 'right-dialog-container',
       width: '400px',
-      height: '370px'
+      height: '550px'
     })
   };
 }

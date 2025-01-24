@@ -1,7 +1,12 @@
 @if (orderList.length == 0) {
-<div class="d-flex justify-content-center align-items-center" style="height: 70vh;">
-  <h4>You have no orders to display.</h4>
-</div>
+  <div class="d-flex justify-content-center align-items-center" style="height: 30vh;">
+    <div class="text-center">
+      <h4 class="mb-5">You have no Orders to display.</h4>
+      <div class="button-container">
+        <button class="btn btn-primary btn-lg" (click)="continue()">Continue Shopping</button>
+      </div>
+    </div>
+  </div>
 }@else {
 <div *ngFor="let order of orderList" class="order-card">
   <h2>Order ID: {{ order.orderId }}</h2>
@@ -10,13 +15,14 @@
     }}</p>
   <p><strong>Total Quantity:</strong> {{ order.orderQuantity }}</p>
   <p><strong>Total Price:</strong> ₹{{ order.orderPrice }}</p>
-  <div *ngIf="order.cancelOrder !== true">
-    <button (click)="cancelOrder(order.orderId)">Cancel Order</button>
-  </div>
-
-  <div *ngIf="order.cancelOrder === true" class="cancelled-status">
-    Order Cancelled
-  </div>
+  @if (order.cancelOrder) {
+    <p><strong>Order Status:</strong> Order Cancelled!!</p>
+  }@else {
+    <p><strong>Order Status:</strong> Order In Transit</p>
+    <div>
+      <button class="btn btn-primary btn-lg" (click)="cancelOrder(order.orderId)">Cancel Order</button>
+    </div>
+  }
 
   <div *ngIf="order.orderBooks.length > 0">
     <h3>Books:</h3>
@@ -32,6 +38,9 @@
   <hr />
 </div>
 }
-<div class="button-container">
-  <button (click)="continue()">Continue Shopping</button>
+<div class="text-center pb-4">
+  <div class="button-container">
+    <button class="btn btn-primary btn-lg" (click)="continue()">Continue Shopping</button>
+  </div>
 </div>
+

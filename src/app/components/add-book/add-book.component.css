@@ -1,0 +1,33 @@
+.dialog-container {
+  max-width: 500px;
+  padding: 20px;
+}
+
+.dialog-title {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.book-form .form-group {
+  margin-bottom: 15px;
+}
+
+.book-form label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.8em;
+  margin-top: 5px;
+}

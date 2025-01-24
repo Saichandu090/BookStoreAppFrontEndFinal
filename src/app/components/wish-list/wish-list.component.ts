@@ -14,7 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-wish-list',
   standalone: true,
-  imports: [CommonModule,MatIconModule],
+  imports: [CommonModule, MatIconModule],
   templateUrl: './wish-list.component.html',
   styleUrl: './wish-list.component.css'
 })
@@ -49,11 +49,18 @@ export class WishListComponent implements OnInit {
   getWishListBooks(): void {
     this.wishListService.getWishList().subscribe({
       next: (response: ResponseStructure<WishListResponse[]>) => {
-        if (response.status === 200 && response.data) {
+        if (response === null) {
+          this.booksInWishList = [];
+          this.wishListBooks = [];
+        }
+        else if (response.status === 200 && response.data) {
           this.booksInWishList = [];
           this.wishListBooks = response.data;
           this.getBooks(this.wishListBooks);
         }
+      },
+      error: (error) => {
+        this.snackBar.open('Error occured loading wishlist', '', { duration: 3000 });
       }
     });
   };

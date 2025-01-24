@@ -78,38 +78,6 @@
 }
 
 
-button {
-  text-align: center;
-  display: inline-block;
-  padding: 12px 25px;
-  background-color:  #f4b400;
-  color: #ffffff;
-  font-size: 16px;
-  font-weight: bold;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  margin-top: 0px;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-
-  &:hover {
-    background-color: #0056b3;
-    transform: translateY(-2px);
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
-}
-
-
-.button-container {
-display: flex;
-justify-content: center;
-align-items: center;
-height: 100%;
-}
-
 @media (max-width: 768px) {
   .order-card {
     padding: 15px;

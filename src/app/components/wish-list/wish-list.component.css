@@ -1,75 +1,154 @@
-.product-card {
-  border: 2px solid #d6dc1b;
-  /* Blue border highlight */
-  border-radius: 7px;
-  overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.2s;
+.book-gallery {
+  background-color: #f8f9fa;
 }
 
-.product-card:hover {
-  transform: scale(1.03);
-  /* Slightly enlarge on hover */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  /* Add shadow on hover */
+.book-card {
+  perspective: 1000px;
+  height: 550px;
 }
 
-.product-image {
+.book-card-inner {
+  position: relative;
   width: 100%;
-  height: 200px;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.book-card-front {
+  position: relative;
+  overflow: hidden;
+}
+
+.book-image {
+  width: 100%;
+  height: 300px;
   object-fit: cover;
 }
 
-.card-title {
+.book-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.book-description {
+  color: white;
+  text-align: center;
+  padding: 15px;
+}
+
+.book-card:hover .book-overlay {
+  opacity: 1;
+}
+
+.book-card-details {
+  padding: 15px;
+  text-align: center;
+}
+
+.wishlist-btn {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  padding: 10px;
+  color: #888;
+}
+
+.wishlist-btn.active {
+  color: red;
+}
+
+.admin-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.book-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+  margin-bottom: 20px;
+}
+
+.book-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.book-card-front {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.book-image {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.book-card-details {
+  background-color: #fff;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.book-title {
   font-size: medium;
 }
 
-.card-author {
-  font-size: small;
+.col-xl-3, .col-lg-4, .col-md-6, .col-sm-12 {
+  padding: 20px;
 }
 
-.product-category {
-  font-size: 0.9em;
-  color: #6c757d;
-}
-
-.product-price {
-  color: #28a745;
-  font-weight: bold;
-}
-
-.add-to-cart-btn {
+.btn-add-to-cart {
   background-color: #007bff;
   color: white;
   border: none;
+  padding: 12px 24px;
+  font-size: 16px;
   border-radius: 5px;
-  width: 100%;
-  padding: 10px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.add-to-cart-btn:hover {
+.btn-add-to-cart:hover {
   background-color: #0056b3;
-  /* Darker blue on hover */
+  transform: scale(1.05);
 }
 
-.category-badge {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  padding: 5px 10px;
-  border-radius: 12px;
-  font-size: 1.5em;
+.btn-update, .btn-delete {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.button-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
+.btn-update:hover, .btn-delete:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
 }
 
+@media (max-width: 768px) {
+  .book-card {
+    height: auto;
+  }
 
-.active {
-  color: red;
+  .btn-add-to-cart {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+  }
 }
+

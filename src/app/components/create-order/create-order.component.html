@@ -3,7 +3,7 @@
     <!-- Billing Address -->
     <div class="col-lg-8 col-md-12 mb-3">
       <div class="card shadow">
-        <div class="card-header" style="background-color: #ed9d4db6 !important">
+        <div class="card-header" style="background-color: #f8f6f4 !important">
           <h4>Billing Address</h4>
           <button class="btn btn-info float-end" (click)="openAddAddress()">Add-New Address</button>
         </div>
@@ -17,7 +17,6 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-
           <table class="table">
             <thead>
               <tr>
@@ -39,18 +38,14 @@
                 <td>{{item.state}}</td>
                 <td>{{item.pinCode}}</td>
                 <td>
-                  <div class="d-flex gap-3">
-                    <a class="edit btn">
-                      <i class="bi bi-pen-fill" (click)="editOldAddress(item.addressId)"></i>
-                    </a>
-                  </div>
+                  <button mat-raised-button color="primary" (click)="editOldAddress(item.addressId)">
+                    <mat-icon>edit</mat-icon>
+                  </button>
                 </td>
                 <td>
-                  <div class="d-flex gap-3">
-                    <a class="delete btn">
-                      <i class="bi bi-trash" (click)="deleteAddress(item.addressId)"></i>
-                    </a>
-                  </div>
+                  <button mat-raised-button color="warn" (click)="deleteAddress(item.addressId)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
                 </td>
               </tr>
             </tbody>
@@ -59,11 +54,11 @@
         </div>
       </div>
     </div>
-    <!-- Your Order -->
+    @if (totalQuantity > 0) {
     <div class="col-lg-4 col-md-12">
       <div class="card shadow ">
-        <div class="card-header" style="background-color: #faa24ab6 !important">
-          <h4>Your Order</h4>
+        <div class="card-header" style="background-color: #f9f8f6 !important">
+          <h4>Your Order Summary</h4>
         </div>
         <div class="card-body">
           @for (item of cartData; track $index) {
@@ -106,6 +101,25 @@
         </div>
       </div>
     </div>
+    }@else {
+      <div class="col-lg-4 col-md-12">
+        <div class="card shadow ">
+          <div class="card-header" style="background-color: #f9f8f6 !important">
+            <h4>Your Order Summary</h4>
+          </div>
+          <div class="card-body">
+            <div class="d-flex justify-content-center align-items-center" style="height: 30vh;">
+              <div class="text-center">
+                <h5 class="mb-5">You have no books to Place order.</h5>
+                <div class="button-container">
+                  <button mat-fab extended class="btn btn-primary btn-lg" (click)="continue()">Continue Shopping</button>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+    }
   </div>
 </div>
 
@@ -171,7 +185,8 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
           (click)="closeEditAddress()">Close</button>
-        <button type="button" class="btn btn-primary" (click)="saveNewAddress()">Save Address</button>
+        <button type="button" class="btn btn-primary" [disabled]="newEditAddress.invalid"
+          (click)="saveNewAddress()">Save Address</button>
       </div>
     </div>
   </div>

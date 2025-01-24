@@ -1,52 +1,61 @@
-<mat-dialog-content>
-  <div class="row">
-    <div class="col-8">
-      <h3 mat-dialog-title>User Cart <i class="bi bi-cart4"></i></h3>
-    </div>
-    <div class="col-4 text-end">
-      <i class="fa fa-close p-2" mat-dialog-close></i>
+<mat-dialog-content class="cart-dialog">
+  <div class="cart-header">
+    <div class="row align-items-center">
+      <div class="col-8">
+        <h3 class="cart-title">Cart <i class="bi bi-cart4"></i></h3>
+      </div>
+      <div class="col-4 text-end">
+        <i class="fa fa-close cart-close" mat-dialog-close></i>
+      </div>
     </div>
   </div>
-  <table class="table table-sm">
-    <tbody>
-      @for (item of cartData; track $index) {
-      <tr>
-        <td>
-          <div class="rounded"
-            style="background-image: url({{item.bookLogo}}); width: 60px; height: 60px; background-size: cover;">
-          </div>
-        </td>
-        <td class="align-middle text-left">{{item.bookName}}</td>
-        <td class="align-middle text-center">
-          <button class="btn" (click)="onRemoveFromCart(item.cartId)">
-            <i class="bi bi-dash"></i>
-          </button>
-          <button class="btn"><b>{{item.quantity}}</b> </button>
-          <button class="btn" (click)="onAddToCart(item.bookId)">
-            <i class="bi bi-plus"></i>
-          </button>
-        </td>
-        <td class="align-middle text-right">{{item.totalPrice | currency:'INR'}}</td>
-      </tr>
-      }
-    </tbody>
-    @if (totalQuantity!=0) {
-      <tfoot>
-        <tr>
-          <td colspan="2" class="align-middle text-right"><strong>Summary</strong></td>
-          <td class="align-middle text-center"><strong>{{ totalQuantity }}</strong></td>
-          <td class="align-middle text-right"><strong>{{ totalPrice | currency: 'INR' }}</strong></td>
-        </tr>
-      </tfoot>
-    }
-  </table>
-</mat-dialog-content>
-<mat-dialog-actions>
-  @if (cartData.length!=0) {
-  <button mat-button [routerLink]="'create-order'" mat-dialog-close>CheckOut</button>
-  <button mat-button mat-dialog-close>Close</button>
-  }@else {
-  <span>Please do some shopping to place order!!</span>
-  }
 
+  <div class="cart-items-container">
+    <table class="cart-table">
+      <tbody>
+        @for (item of cartData; track $index) {
+        <tr class="cart-item">
+          <td class="cart-item-image">
+            <div class="book-thumbnail" [style.background-image]="'url(' + item.bookLogo + ')'">
+            </div>
+          </td>
+          <td class="cart-item-name">{{item.bookName}}</td>
+          <td class="cart-item-quantity">
+            <div class="quantity-control">
+              <button class="btn-quantity" (click)="onRemoveFromCart(item.cartId)">
+                <i class="bi bi-dash"></i>
+              </button>
+              <span class="quantity-display">{{item.quantity}}</span>
+              <button class="btn-quantity" (click)="onAddToCart(item.bookId)">
+                <i class="bi bi-plus"></i>
+              </button>
+            </div>
+          </td>
+          <td class="cart-item-price">{{item.totalPrice | currency:'INR'}}</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+
+    @if (totalQuantity!=0) {
+    <div class="cart-summary">
+      <div class="summary-row">
+        <div class="summary-label">Summary</div>
+        <div class="summary-quantity">{{ totalQuantity }}</div>
+        <div class="summary-total">{{ totalPrice | currency: 'INR' }}</div>
+      </div>
+    </div>
+    }
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions class="cart-actions">
+  @if (cartData.length!=0) {
+  <button mat-stroked-button [routerLink]="'create-order'" mat-dialog-close>
+    Checkout
+  </button>
+  <button mat-stroked-button mat-dialog-close>Close</button>
+  } @else {
+  <div class="empty-cart-message">Please do some shopping to place an order!!</div>
+  }
 </mat-dialog-actions>
