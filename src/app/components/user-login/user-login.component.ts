@@ -6,7 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { LoginResponse, RegisterResponse, ResponseStructure } from '../../model/interfaces/jsonresponse';
 import { Router } from '@angular/router';
-import { LoggedInUser, UserRegister } from '../../model/classes/user';
+import { LoggedInUser, NewPassword, UserRegister } from '../../model/classes/user';
 import { ToastrService } from 'ngx-toastr';
 import { LoginService } from '../../services/login/login.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -35,32 +35,78 @@ export class UserLoginComponent {
 
   isLogin = true;
 
-  loginForm: FormGroup;
+  isForgotPassword = false;
 
-  registerForm: FormGroup;
+  forgotPasswordForm!: FormGroup;
 
-  constructor(private fb: FormBuilder,) {
+  isPasswordResetStage = false;
+
+  loginForm!: FormGroup;
+
+  registerForm!: FormGroup;
+
+  constructor(private fb: FormBuilder) {
+    this.initializeForms();
+  }
+
+  initializeForms() {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]],
+      password: ['', [Validators.required]]
     });
 
     this.registerForm = this.fb.group({
-      firstName: new FormControl('', [Validators.required, Validators.pattern("^[A-Z][A-Za-z .]{2,}$")]),
-      lastName: new FormControl('', [Validators.required, Validators.pattern("^[A-Z][A-Za-z .]{2,}$")]),
-      dob: new FormControl('', [Validators.required]),
-      password: new FormControl('', [Validators.required, Validators.pattern("^[a-zA-Z 0-9.@-_]{8,}$")]),
-      email: new FormControl('', [Validators.required, Validators.email])
+      firstName: ['', [
+        Validators.required,
+        Validators.pattern('^[A-Z][a-zA-Z]{2,}$')
+      ]],
+      lastName: ['', [
+        Validators.required,
+        Validators.pattern('^[A-Z][a-zA-Z]{2,}$')
+      ]],
+      dob: [''],
+      password: ['', [
+        Validators.required,
+        Validators.minLength(8)
+      ]],
+      email: ['', [Validators.required, Validators.email]]
     });
+
+    this.forgotPasswordForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      newPassword: ['', [Validators.required, Validators.minLength(8)]],
+      confirmPassword: ['', [Validators.required]]
+    }, { validators: this.passwordMatchValidator });
+  }
+
+  passwordMatchValidator(form: FormGroup) {
+    const newPassword = form.get('newPassword');
+    const confirmPassword = form.get('confirmPassword');
+    return newPassword && confirmPassword && newPassword.value === confirmPassword.value
+      ? null
+      : { passwordMismatch: true };
   }
 
   toggleForm(): void {
     this.isLogin = !this.isLogin;
     this.loginForm.reset();
     this.registerForm.reset();
+    this.isForgotPassword = false;
   }
 
+  toggleForgotPassword() {
+    this.isForgotPassword = !this.isForgotPassword;
+    this.isLogin = false;
+    this.isPasswordResetStage = false;
+    this.forgotPasswordForm.reset();
+  }
+
+
   handleLogin(): void {
+    if (this.loginForm.invalid) {
+      this.toaster.error('Bad credentials');
+      return;
+    }
     this.loginService.loginUser(this.loginForm.value).subscribe({
       next: (response: ResponseStructure<LoginResponse>) => {
         if (response.status === 200 && response.data) {
@@ -74,7 +120,7 @@ export class UserLoginComponent {
         }
       },
       error: (error: ResponseStructure<LoginResponse>) => {
-        this.toaster.error(error.message);
+        this.toaster.error('Bad credentials');
       }
     });
   };
@@ -101,6 +147,49 @@ export class UserLoginComponent {
         }
       });
     }
+  };
+
+  isUserExists(): void {
+    const email: string = this.forgotPasswordForm.get('email')?.value;
+    this.loginService.isUserExists(email).subscribe({
+      next: (response: ResponseStructure<boolean>) => {
+        if (response.status === 200 && response.data) {
+          this.isPasswordResetStage = true;
+        }
+      },
+      error: (error: ResponseStructure<boolean>) => {
+        this.toaster.error('User not Exist');
+      }
+    });
+  };
+
+  forgetPasswordObject: NewPassword = new NewPassword();
+
+  handleForgotPassword(): void {
+    if (!this.isPasswordResetStage) {
+      if (this.forgotPasswordForm.valid) {
+        this.isPasswordResetStage = true;
+      }
+    } else {
+      if (this.forgotPasswordForm.valid) {
+        this.forgetPasswordObject.email = this.forgotPasswordForm.get('email')?.value;
+        this.forgetPasswordObject.password = this.forgotPasswordForm.get('newPassword')?.value;
+        this.loginService.forgetPassword(this.forgetPasswordObject).subscribe({
+          next: (response: ResponseStructure<boolean>) => {
+            if (response.status === 200 && response.data) {
+              this.snackBar.open(response.message, '', { duration: 3000 });
+              this.forgotPasswordForm.reset();
+              this.isForgotPassword = false;
+              this.isLogin = true;
+              this.isPasswordResetStage = false;
+            }
+          },
+          error: (error) => {
+            this.toaster.error('Password rest failed');
+          }
+        });
+      }
+    };
   };
 
 

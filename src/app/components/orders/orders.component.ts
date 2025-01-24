@@ -5,13 +5,14 @@ import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { MessageService } from 'primeng/api';
 import { OrderService } from '../../services/order/order.service';
-import { ResponseStructure } from '../../model/interfaces/jsonresponse';
+import { BookResponse, ResponseStructure } from '../../model/interfaces/jsonresponse';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CartData } from '../../model/interfaces/cart';
 import { OrderResponse } from '../../model/interfaces/order';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -30,15 +31,19 @@ export class OrdersComponent implements OnInit {
 
   orderList: OrderResponse[] = [];
 
+  bookList : BookResponse[]=[];
+
   carts: CartData[] = [];
 
   snackbar: MatSnackBar = inject(MatSnackBar);
+
+  router : Router=inject(Router);
 
   getOrders(): void {
     this.orderService.getAllOrders().subscribe({
       next: (response: ResponseStructure<OrderResponse[]>) => {
         if (response.status === 200 && response.data) {
-          this.orderList = response.data
+          this.orderList = response.data;
         }
       },
       error: (error: ResponseStructure<OrderResponse[]>) => {
@@ -63,6 +68,10 @@ export class OrdersComponent implements OnInit {
       });
     }
   };
+
+  continue():void{
+    this.router.navigateByUrl('homepage');
+  }
 
 
   ngOnInit(): void {

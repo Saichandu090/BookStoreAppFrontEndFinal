@@ -1,3 +1,11 @@
+@if (wishListBooks.length == 0) {
+<div class="d-flex justify-content-center align-items-center" style="height: 30vh;">
+  <h4>You have no WishList to display.</h4>
+</div>
+<div class="button-container">
+  <button (click)="continue()">Continue Shopping</button>
+</div>
+}@else {
 <div class="container-fluid">
   <div class="row">
     <div class="col-12">
@@ -25,3 +33,4 @@
     </div>
   </div>
 </div>
+}

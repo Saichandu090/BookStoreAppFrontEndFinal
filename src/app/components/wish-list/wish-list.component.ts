@@ -8,11 +8,13 @@ import { CartResponse } from '../../model/interfaces/cart';
 import { CartService } from '../../services/cart/cart.service';
 import { BooksService } from '../../services/books/books.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-wish-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,MatIconModule],
   templateUrl: './wish-list.component.html',
   styleUrl: './wish-list.component.css'
 })
@@ -34,9 +36,15 @@ export class WishListComponent implements OnInit {
 
   cartService: CartService = inject(CartService);
 
+  router: Router = inject(Router);
+
   wishListObject: WishListRequest = {
     bookId: 0
   };
+
+  continue(): void {
+    this.router.navigateByUrl('/homepage');
+  }
 
   getWishListBooks(): void {
     this.wishListService.getWishList().subscribe({

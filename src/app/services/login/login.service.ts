@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { LoginResponse, RegisterResponse, ResponseStructure } from '../../model/interfaces/jsonresponse';
 import { ILogin } from '../../model/interfaces/user';
-import { UserRegister } from '../../model/classes/user';
+import { NewPassword, UserRegister } from '../../model/classes/user';
 import { APP_CONSTANTS } from '../../constants/constant';
 
 @Injectable({
@@ -30,5 +30,13 @@ export class LoginService {
 
   loginUser(loginObject: ILogin): Observable<ResponseStructure<LoginResponse>> {
     return this.http.post<ResponseStructure<LoginResponse>>(this.baseURL + "login", loginObject);
+  }
+
+  isUserExists(email: string): Observable<ResponseStructure<boolean>> {
+    return this.http.get<ResponseStructure<boolean>>(`${this.baseURL}isUserExists/${email}`);
+  }
+
+  forgetPassword(newPasswordObject: NewPassword): Observable<ResponseStructure<boolean>> {
+    return this.http.put<ResponseStructure<boolean>>(this.baseURL + 'forgetPassword', newPasswordObject);
   }
 }

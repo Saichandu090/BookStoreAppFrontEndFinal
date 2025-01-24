@@ -53,14 +53,14 @@ describe('BooksService', () => {
     jest.spyOn(service, 'getHeaders').mockReturnValue(mockHeaders);
 
     service.addNewBook(book).subscribe({
-      next: (response:ResponseStructure<BookResponse>) => {
+      next: (response: ResponseStructure<BookResponse>) => {
         if (response.data) {
           expect(response.status).toBe(201);
           expect(response.data.bookId).toBe(1);
           expect(response.data.bookName).toBe('Testing');
         }
       },
-      error:(error)=>{
+      error: (error) => {
         fail('response expected in add book');
       }
     });
@@ -93,7 +93,7 @@ describe('BooksService', () => {
     jest.spyOn(service, 'getHeaders').mockReturnValue(mockHeaders);
 
     service.addNewBook(book).subscribe({
-      next:(response)=>{
+      next: (response) => {
         fail('error expected in add book')
       },
       error: (error) => {
@@ -128,14 +128,14 @@ describe('BooksService', () => {
     jest.spyOn(service, 'getHeaders').mockReturnValue(mockHeaders);
 
     service.getBookById(bookId).subscribe({
-      next: (response:ResponseStructure<BookResponse>) => {
+      next: (response: ResponseStructure<BookResponse>) => {
         if (response.data) {
           expect(response.status).toBe(200);
           expect(response.data.bookId).toBe(1);
           expect(response.data.bookName).toBe('Testing');
         }
       },
-      error:(error)=>{
+      error: (error) => {
         fail('response expected in getBookById');
       }
     });
@@ -204,7 +204,7 @@ describe('BooksService', () => {
     jest.spyOn(service, 'getHeaders').mockReturnValue(mockHeaders);
 
     service.getAllBooks().subscribe({
-      next: (response:ResponseStructure<BookResponse[]>) => {
+      next: (response: ResponseStructure<BookResponse[]>) => {
         if (response.data) {
           expect(response.status).toBe(200);
           expect(response.data.length).toBe(2);
@@ -214,12 +214,93 @@ describe('BooksService', () => {
           expect(response.data[1].bookName).toBe('Testing Book 2');
         }
       },
-      error:(error)=>{
+      error: (error) => {
         fail('response expected in getAllBooks');
       }
     });
 
     const urlRequest = httpMock.expectOne(`${baseUrl}getBooks`);
+    expect(urlRequest.request.method).toBe('GET');
+    expect(urlRequest.request.headers.get('Authorization')).toBe('Bearer mock-token');
+    urlRequest.flush(mockBookResponse);
+  });
+
+
+  it('should sort the books by name', () => {
+    const field = 'bookName';
+    const mockBookResponse: ResponseStructure<BookResponse[]> = {
+      status: 200,
+      message: 'Books sorted successully',
+      data: [
+        {
+          bookId: 1,
+          bookName: "Alpha",
+          bookAuthor: "Chandu",
+          bookPrice: 987.3,
+          bookDescription: 'Learn testing',
+          bookLogo: 'URL',
+          bookQuantity: 34
+        },
+        {
+          bookId: 2,
+          bookName: 'Beta',
+          bookAuthor: 'Chandu',
+          bookPrice: 1025.5,
+          bookDescription: 'Learn testing with Book 2',
+          bookLogo: 'URL2',
+          bookQuantity: 50
+        }
+      ]
+    };
+    const mockHeaders = new HttpHeaders().set('Authorization', 'Bearer mock-token');
+    jest.spyOn(service, 'getHeaders').mockReturnValue(mockHeaders);
+
+    service.sortByField(field).subscribe({
+      next: (response: ResponseStructure<BookResponse[]>) => {
+        if (response.data) {
+          expect(response.status).toBe(200);
+          expect(response.data.length).toBe(2);
+          expect(response.data[0].bookId).toBe(1);
+          expect(response.data[0].bookName).toBe('Alpha');
+          expect(response.data[1].bookId).toBe(2);
+          expect(response.data[1].bookName).toBe('Beta');
+        }
+      },
+      error: (error) => {
+        fail('response expected in sortByField');
+      }
+    });
+
+    const urlRequest = httpMock.expectOne(`${baseUrl}sortBy/${field}`);
+    expect(urlRequest.request.method).toBe('GET');
+    expect(urlRequest.request.headers.get('Authorization')).toBe('Bearer mock-token');
+    urlRequest.flush(mockBookResponse);
+  });
+
+
+  it('should handle the error in sortByField', () => {
+    const field = 'bookName';
+    const mockBookResponse: ResponseStructure<BookResponse[]> = {
+      status: 400,
+      message: 'Bad request',
+      data: null
+    };
+    const mockHeaders = new HttpHeaders().set('Authorization', 'Bearer mock-token');
+    jest.spyOn(service, 'getHeaders').mockReturnValue(mockHeaders);
+
+    service.sortByField(field).subscribe({
+      next: (response: ResponseStructure<BookResponse[]>) => {
+        if (response.data) {
+          fail('expected error in sortByField');
+        }
+      },
+      error: (error) => {
+        expect(error.status).toBe(400);
+        expect(error.message).toBe('Bad request');
+      }
+    });
+
+    const urlRequest = httpMock.expectOne(`${baseUrl}sortBy/${field}`);
     expect(urlRequest.request.method).toBe('GET');
     expect(urlRequest.request.headers.get('Authorization')).toBe('Bearer mock-token');
     urlRequest.flush(mockBookResponse);
@@ -236,11 +317,11 @@ describe('BooksService', () => {
     jest.spyOn(service, 'getHeaders').mockReturnValue(mockHeaders);
 
     service.getAllBooks().subscribe({
-      next: (response:ResponseStructure<BookResponse[]>) => {
+      next: (response: ResponseStructure<BookResponse[]>) => {
         expect(response.status).toBe(204);
         expect(response.message).toBe('No books are available');
       },
-      error:(error)=>{
+      error: (error) => {
         fail('response expected in getAllBooks');
       }
     });
@@ -279,8 +360,8 @@ describe('BooksService', () => {
     const mockHeaders = new HttpHeaders().set('Authorization', 'Bearer mock-token');
     jest.spyOn(service, 'getHeaders').mockReturnValue(mockHeaders);
 
-    service.updateBook(book.bookId,book).subscribe({
-      next: (response:ResponseStructure<BookResponse>) => {
+    service.updateBook(book.bookId, book).subscribe({
+      next: (response: ResponseStructure<BookResponse>) => {
         if (response.data) {
           expect(response.status).toBe(200);
           expect(response.data.bookId).toBe(1);
@@ -288,7 +369,7 @@ describe('BooksService', () => {
           expect(response.message).toBe('Book updated successully');
         }
       },
-      error:(error)=>{
+      error: (error) => {
         fail('response expected in updateBook');
       }
     });
@@ -314,18 +395,18 @@ describe('BooksService', () => {
     const mockBookResponse: ResponseStructure<BookResponse> = {
       status: 404,
       message: 'Book not found',
-      data:null
+      data: null
     };
     const mockHeaders = new HttpHeaders().set('Authorization', 'Bearer mock-token');
     jest.spyOn(service, 'getHeaders').mockReturnValue(mockHeaders);
 
-    service.updateBook(book.bookId,book).subscribe({
-      next: (response:ResponseStructure<BookResponse>) => {
+    service.updateBook(book.bookId, book).subscribe({
+      next: (response: ResponseStructure<BookResponse>) => {
         if (response.data) {
           fail('expected error in updateBook');
         }
       },
-      error:(error:ResponseStructure<BookResponse>)=>{
+      error: (error: ResponseStructure<BookResponse>) => {
         expect(error.status).toBe(404);
         expect(error.message).toBe('Book not found');
       }
@@ -339,23 +420,23 @@ describe('BooksService', () => {
 
 
   it('should delete a book with bookId given', () => {
-    const bookId:number=12;
+    const bookId: number = 12;
     const mockBookResponse: ResponseStructure<string> = {
       status: 200,
       message: 'Book deleted successully',
-      data:'Book deleted'
+      data: 'Book deleted'
     };
     const mockHeaders = new HttpHeaders().set('Authorization', 'Bearer mock-token');
     jest.spyOn(service, 'getHeaders').mockReturnValue(mockHeaders);
 
     service.deleteBook(bookId).subscribe({
-      next: (response:ResponseStructure<string>) => {
+      next: (response: ResponseStructure<string>) => {
         if (response.data) {
           expect(response.status).toBe(200);
           expect(response.message).toBe('Book updated successully');
         }
       },
-      error:(error)=>{
+      error: (error) => {
         fail('response expected in deleteBook');
       }
     });
@@ -369,7 +450,7 @@ describe('BooksService', () => {
 
 
   it('should return an error 404', () => {
-    const bookId:number=12;
+    const bookId: number = 12;
     const mockBookResponse: ResponseStructure<string> = {
       status: 404,
       message: 'Book not found',
@@ -379,10 +460,10 @@ describe('BooksService', () => {
     jest.spyOn(service, 'getHeaders').mockReturnValue(mockHeaders);
 
     service.deleteBook(bookId).subscribe({
-      next: (response:ResponseStructure<string>) => {
+      next: (response: ResponseStructure<string>) => {
         fail('expected error in deleteBook');
       },
-      error:(error)=>{
+      error: (error) => {
         expect(error.status).toBe(404);
         expect(error.message).toBe('Book not found');
       }

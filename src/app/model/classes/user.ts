@@ -41,3 +41,12 @@ export class UserEdit{
     }
 }
 
+export class NewPassword{
+  email:string
+  password:string
+
+  constructor(){
+    this.email=''
+    this.password=''
+  }
+}
