@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CartD, CartResponse } from '../../model/interfaces/cart';
+import { CartData, CartResponse } from '../../model/interfaces/cart';
 import { CartService } from '../../services/cart/cart.service';
 import { AddressResponse, BookResponse, IJsonResponse, ResponseStructure } from '../../model/interfaces/jsonresponse';
 import { AddressService } from '../../services/address/address.service';
@@ -34,9 +34,24 @@ export class CreateOrderComponent implements OnInit {
 
   private snackBar: MatSnackBar = inject(MatSnackBar);
 
-  cartData: CartD[] = [];
+  cartData: CartData[] = [];
 
   cartObj: Cart = new Cart();
+
+  totalQuantity: number = 0;
+
+  totalPrice: number = 0;
+
+  addressList: AddressResponse[] = [];
+
+  private formBuilder: FormBuilder = inject(FormBuilder);
+
+  private addressService: AddressService = inject(AddressService);
+
+  orderService: OrderService = inject(OrderService);
+
+  router: Router = inject(Router);
+
 
   onAddToCart(bookId: number): void {
     this.cartObj.bookId = bookId;
@@ -53,7 +68,7 @@ export class CreateOrderComponent implements OnInit {
       error: (error: ResponseStructure<CartResponse>) => {
         this.snackBar.open(error.message, '', { duration: 3000 });
       }
-    })
+    });
   };
 
   onRemoveFromCart(cartId: number): void {
@@ -78,11 +93,8 @@ export class CreateOrderComponent implements OnInit {
       error: (error: ResponseStructure<CartResponse>) => {
         this.snackbar.open(error.message, '', { duration: 3000 });
       }
-    })
+    });
   };
-
-  totalQuantity: number = 0;
-  totalPrice: number = 0;
 
   updateTotals(): void {
     this.totalPrice = 0;
@@ -110,7 +122,7 @@ export class CreateOrderComponent implements OnInit {
         this.bookService.getBookById(item.bookId).subscribe({
           next: (response: ResponseStructure<BookResponse>) => {
             if (response.status === 200 && response.data) {
-              const newCart = new CartD();
+              const newCart = new CartData();
               newCart.cartId = item.cartId;
               newCart.bookPrice = response.data.bookPrice;
               newCart.quantity = item.cartQuantity;
@@ -146,26 +158,20 @@ export class CreateOrderComponent implements OnInit {
   ngOnInit(): void {
     this.getUserCart();
     this.getAllUserAddress();
-    this.addressService.onAddressChange.subscribe((res: boolean) => {
-      if (res) {
+    this.addressService.onAddressChange.subscribe((result: boolean) => {
+      if (result) {
         this.getAllUserAddress();
       }
     });
-    this.cartService.onCartCalled.subscribe((res: boolean) => {
-      if (res) {
+    this.cartService.onCartCalled.subscribe((result: boolean) => {
+      if (result) {
         this.getUserCart();
       }
     });
   };
 
 
-  addressList: AddressResponse[] = [];
-
-  private fb: FormBuilder = inject(FormBuilder);
-
-  private addressService: AddressService = inject(AddressService);
-
-  getAllUserAddress() {
+  getAllUserAddress(): void {
     this.addressService.getAllAddress().subscribe({
       next: (response: ResponseStructure<AddressResponse[]>) => {
         if (response.status === 200 && response.data) {
@@ -181,15 +187,15 @@ export class CreateOrderComponent implements OnInit {
 
   @ViewChild("editAddress") editAddress: ElementRef | undefined;
 
-  closeEditAddress() {
+  closeEditAddress(): void {
     if (this.editAddress) {
       this.editAddress.nativeElement.style.display = "none";
     }
-  }
+  };
 
   editableAddress!: AddressResponse;
 
-  getEditAddress() {
+  getEditAddress(): void {
     this.addressService.getAddressById(this.editAddressId).subscribe({
       next: (response: ResponseStructure<AddressResponse>) => {
         if (response.status === 200 && response.data) {
@@ -208,24 +214,25 @@ export class CreateOrderComponent implements OnInit {
     });
   };
 
-  newEditAddress: FormGroup = this.fb.group({
+
+  newEditAddress: FormGroup = this.formBuilder.group({
     streetName: new FormControl('', [Validators.required]),
     city: new FormControl('', [Validators.required]),
     state: new FormControl('', [Validators.required]),
     pinCode: new FormControl('', [Validators.required])
-  })
+  });
 
   editAddressId: number = 0;
 
-  editOldAddress(id: number) {
+  editOldAddress(id: number): void {
     this.editAddressId = id;
     if (this.editAddress) {
       this.editAddress.nativeElement.style.display = "block";
       this.getEditAddress();
     }
-  }
+  };
 
-  saveNewAddress() {
+  saveNewAddress(): void {
     this.editableAddress = Object.assign(new Address(), this.newEditAddress.value);
     this.editableAddress.addressId = this.editAddressId;
     this.addressService.editAddress(this.editableAddress.addressId, this.editableAddress).subscribe({
@@ -243,7 +250,7 @@ export class CreateOrderComponent implements OnInit {
   };
 
 
-  deleteAddress(id: number) {
+  deleteAddress(id: number): void {
     const rs = confirm("Do you want to delete the address ?");
     if (rs) {
       this.addressService.deleteAddress(id).subscribe({
@@ -264,16 +271,12 @@ export class CreateOrderComponent implements OnInit {
 
   selectedAddress: Address = new Address();
 
-  onAddressSelect(event: any) {
+  onAddressSelect(event: any): void {
     this.selectedAddress = event.value;
     console.log('Selected Address:', this.selectedAddress);
-  }
+  };
 
   createOrder: OrderRequest = new OrderRequest();
-
-  orderService: OrderService = inject(OrderService);
-
-  router: Router = inject(Router);
 
   onPlaceOrder(): void {
     if (this.addressControl.invalid) {
@@ -301,7 +304,7 @@ export class CreateOrderComponent implements OnInit {
 
   readonly dialog = inject(MatDialog);
 
-  openAddAddress():void {
+  openAddAddress(): void {
     this.dialog.open(AddAddressComponent, {
       panelClass: 'right-dialog-container',
       width: '400px',

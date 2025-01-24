@@ -14,9 +14,9 @@ export class WishlistService {
 
   private http: HttpClient = inject(HttpClient);
 
-  onWishListChanged:Subject<boolean> =new Subject<boolean>();
+  onWishListChanged: Subject<boolean> = new Subject<boolean>();
 
-  getHeaders():HttpHeaders{
+  getHeaders(): HttpHeaders {
     let token = localStorage.getItem(APP_CONSTANTS.LOGIN_TOKEN);
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
@@ -26,12 +26,12 @@ export class WishlistService {
   }
 
   addToWishList(wishListObject: WishListRequest): Observable<ResponseStructure<WishListResponse>> {
-    const headers=this.getHeaders();
+    const headers = this.getHeaders();
     return this.http.post<ResponseStructure<WishListResponse>>(this.baseURL + "addToWishList", wishListObject, { headers });
   }
 
   getWishList(): Observable<ResponseStructure<WishListResponse[]>> {
-    const headers=this.getHeaders();
+    const headers = this.getHeaders();
     return this.http.get<ResponseStructure<WishListResponse[]>>(`${this.baseURL}getWishList`, { headers });
   }
 }

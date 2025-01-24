@@ -6,7 +6,6 @@ import { MatDialogActions, MatDialogClose, MatDialogContent } from '@angular/mat
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { Address } from '../../model/classes/cart';
 import { AddressService } from '../../services/address/address.service';
 import { AddressResponse, ResponseStructure } from '../../model/interfaces/jsonresponse';
 import { MatSnackBar } from '@angular/material/snack-bar';

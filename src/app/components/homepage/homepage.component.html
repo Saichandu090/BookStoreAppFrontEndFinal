@@ -1,13 +1,11 @@
-<!-- <button class="btn btn-info" (click)="sortByPriceASC()">Sort By Price</button>
-<button class="btn btn-info" (click)="sortByBookNameASC()">Sort By Bookname</button> -->
 <div class="container-fluid">
   <div class="row">
     <div class="d-flex justify-content-end">
       <button mat-button [matMenuTriggerFor]="menu">Sort By</button>
       <mat-menu #menu="matMenu">
-        <button mat-menu-item (click)="sortByBookNameASC()">BookName</button>
-        <button mat-menu-item (click)="sortByPriceASC()">BookPrice</button>
-        <button mat-menu-item (click)="sortByPriceASC()">AuthorName</button>
+        <button mat-menu-item (click)="sortByField('bookName')">BookName</button>
+        <button mat-menu-item (click)="sortByField('bookPrice')">BookPrice</button>
+        <button mat-menu-item (click)="sortByField('bookAuthor')">AuthorName</button>
         <button mat-menu-item (click)="getAllBooks()">None</button>
       </mat-menu>
     </div>

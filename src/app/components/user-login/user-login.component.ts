@@ -29,17 +29,17 @@ export class UserLoginComponent {
 
   toaster: ToastrService = inject(ToastrService);
 
-  private snackBar=inject(MatSnackBar);
+  private snackBar = inject(MatSnackBar);
 
-  currentUser:LoggedInUser=new LoggedInUser();
+  currentUser: LoggedInUser = new LoggedInUser();
 
   isLogin = true;
+
   loginForm: FormGroup;
+
   registerForm: FormGroup;
 
-  constructor(
-    private fb: FormBuilder,
-  ) {
+  constructor(private fb: FormBuilder,) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
@@ -62,9 +62,9 @@ export class UserLoginComponent {
 
   handleLogin(): void {
     this.loginService.loginUser(this.loginForm.value).subscribe({
-      next: (response:ResponseStructure<LoginResponse>) => {
-        if (response.status===200 && response.data) {
-          this.snackBar.open("Welcome to BookStore, Login Success!!",'',{duration : 3000});
+      next: (response: ResponseStructure<LoginResponse>) => {
+        if (response.status === 200 && response.data) {
+          this.snackBar.open("Welcome to BookStore, Login Success!!", '', { duration: 3000 });
           this.currentUser = response.data;
           localStorage.setItem(APP_CONSTANTS.LOGIN_TOKEN, response.message);
           localStorage.setItem("UserDetails", JSON.stringify(response.data));
@@ -73,10 +73,11 @@ export class UserLoginComponent {
           this.toaster.error(response.message);
         }
       },
-      error: (error:ResponseStructure<LoginResponse>) => {
+      error: (error: ResponseStructure<LoginResponse>) => {
         this.toaster.error(error.message);
-      }});
-  }
+      }
+    });
+  };
 
   handleSignup(): void {
     if (this.registerForm.invalid) {
@@ -98,7 +99,7 @@ export class UserLoginComponent {
         error: (error: ResponseStructure<RegisterResponse>) => {
           this.toaster.error(error.message);
         }
-      })
+      });
     }
   };
 
@@ -117,5 +118,5 @@ export class UserLoginComponent {
       return `${year}-${month}-${day}`;
     }
     return '';
-  }
+  };
 }

@@ -21,7 +21,7 @@ export class AdminRegisterComponent {
 
   private loginService: LoginService = inject(LoginService);
 
-  private fb: FormBuilder = inject(FormBuilder);
+  private formBuilder: FormBuilder = inject(FormBuilder);
 
   router: Router = inject(Router);
 
@@ -29,7 +29,7 @@ export class AdminRegisterComponent {
 
   toaster: ToastrService = inject(ToastrService);
 
-  registerForm: FormGroup = this.fb.group({
+  registerForm: FormGroup = this.formBuilder.group({
     firstName: new FormControl('', [Validators.required, Validators.pattern("^[A-Z][A-Za-z .]{2,}$")]),
     lastName: new FormControl('', [Validators.required, Validators.pattern("^[A-Z][A-Za-z .]{2,}$")]),
     dob: new FormControl('', [Validators.required]),

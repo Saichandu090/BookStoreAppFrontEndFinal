@@ -10,7 +10,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { CartD } from '../../model/interfaces/cart';
+import { CartData } from '../../model/interfaces/cart';
 import { OrderResponse } from '../../model/interfaces/order';
 
 
@@ -30,11 +30,11 @@ export class OrdersComponent implements OnInit {
 
   orderList: OrderResponse[] = [];
 
-  carts: CartD[] = [];
+  carts: CartData[] = [];
 
   snackbar: MatSnackBar = inject(MatSnackBar);
 
-  getOrders():void {
+  getOrders(): void {
     this.orderService.getAllOrders().subscribe({
       next: (response: ResponseStructure<OrderResponse[]>) => {
         if (response.status === 200 && response.data) {
@@ -47,7 +47,7 @@ export class OrdersComponent implements OnInit {
     });
   };
 
-  cancelOrder(orderId: number):void {
+  cancelOrder(orderId: number): void {
     const rs = confirm("Do you want to cancel the order ?");
     if (rs) {
       this.orderService.cancelOrder(orderId).subscribe({
@@ -71,7 +71,7 @@ export class OrdersComponent implements OnInit {
       if (res) {
         this.getOrders();
       }
-    })
-  }
+    });
+  };
 
 }

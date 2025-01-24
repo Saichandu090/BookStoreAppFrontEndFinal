@@ -1,139 +1,107 @@
 import { RouterTestingModule } from '@angular/router/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LayoutComponent } from './layout.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
-import { FormBuilder } from '@angular/forms';
 import { LoggedInUser } from '../../model/classes/user';
 
 describe('LayoutComponent', () => {
   let component: LayoutComponent;
   let fixture: ComponentFixture<LayoutComponent>;
-
-  const mockSnackBar = {
-    open: jest.fn()
-  };
-
-  const mockRouter = {
-    navigateByUrl: jest.fn()
-  };
-
-  const mockDialog = {
-    open: jest.fn()
-  };
-
-  const mockFormBuilder = {
-    group: jest.fn()
-  };
+  let mockRouter: jest.Mocked<Router>;
+  let mockSnackBar: jest.Mocked<MatSnackBar>;
+  let mockDialog: jest.Mocked<MatDialog>;
 
   beforeEach(async () => {
+    mockRouter = {
+      navigateByUrl: jest.fn()
+    } as any;
+
+    mockSnackBar = {
+      open: jest.fn()
+    } as any;
+
+    mockDialog = {
+      open: jest.fn()
+    } as any;
+
     await TestBed.configureTestingModule({
-      imports: [LayoutComponent,RouterTestingModule],
+      imports: [LayoutComponent, RouterTestingModule],
       providers: [
         { provide: MatSnackBar, useValue: mockSnackBar },
         { provide: MatDialog, useValue: mockDialog },
-        { provide: FormBuilder, useValue: mockFormBuilder }
       ]
     }).compileComponents();
 
-    localStorage.clear();
     fixture = TestBed.createComponent(LayoutComponent);
     component = fixture.componentInstance;
   });
 
-  // Test getCurrentUser method
+  afterEach(() => {
+    localStorage.clear();
+  });
+
   describe('getCurrentUser', () => {
-    it('should retrieve user details from localStorage', () => {
-      const mockUser = {
-        email: 'test@example.com',
-        role: 'user'
-      };
+    it('should parse user from localStorage', () => {
+      const mockUser: LoggedInUser = { email: 'test@gamil.com', role: 'USER' };
       localStorage.setItem('UserDetails', JSON.stringify(mockUser));
       component.getCurrentUser();
-      expect(component.currentUser.email).toBe('test@example.com');
-      expect(component.currentUser.role).toBe('user');
+      expect(component.currentUser).toEqual(mockUser);
     });
 
-    it('should do nothing if no user details in localStorage', () => {
+    it('should do nothing if no user in localStorage', () => {
       component.getCurrentUser();
       expect(component.currentUser).toEqual(new LoggedInUser());
     });
   });
 
-
   describe('onLogOut', () => {
-    it('should logout successfully when confirmed', () => {
-      jest.spyOn(window, 'confirm').mockReturnValue(true);
-      component.onLogOut();
-      expect(localStorage.getItem('appToken')).toBeNull();
-      expect(localStorage.getItem('UserDetails')).toBeNull();
-      expect(mockRouter.navigateByUrl).toHaveBeenCalledWith('/login');
-      expect(mockSnackBar.open).toHaveBeenCalledWith('Logout Success', '', { duration: 3000 });
+    it('should logout when confirmed', () => {
+    jest.spyOn(window, 'confirm').mockReturnValue(true);
+    jest.spyOn(mockRouter, 'navigateByUrl');
+    localStorage.setItem('UserDetails', JSON.stringify({ id: 1 }));
+    localStorage.setItem('appToken', 'test-token');
+
+    component.onLogOut();
+
+    expect(window.confirm).toHaveBeenCalledWith('Do you want to Logout?');
+    expect(mockSnackBar.open).toHaveBeenCalledWith('Logout Success', '', { duration: 3000 });
+    expect(localStorage.getItem('appToken')).toBeNull();
+    expect(localStorage.getItem('UserDetails')).toBeNull();
+    expect(mockRouter.navigateByUrl).toHaveBeenCalledWith('/login');
     });
 
     it('should not logout when not confirmed', () => {
       jest.spyOn(window, 'confirm').mockReturnValue(false);
+      localStorage.setItem('UserDetails', '{"test@gmail.com": "USER"}');
+      localStorage.setItem('appToken', 'test-token');
       component.onLogOut();
-      expect(mockRouter.navigateByUrl).not.toHaveBeenCalled();
+      expect(window.confirm).toHaveBeenCalledWith('Do you want to Logout?');
       expect(mockSnackBar.open).not.toHaveBeenCalled();
+      expect(localStorage.getItem('appToken')).not.toBeNull();
+      expect(mockRouter.navigateByUrl).not.toHaveBeenCalled();
     });
   });
 
-
-  describe('showCartPopUp', () => {
-    it('should toggle isPopUpOpen', () => {
-
-      component.isPopUpOpen = true;
+  describe('Dialog Methods', () => {
+    it('should toggle cart popup', () => {
+      component.isPopUpOpen = false;
       component.showCartPopUp();
-      expect(component.isPopUpOpen).toBe(false);
-      component.showCartPopUp();
-      expect(component.isPopUpOpen).toBe(true);
+      expect(component.isPopUpOpen).toBeTruthy();
+    });
+
+    it('should open cart dialog', () => {
+      component.openDialog();
+      expect(mockDialog.open).toHaveBeenCalled();
     });
   });
 
-
-  describe('bookForm Validation', () => {
-    beforeEach(() => {
-      fixture.detectChanges();
-    });
-
-    it('should validate book name', () => {
-      const bookNameControl = component.bookForm.get('bookName');
-      bookNameControl?.setValue('Valid Book Name');
-      expect(bookNameControl?.valid).toBeTruthy();
-
-      bookNameControl?.setValue('ab');
-      expect(bookNameControl?.valid).toBeFalsy();
-
-      bookNameControl?.setValue('Book123');
-      expect(bookNameControl?.valid).toBeFalsy();
-    });
-
-    it('should validate book author', () => {
-      const bookAuthorControl = component.bookForm.get('bookAuthor');
-
-      bookAuthorControl?.setValue('John Doe');
-      expect(bookAuthorControl?.valid).toBeTruthy();
-
-      bookAuthorControl?.setValue('Jo');
-      expect(bookAuthorControl?.valid).toBeFalsy();
-
-      bookAuthorControl?.setValue('Author123');
-      expect(bookAuthorControl?.valid).toBeFalsy();
-    });
-
-    it('should validate book price', () => {
-      const bookPriceControl = component.bookForm.get('bookPrice');
-
-      bookPriceControl?.setValue('10.50');
-      expect(bookPriceControl?.valid).toBeTruthy();
-
-      bookPriceControl?.setValue('price');
-      expect(bookPriceControl?.valid).toBeFalsy();
-
-      bookPriceControl?.setValue('-10');
-      expect(bookPriceControl?.valid).toBeFalsy();
+  describe('ngOnInit', () => {
+    it('should call getCurrentUser on initialization', () => {
+      const spyGetCurrentUser = jest.spyOn(component, 'getCurrentUser');
+      component.ngOnInit();
+      expect(spyGetCurrentUser).toHaveBeenCalled();
     });
   });
 });

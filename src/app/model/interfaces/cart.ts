@@ -1,5 +1,5 @@
 
-export class CartD{
+export class CartData{
     cartId:number;
     bookId:number;
     bookPrice:number

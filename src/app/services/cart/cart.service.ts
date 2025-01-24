@@ -17,7 +17,7 @@ export class CartService {
 
   onCartCalled: Subject<boolean> = new Subject<boolean>();
 
-  getHeaders():HttpHeaders{
+  getHeaders(): HttpHeaders {
     let token = localStorage.getItem(APP_CONSTANTS.LOGIN_TOKEN);
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
@@ -27,17 +27,17 @@ export class CartService {
   }
 
   addBookToCart(cartObj: Cart): Observable<ResponseStructure<CartResponse>> {
-    const headers=this.getHeaders();
+    const headers = this.getHeaders();
     return this.http.post<ResponseStructure<CartResponse>>(this.baseURL + 'addToCart', cartObj, { headers })
   }
 
   removeBookFromCart(cartId: number): Observable<ResponseStructure<CartResponse>> {
-    const headers=this.getHeaders();
+    const headers = this.getHeaders();
     return this.http.delete<ResponseStructure<CartResponse>>(`${this.baseURL}removeFromCart/${cartId}`, { headers })
   }
 
   getUserCart(): Observable<ResponseStructure<CartResponse[]>> {
-    const headers=this.getHeaders();
+    const headers = this.getHeaders();
     return this.http.get<ResponseStructure<CartResponse[]>>(this.baseURL + 'getCart', { headers })
   }
 }

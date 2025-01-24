@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { CartD, CartResponse } from '../../model/interfaces/cart';
+import { MatDialogModule } from '@angular/material/dialog';
+import { CartData, CartResponse } from '../../model/interfaces/cart';
 import { CartService } from '../../services/cart/cart.service';
 import { BookResponse, IJsonResponse, ResponseStructure } from '../../model/interfaces/jsonresponse';
 import { CommonModule } from '@angular/common';
@@ -21,7 +21,7 @@ export class CartComponent implements OnInit {
 
   isPopUpOpen: boolean = true;
 
-  cartData: CartD[] = [];
+  cartData: CartData[] = [];
 
   cartService: CartService = inject(CartService);
 
@@ -29,12 +29,14 @@ export class CartComponent implements OnInit {
 
   snackbar = inject(MatSnackBar);
 
-  showCartPopUp() {
-    this.isPopUpOpen = !this.isPopUpOpen
-  }
+  private cartObject: Cart = new Cart();
 
   totalQuantity: number = 0;
   totalPrice: number = 0;
+
+  showCartPopUp():void {
+    this.isPopUpOpen = !this.isPopUpOpen
+  }
 
   updateTotals(): void {
     this.totalPrice = 0;
@@ -59,7 +61,7 @@ export class CartComponent implements OnInit {
         this.bookService.getBookById(item.bookId).subscribe({
           next: (response: ResponseStructure<BookResponse>) => {
             if (response.status === 200 && response.data) {
-              const newCart = new CartD();
+              const newCart = new CartData();
               newCart.cartId = item.cartId;
               newCart.bookPrice = response.data.bookPrice;
               newCart.quantity = item.cartQuantity;
@@ -79,7 +81,7 @@ export class CartComponent implements OnInit {
     });
   };
 
-  getCartItems() {
+  getCartItems():void {
     this.cartService.getUserCart().subscribe({
       next: (response: ResponseStructure<CartResponse[]>) => {
         if (response.status === 200 && response.data) {
@@ -89,7 +91,7 @@ export class CartComponent implements OnInit {
       error: (error: ResponseStructure<CartResponse[]>) => {
         this.snackbar.open(error.message, '', { duration: 3000 });
       }
-    })
+    });
   };
 
 
@@ -119,12 +121,9 @@ export class CartComponent implements OnInit {
   };
 
 
-
-  private cartObj: Cart = new Cart();
-
   onAddToCart(bookId: number): void {
-    this.cartObj.bookId = bookId;
-    this.cartService.addBookToCart(this.cartObj).subscribe({
+    this.cartObject.bookId = bookId;
+    this.cartService.addBookToCart(this.cartObject).subscribe({
       next: (response: ResponseStructure<CartResponse>) => {
         if (response.status === 200 && response.data) {
           this.snackbar.open(response.message, '', { duration: 3000 });
@@ -137,8 +136,8 @@ export class CartComponent implements OnInit {
       error: (error: ResponseStructure<CartResponse>) => {
         this.snackbar.open(error.message, '', { duration: 3000 });
       }
-    })
-  }
+    });
+  };
 
   ngOnInit(): void {
     this.getCartItems();
@@ -146,6 +145,6 @@ export class CartComponent implements OnInit {
       if (res) {
         this.getCartItems();
       }
-    })
+    });
   };
 }

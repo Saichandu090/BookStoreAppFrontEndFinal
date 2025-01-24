@@ -26,9 +26,9 @@ export class AddBookComponent {
 
   bookService: BooksService = inject(BooksService);
 
-  fb: FormBuilder = inject(FormBuilder);
+  formBuilder: FormBuilder = inject(FormBuilder);
 
-  bookForm = this.fb.group({
+  bookForm = this.formBuilder.group({
     bookId: new FormControl(0, [Validators.required]),
     bookName: new FormControl('', [Validators.required, Validators.pattern("^[a-zA-Z .',]{3,}$")]),
     bookAuthor: new FormControl('', [Validators.required, Validators.pattern("^[a-zA-Z .',]{5,}$")]),

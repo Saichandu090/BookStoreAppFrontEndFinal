@@ -13,6 +13,7 @@ import { AddressResponse, BookResponse, ResponseStructure } from '../../model/in
 import { CartResponse } from '../../model/interfaces/cart';
 import { Address } from '../../model/classes/cart';
 import { OrderResponse } from '../../model/interfaces/order';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 describe('CreateOrderComponent', () => {
   let component: CreateOrderComponent;
@@ -79,7 +80,7 @@ describe('CreateOrderComponent', () => {
         { provide: OrderService, useValue: mockOrderService },
         { provide: MatSnackBar, useValue: mockSnackBar },
         { provide: Router, useValue: mockRouter },
-        { provide: MatDialog, useValue: mockDialog }
+        { provide: MatDialog, useValue: mockDialog },provideAnimations()
       ]
     });
 
@@ -131,6 +132,7 @@ describe('CreateOrderComponent', () => {
   describe('Positive Scenarios', () => {
 
     it('should load user cart successfully', () => {
+      mockAddressService.getAllAddress.mockReturnValue(of(mockAddressResponse));
       mockCartService.getUserCart.mockReturnValue(of(mockCartResponse));
       mockBooksService.getBookById.mockReturnValue(of(mockBookResponse));
       fixture.detectChanges();
@@ -142,6 +144,7 @@ describe('CreateOrderComponent', () => {
 
 
     it('should load user addresses successfully', () => {
+      mockCartService.getUserCart.mockReturnValue(of(mockCartResponse));
       mockAddressService.getAllAddress.mockReturnValue(of(mockAddressResponse));
       fixture.detectChanges();
       expect(mockAddressService.getAllAddress).toHaveBeenCalled();
@@ -213,6 +216,7 @@ describe('CreateOrderComponent', () => {
         message: 'Bad request',
         data:null
       };
+      mockAddressService.getAllAddress.mockReturnValue(of(mockAddressResponse));
       mockCartService.getUserCart.mockReturnValue(throwError(() => errorResponse));
       fixture.detectChanges();
       expect(mockSnackBar.open).toHaveBeenCalledWith(errorResponse.message, '', { duration: 3000 });

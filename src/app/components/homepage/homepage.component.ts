@@ -7,7 +7,6 @@ import { LoggedInUser } from '../../model/classes/user';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Book } from '../../model/classes/book';
 import { Cart, WishListRequest } from '../../model/classes/cart';
-import { CartService } from '../../services/cart/cart.service';
 import { CartResponse } from '../../model/interfaces/cart';
 import { WishlistService } from '../../services/wishList/wishlist.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -15,6 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { CartService } from '../../services/cart/cart.service';
 
 @Component({
   selector: 'app-homepage',
@@ -39,17 +39,35 @@ export class HomepageComponent implements OnInit {
   private snackBar = inject(MatSnackBar);
 
   updatableBook: Book = new Book();
+
   editableBook!: number;
 
-  fb: FormBuilder = inject(FormBuilder);
+  formBuilder: FormBuilder = inject(FormBuilder);
 
-  sortByBookNameASC(): void {
+  cartObject: Cart = new Cart();
 
-  }
+  cartService: CartService = inject(CartService);
 
-  sortByPriceASC(): void {
+  wishListService: WishlistService = inject(WishlistService);
 
-  }
+  wishListObj: WishListRequest = {
+    bookId: 0,
+  };
+
+  wishListBooks: WishListResponse[] = [];
+
+  sortByField(field: string): void {
+    this.bookService.sortByField(field).subscribe({
+      next: (response: ResponseStructure<BookResponse[]>) => {
+        if (response.status === 200 && response.data) {
+          this.bookList = response.data;
+        }
+      },
+      error: (error: ResponseStructure<BookResponse[]>) => {
+        this.snackBar.open(error.message, '', { duration: 3000 });
+      }
+    });
+  };
 
 
   getAllBooks(): void {
@@ -67,10 +85,10 @@ export class HomepageComponent implements OnInit {
         console.log("error", error)
         this.snackBar.open(error.message, '', { duration: 3000 })
       }
-    })
+    });
   };
 
-  //======================================//
+
 
   onEditBook(id: number): void {
     if (this.editBook) {
@@ -85,8 +103,6 @@ export class HomepageComponent implements OnInit {
       this.editBook.nativeElement.style.display = "none";
     }
   }
-
-  //======================================//
 
 
 
@@ -103,11 +119,11 @@ export class HomepageComponent implements OnInit {
         error: (error: ResponseStructure<string>) => {
           this.snackBar.open(error.message);
         }
-      })
+      });
     }
   };
 
-  bookForm = this.fb.group({
+  bookForm = this.formBuilder.group({
     bookId: new FormControl('', [Validators.required]),
     bookName: new FormControl('', [Validators.required, Validators.pattern("^[a-zA-Z .',]{3,}$")]),
     bookAuthor: new FormControl('', [Validators.required, Validators.pattern("^[a-zA-Z .',]{5,}$")]),
@@ -115,7 +131,7 @@ export class HomepageComponent implements OnInit {
     bookPrice: new FormControl(0, [Validators.required, Validators.pattern("^[0-9.]+$")]),
     bookQuantity: new FormControl(0, [Validators.required, Validators.min(16)]),
     bookLogo: new FormControl('', [Validators.required])
-  })
+  });
 
 
 
@@ -137,8 +153,8 @@ export class HomepageComponent implements OnInit {
           this.snackBar.open(response.message, '', { duration: 3000 })
         }
       }
-    })
-  }
+    });
+  };
 
 
   onUpdateBook(): void {
@@ -154,45 +170,32 @@ export class HomepageComponent implements OnInit {
           this.updatableBook = new Book();
         }
       }
-    })
-  }
+    });
+  };
 
-  //=========================================//
-
-  cartObj: Cart = new Cart();
-
-  cartService: CartService = inject(CartService);
 
   onAddToCart(id: number): void {
-    this.cartObj.bookId = id;
-    this.cartService.addBookToCart(this.cartObj).subscribe({
+    this.cartObject.bookId = id;
+    this.cartService.addBookToCart(this.cartObject).subscribe({
       next: (response: ResponseStructure<CartResponse>) => {
-        if (response.status===200) {
+        if (response.status === 200) {
           this.snackBar.open(response.message, '', { duration: 3000 });
           this.cartService.onCartCalled.next(true);
         }
-        else if(response.status===209){
+        else if (response.status === 209) {
           this.snackBar.open(response.message);
         }
       },
       error: (error: ResponseStructure<CartResponse>) => {
         this.snackBar.open(error.message, '', { duration: 3000 });
       }
-    })
+    });
   };
 
-  //==================================//
 
-  wishListService: WishlistService = inject(WishlistService);
-
-  wishListObj: WishListRequest={
-    bookId:0,
-  };
-
-  wishListBooks: WishListResponse[] = [];
 
   addToWishList(bookId: number): void {
-    this.wishListObj.bookId=bookId;
+    this.wishListObj.bookId = bookId;
     this.wishListService.addToWishList(this.wishListObj).subscribe({
       next: (response: ResponseStructure<WishListResponse>) => {
         if (response.status === 201) {
@@ -207,42 +210,42 @@ export class HomepageComponent implements OnInit {
       error: (error: ResponseStructure<WishListResponse>) => {
         this.snackBar.open(error.message, '', { duration: 3000 });
       }
-    })
-  } // end of addToWishList
+    });
+  };
 
 
   getWishListBooks(): void {
     this.wishListService.getWishList().subscribe({
-      next:(response: ResponseStructure<WishListResponse[]>) => {
-        if (response.status===200 && response.data) {
+      next: (response: ResponseStructure<WishListResponse[]>) => {
+        if (response.status === 200 && response.data) {
           this.wishListBooks = response.data;
         }
-    }
-    })
-  }; // end of getWishListBooks
+      }
+    });
+  };
 
 
   ngOnInit(): void {
     this.getAllBooks();
     this.getCurrentUser();
     this.getWishListBooks();
-    this.bookService.onBookChanged.subscribe((res: boolean) => {
-      if (res) {
+    this.bookService.onBookChanged.subscribe((result: boolean) => {
+      if (result) {
         this.getAllBooks();
       }
     });
-    this.wishListService.onWishListChanged.subscribe((res: boolean) => {
-      if (res) {
+    this.wishListService.onWishListChanged.subscribe((result: boolean) => {
+      if (result) {
         this.getWishListBooks();
       }
-    })
-  } // end of ngOnInit
+    });
+  };
 
 
   isBookPresent(id: number): boolean {
     const index = this.wishListBooks.findIndex(item => item.bookId === id);
     return index != -1;
-  }
+  };
 
   getCurrentUser(): void {
     const user = localStorage.getItem("UserDetails");
@@ -251,5 +254,5 @@ export class HomepageComponent implements OnInit {
       const parsedUser = JSON.parse(user);
       this.currentUser = parsedUser;
     }
-  }
+  };
 }

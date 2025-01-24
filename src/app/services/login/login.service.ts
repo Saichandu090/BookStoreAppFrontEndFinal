@@ -15,7 +15,7 @@ export class LoginService {
 
   private http: HttpClient = inject(HttpClient);
 
-  getHeaders():HttpHeaders{
+  getHeaders(): HttpHeaders {
     let token = localStorage.getItem(APP_CONSTANTS.LOGIN_TOKEN);
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
