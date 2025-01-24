@@ -1,243 +1,178 @@
 <div class="container mt-5">
-    <div class="row">
-        <!-- Billing Address -->
-        <div class="col-lg-8 col-md-12 mb-3">
-            <div class="card shadow">
-                <div class="card-header bg-danger bg-opacity-25">
-                    <h4>Billing Address</h4>
-                    <button class="btn btn-info float-end" (click)="openAddAddress()">Add-New Address</button>
-                </div>
-                <div class="card-body mb-5">
-                    <mat-form-field appearance="outline" class="outline">
-                        <mat-label>Select your Address</mat-label>
-                        <mat-select [formControl]="addressControl" (selectionChange)="onAddressSelect($event)">
-                            <mat-option>-- Select Address --</mat-option>
-                            <mat-option *ngFor="let item of addressList" [value]="item">
-                                {{ item.streetName }} , {{ item.city }} , {{ item.state }} , {{ item.pinCode }}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">SL.No</th>
-                                <th scope="col">Street-Name</th>
-                                <th scope="col">City</th>
-                                <th scope="col">State</th>
-                                <th scope="col">PinCode</th>
-                                <th scope="col">Edit</th>
-                                <th scope="col">Delete</th>
-                            </tr>
-                        </thead>
-                        @for (item of addressList; track $index) {
-                        <tbody>
-                            <tr>
-                                <td>{{$index+1}}</td>
-                                <td>{{item.streetName}}</td>
-                                <td>{{item.city}}</td>
-                                <td>{{item.state}}</td>
-                                <td>{{item.pinCode}}</td>
-                                <td>
-                                    <div class="d-flex gap-3">
-                                        <a class="edit btn">
-                                            <i class="bi bi-pen-fill" (click)="editOldAddress(item.addressId)"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="d-flex gap-3">
-                                        <a class="delete btn">
-                                            <i class="bi bi-trash" (click)="deleteAddress(item.addressId)"></i>
-                                        </a>
-                                    </div>
-                                </td>
-
-
-                            </tr>
-                        </tbody>
-                        }
-                    </table>
-                </div>
-            </div>
+  <div class="row">
+    <!-- Billing Address -->
+    <div class="col-lg-8 col-md-12 mb-3">
+      <div class="card shadow">
+        <div class="card-header" style="background-color: #ed9d4db6 !important">
+          <h4>Billing Address</h4>
+          <button class="btn btn-info float-end" (click)="openAddAddress()">Add-New Address</button>
         </div>
-        <!-- Your Order -->
-        <div class="col-lg-4 col-md-12">
-            <div class="card shadow ">
-                <div class="card-header  bg-danger bg-opacity-25">
-                    <h4>Your Order</h4>
-                </div>
-                <div class="card-body">
-                    @for (item of cartData; track $index) {
-                    <div class="border-top d-flex mt-2">
-                        <img class="img-fluid h-25 w-25 p-2 " [src]="item.bookLogo" alt="book">
-                        <div class="ps-3">
-                            <p class="p-0 m-0 fw-semibold">{{item.bookName}}</p>
-                            <p class="p-0 m-0">{{item.totalPrice | currency:'INR'}}</p>
-                            <p class="text-start mt-4"><button class="btn">QTY : <b>{{item.quantity}}</b> </button>
-                              <button class="btn ms-3 text-danger" (click)="onRemoveCart(item.cartId)">
-                                <i class="bi bi-trash"></i>
-                              </button></p>
-                        </div>
-                    </div>
-                    }
-                    <div class="border-top">
+        <div class="card-body mb-5">
+          <mat-form-field appearance="outline" class="outline">
+            <mat-label>Select your Address</mat-label>
+            <mat-select [formControl]="addressControl" (selectionChange)="onAddressSelect($event)">
+              <mat-option>-- Select Address --</mat-option>
+              <mat-option *ngFor="let item of addressList" [value]="item">
+                {{ item.streetName }} , {{ item.city }} , {{ item.state }} , {{ item.pinCode }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
 
-
-                        <div class=" border-top ">
-                            <div class="d-flex justify-content-between mt-2">
-                                <p class="fw-semibold">Quantity :</p>
-                                <p class="fw-semibold">{{totalQuantity}}</p>
-                                <hr>
-                                <p class="fw-semibold">Total :</p>
-                                <p class="fw-semibold">{{totalPrice | currency:'INR'}}</p>
-                            </div>
-                        </div>
-                        <div class="row border-top ">
-                            <div class="col-12 text-center mt-2">
-                                <div class="w-100 bg-black">
-                                    <button class="btn text-white rounded-0" (click)="onPlaceOrder()">Place
-                                        Order</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">SL.No</th>
+                <th scope="col">Street-Name</th>
+                <th scope="col">City</th>
+                <th scope="col">State</th>
+                <th scope="col">PinCode</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
+              </tr>
+            </thead>
+            @for (item of addressList; track $index) {
+            <tbody>
+              <tr>
+                <td>{{$index+1}}</td>
+                <td>{{item.streetName}}</td>
+                <td>{{item.city}}</td>
+                <td>{{item.state}}</td>
+                <td>{{item.pinCode}}</td>
+                <td>
+                  <div class="d-flex gap-3">
+                    <a class="edit btn">
+                      <i class="bi bi-pen-fill" (click)="editOldAddress(item.addressId)"></i>
+                    </a>
+                  </div>
+                </td>
+                <td>
+                  <div class="d-flex gap-3">
+                    <a class="delete btn">
+                      <i class="bi bi-trash" (click)="deleteAddress(item.addressId)"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+            }
+          </table>
         </div>
+      </div>
     </div>
+    <!-- Your Order -->
+    <div class="col-lg-4 col-md-12">
+      <div class="card shadow ">
+        <div class="card-header" style="background-color: #faa24ab6 !important">
+          <h4>Your Order</h4>
+        </div>
+        <div class="card-body">
+          @for (item of cartData; track $index) {
+          <div class="border-top d-flex mt-2">
+            <img class="img-fluid h-25 w-25 p-2 " [src]="item.bookLogo" alt="book">
+            <div class="ps-3">
+              <p class="p-0 m-0 fw-semibold">{{item.bookName}}</p>
+              <p class="p-0 m-0">{{item.totalPrice | currency:'INR'}}</p>
+              <p class="text-start mt-4">
+                <button class="btn" (click)="onRemoveFromCart(item.cartId)">
+                  <i class="bi bi-dash"></i>
+                </button>
+                <button class="btn"><b>{{item.quantity}}</b> </button>
+
+                <button class="btn" (click)="onAddToCart(item.bookId)">
+                  <i class="bi bi-plus"></i>
+                </button>
+            </div>
+          </div>
+          }
+          <div class="border-top">
+            <div class=" border-top ">
+              <div class="d-flex justify-content-between mt-2">
+                <p class="fw-semibold">Quantity :</p>
+                <p class="fw-semibold">{{totalQuantity}}</p>
+                <hr>
+                <p class="fw-semibold">Total :</p>
+                <p class="fw-semibold">{{totalPrice | currency:'INR'}}</p>
+              </div>
+            </div>
+            <div class="row border-top ">
+              <div class="col-12 text-center mt-2">
+                <div class="w-100 bg-black">
+                  <button class="btn text-white rounded-0" (click)="onPlaceOrder()">Place
+                    Order</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<!-- This view child modal is for adding the address -->
-
-<div class="modal" tabindex="-1" #addAddress>
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Enter New Address</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                    (click)="closeAddAddress()"></button>
-            </div>
-            <div class="modal-body">
-                <form [formGroup]="newAddress">
-                    <div class="col-12">
-                        <label for="">Street Address</label>
-                        <input type="text" formControlName="streetName" class="form-control">
-                        @if(newAddress.controls["streetName"].touched){
-                        <div class="text-danger">
-                            @if (newAddress.controls["streetName"].errors?.['required']) {
-                            <span>This is Required</span>
-                            }
-                        </div>
-                        }
-                    </div>
-                    <div class="col-12">
-                        <label for="">City</label>
-                        <input type="text" formControlName="city" class="form-control">
-                        @if(newAddress.controls["city"].touched){
-                        <div class="text-danger">
-                            @if (newAddress.controls["city"].errors?.['required']) {
-                            <span>This is Required</span>
-                            }
-                        </div>
-                        }
-                    </div>
-                    <div class="col-12">
-                        <label for="">State</label>
-                        <input type="text" formControlName="state" class="form-control">
-                        @if(newAddress.controls["state"].touched){
-                        <div class="text-danger">
-                            @if (newAddress.controls["state"].errors?.['required']) {
-                            <span>This is Required</span>
-                            }
-                        </div>
-                        }
-                    </div>
-                    <div class="col-12">
-                        <label for="">Pin-code</label>
-                        <input type="text" formControlName="pinCode" class="form-control">
-                        @if(newAddress.controls["pinCode"].touched){
-                        <div class="text-danger">
-                            @if (newAddress.controls["pinCode"].errors?.['pattern']) {
-                            <span>Only Numbers are Required</span>
-                            }
-                        </div>
-                        }
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                    (click)="closeAddAddress()">Close</button>
-                <button type="button" class="btn btn-primary" (click)="addNewAddress()">Save Address</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- This View Child modal is for editing the address -->
 
 <div class="modal" tabindex="-1" #editAddress>
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Edit your Address</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                    (click)="closeEditAddress()"></button>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit your Address</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="closeEditAddress()"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="newEditAddress">
+          <div class="col-12">
+            <label for="">Street Address</label>
+            <input type="text" formControlName="streetName" class="form-control">
+            @if(newEditAddress.controls["streetName"].dirty){
+            <div class="text-danger">
+              @if (newEditAddress.controls["streetName"].errors?.['required']) {
+              <span>This is Required</span>
+              }
             </div>
-            <div class="modal-body">
-                <form [formGroup]="newEditAddress">
-                    <div class="col-12">
-                        <label for="">Street Address</label>
-                        <input type="text" formControlName="streetName" class="form-control">
-                        @if(newEditAddress.controls["streetName"].dirty){
-                        <div class="text-danger">
-                            @if (newEditAddress.controls["streetName"].errors?.['required']) {
-                            <span>This is Required</span>
-                            }
-                        </div>
-                        }
-                    </div>
-                    <div class="col-12">
-                        <label for="">City</label>
-                        <input type="text" formControlName="city" class="form-control">
-                        @if(newEditAddress.controls["city"].dirty){
-                        <div class="text-danger">
-                            @if (newEditAddress.controls["city"].errors?.['required']) {
-                            <span>This is Required</span>
-                            }
-                        </div>
-                        }
-                    </div>
-                    <div class="col-12">
-                        <label for="">State</label>
-                        <input type="text" formControlName="state" class="form-control">
-                        @if(newEditAddress.controls["state"].dirty){
-                        <div class="text-danger">
-                            @if (newEditAddress.controls["state"].errors?.['required']) {
-                            <span>This is Required</span>
-                            }
-                        </div>
-                        }
-                    </div>
-                    <div class="col-12">
-                        <label for="">Pin-code</label>
-                        <input type="text" formControlName="pinCode" class="form-control">
-                        @if(newEditAddress.controls["pinCode"].dirty){
-                        <div class="text-danger">
-                            @if (newEditAddress.controls["pinCode"].errors?.['pattern']) {
-                            <span>Only Numbers are Required</span>
-                            }
-                        </div>
-                        }
-                    </div>
-                </form>
+            }
+          </div>
+          <div class="col-12">
+            <label for="">City</label>
+            <input type="text" formControlName="city" class="form-control">
+            @if(newEditAddress.controls["city"].dirty){
+            <div class="text-danger">
+              @if (newEditAddress.controls["city"].errors?.['required']) {
+              <span>This is Required</span>
+              }
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                    (click)="closeEditAddress()">Close</button>
-                <button type="button" class="btn btn-primary" (click)="saveNewAddress()">Save Address</button>
+            }
+          </div>
+          <div class="col-12">
+            <label for="">State</label>
+            <input type="text" formControlName="state" class="form-control">
+            @if(newEditAddress.controls["state"].dirty){
+            <div class="text-danger">
+              @if (newEditAddress.controls["state"].errors?.['required']) {
+              <span>This is Required</span>
+              }
             </div>
-        </div>
+            }
+          </div>
+          <div class="col-12">
+            <label for="">Pin-code</label>
+            <input type="text" formControlName="pinCode" class="form-control">
+            @if(newEditAddress.controls["pinCode"].dirty){
+            <div class="text-danger">
+              @if (newEditAddress.controls["pinCode"].errors?.['pattern']) {
+              <span>Only Numbers are Required</span>
+              }
+            </div>
+            }
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="closeEditAddress()">Close</button>
+        <button type="button" class="btn btn-primary" (click)="saveNewAddress()">Save Address</button>
+      </div>
     </div>
+  </div>
 </div>

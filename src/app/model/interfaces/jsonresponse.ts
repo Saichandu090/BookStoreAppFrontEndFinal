@@ -7,7 +7,7 @@ export interface IJsonResponse{
 export interface ResponseStructure<T> {
   status: number;
   message: string;
-  data: T;
+  data: T | null;
 }
 
 export interface LoginResponse {
@@ -21,6 +21,11 @@ export interface RegisterResponse {
   role: string;
 }
 
+export interface WishListResponse{
+  wishListId:number,
+  bookId:number
+}
+
 export interface BookResponse{
   bookId:number,
   bookName:string,
@@ -29,4 +34,12 @@ export interface BookResponse{
   bookPrice:number,
   bookLogo:string
   bookQuantity:number,
+}
+
+export interface AddressResponse{
+  addressId:number,
+  streetName:string,
+  city:string,
+  state:string,
+  pinCode:number
 }

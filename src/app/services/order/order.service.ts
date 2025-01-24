@@ -1,9 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
-import { Constant } from '../../constants/constant';
-import { IJsonResponse } from '../../model/interfaces/jsonresponse';
-import { IOrder } from '../../model/interfaces/order';
+import { Observable, Subject } from 'rxjs';
+import { APP_CONSTANTS } from '../../constants/constant';
+import { ResponseStructure } from '../../model/interfaces/jsonresponse';
+import { OrderRequest, OrderResponse } from '../../model/interfaces/order';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +16,8 @@ export class OrderService {
 
   onOrderChanged: Subject<boolean> = new Subject<boolean>();
 
-  getHeaders():HttpHeaders{
-    let token = localStorage.getItem(Constant.LOGIN_TOKEN);
+  getHeaders(): HttpHeaders {
+    let token = localStorage.getItem(APP_CONSTANTS.LOGIN_TOKEN);
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
@@ -25,18 +25,18 @@ export class OrderService {
     return headers;
   }
 
-  placeOrder(obj: IOrder) {
-    const headers=this.getHeaders();
-    return this.http.post<IJsonResponse>(this.baseURL + 'placeOrder', obj, { headers })
+  placeOrder(orderObject: OrderRequest): Observable<ResponseStructure<OrderResponse>> {
+    const headers = this.getHeaders();
+    return this.http.post<ResponseStructure<OrderResponse>>(this.baseURL + 'placeOrder', orderObject, { headers });
   }
 
-  cancelOrder(id: number) {
-    const headers=this.getHeaders();
-    return this.http.delete<IJsonResponse>(`${this.baseURL}cancelOrder/${id}`, { headers })
+  cancelOrder(orderId: number): Observable<ResponseStructure<OrderResponse>> {
+    const headers = this.getHeaders();
+    return this.http.delete<ResponseStructure<OrderResponse>>(`${this.baseURL}cancelOrder/${orderId}`, { headers });
   }
 
-  getOrders() {
-    const headers=this.getHeaders();
-    return this.http.get<IJsonResponse>(`${this.baseURL}getAllUserOrders`, { headers })
+  getAllOrders(): Observable<ResponseStructure<OrderResponse[]>> {
+    const headers = this.getHeaders();
+    return this.http.get<ResponseStructure<OrderResponse[]>>(`${this.baseURL}getAllOrders`, { headers });
   }
 }
