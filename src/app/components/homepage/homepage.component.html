@@ -20,7 +20,7 @@
         <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mb-4">
           <div class="book-card">
             <div class="book-card-inner">
-              <div class="book-card-front">
+              <div class="book-card-front" [routerLink]="['/book', item.bookId]">
                 <img [src]="item.bookLogo" class="book-image" alt="{{ item.bookName }}"/>
                 <div class="book-overlay">
                   <p class="book-description">{{ item.bookDescription }}</p>

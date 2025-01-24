@@ -15,11 +15,12 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { CartService } from '../../services/cart/cart.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-homepage',
   standalone: true,
-  imports: [ButtonModule, CommonModule, ReactiveFormsModule, MatButtonModule, MatMenuModule, MatIconModule, MatPaginatorModule],
+  imports: [ButtonModule, CommonModule, ReactiveFormsModule, MatButtonModule, MatMenuModule, MatIconModule, MatPaginatorModule,RouterLink],
   templateUrl: './homepage.component.html',
   styleUrl: './homepage.component.css'
 })

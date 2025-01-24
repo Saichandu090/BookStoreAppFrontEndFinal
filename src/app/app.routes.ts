@@ -8,6 +8,7 @@ import { OrdersComponent } from './components/orders/orders.component';
 import { WishListComponent } from './components/wish-list/wish-list.component';
 import { UserLoginComponent } from './components/user-login/user-login.component';
 import { OrderConfirmationComponent } from './components/order-confirmation/order-confirmation.component';
+import { BookDetailsComponent } from './components/book-details/book-details.component';
 
 export const routes: Routes = [
   {
@@ -51,6 +52,11 @@ export const routes: Routes = [
         path: 'order-placed',
         component: OrderConfirmationComponent,
         canActivate: [loginGuard]
+      },
+      {
+        path:'book/:id',
+        component:BookDetailsComponent,
+        canActivate:[loginGuard]
       }
     ]
   }

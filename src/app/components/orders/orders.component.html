@@ -16,9 +16,9 @@
   <p><strong>Total Quantity:</strong> {{ order.orderQuantity }}</p>
   <p><strong>Total Price:</strong> ₹{{ order.orderPrice }}</p>
   @if (order.cancelOrder) {
-    <p><strong>Order Status:</strong> Order Cancelled!!</p>
+    <p class="text-danger"><strong>Order Status:</strong> Order Cancelled!!</p>
   }@else {
-    <p><strong>Order Status:</strong> Order In Transit</p>
+    <p class="text-success"><strong>Order Status:</strong> Order In Transit</p>
     <div>
       <button class="btn btn-primary btn-lg" (click)="cancelOrder(order.orderId)">Cancel Order</button>
     </div>
@@ -37,10 +37,10 @@
   </div>
   <hr />
 </div>
-}
 <div class="text-center pb-4">
   <div class="button-container">
     <button class="btn btn-primary btn-lg" (click)="continue()">Continue Shopping</button>
   </div>
 </div>
+}
 
