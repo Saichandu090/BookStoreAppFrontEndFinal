@@ -30,9 +30,9 @@ export class AddBookComponent implements OnInit {
 
   bookForm = this.formBuilder.group({
     bookId: new FormControl(0, [Validators.required]),
-    bookName: new FormControl('', [Validators.required, Validators.pattern("^[a-zA-Z .',]{3,}$")]),
-    bookAuthor: new FormControl('', [Validators.required, Validators.pattern("^[a-zA-Z .',]{5,}$")]),
-    bookDescription: new FormControl('', [Validators.required, Validators.pattern("^[a-zA-Z .',]{5,}$")]),
+    bookName: new FormControl('', [Validators.required, Validators.pattern('^[A-Z][a-zA-Z .,\'-_=+]{2,}$')]),
+    bookAuthor: new FormControl('', [Validators.required, Validators.pattern('^[A-Z][a-zA-Z .,\'-_=+]{2,}$')]),
+    bookDescription: new FormControl('', [Validators.required, Validators.pattern('^[A-Z][a-zA-Z0-9 .,\'-_=+]{2,}$')]),
     bookPrice: new FormControl(0, [Validators.required, Validators.pattern("^[0-9.]+$")]),
     bookQuantity: new FormControl(0, [Validators.required, Validators.min(16)]),
     bookLogo: new FormControl('', [Validators.required])

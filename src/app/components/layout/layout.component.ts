@@ -35,7 +35,6 @@ export class LayoutComponent implements OnInit {
   getCurrentUser():void {
     const user = localStorage.getItem("UserDetails");
     if (user != null) {
-      debugger;
       const pardedUser = JSON.parse(user);
       this.currentUser = pardedUser;
     }

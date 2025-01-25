@@ -66,7 +66,9 @@
                   <span>This is required</span>
                 }
                 @if (registerForm.controls['password'].errors?.['pattern']) {
-                  <span>Password should be atleast 8 Characters</span>
+                  <span>
+                    Password requires lowercase, uppercase, number, and special character
+                  </span>
                 }
               </div>
             }
@@ -83,7 +85,7 @@
                 }
               </div>
             }
-        <button mat-raised-button color="primary" type="submit">
+        <button mat-raised-button color="primary" type="submit" [disabled]="registerForm.invalid">
           Signup
         </button>
       </form>
@@ -116,21 +118,23 @@
           <label for="confirmPassword">Confirm New Password</label>
           <input type="password" class="inp" formControlName="confirmPassword" name="confirmPassword">
 
-          <div class="text-danger" *ngIf="forgotPasswordForm.controls['newPassword'].touched">
-            <span *ngIf="forgotPasswordForm.controls['newPassword'].errors?.['required']">
-              New Password is required
-            </span>
-            <span *ngIf="forgotPasswordForm.controls['newPassword'].errors?.['minlength']">
-              Password should be at least 8 characters
-            </span>
+          <div class="text-danger" *ngIf="forgotPasswordForm.get('newPassword')?.touched && forgotPasswordForm.get('newPassword')?.invalid">
+            @if (forgotPasswordForm.get('newPassword')?.errors?.['required']) {
+              <span>New Password is required</span>
+            }
+            @if (forgotPasswordForm.get('newPassword')?.errors?.['pattern']) {
+              <span>
+                Password requires lowercase, uppercase, number, and special character
+              </span>
+            }
           </div>
 
-          @if (forgotPasswordForm.controls['newPassword'].touched) {
-            <div class="text-danger" *ngIf="forgotPasswordForm.hasError('passwordMismatch')">
+          @if (forgotPasswordForm.get('confirmPassword')?.touched && forgotPasswordForm.hasError('passwordMismatch')) {
+            <div class="text-danger">
               Passwords do not match
             </div>
           }
-          <button mat-raised-button color="primary" type="submit">
+          <button mat-raised-button color="primary" type="submit" [disabled]="forgotPasswordForm.invalid">
             Reset Password
           </button>
         </ng-container>

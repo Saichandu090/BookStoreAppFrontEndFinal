@@ -10,7 +10,7 @@ import { CartService } from '../../services/cart/cart.service';
 import { WishlistService } from '../../services/wishList/wishlist.service';
 import { CartResponse } from '../../model/interfaces/cart';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { catchError, debounceTime, EMPTY, filter, forkJoin } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-book-details',
@@ -35,34 +35,16 @@ export class BookDetailsComponent {
   cartQuantity: number = 0;
 
   ngOnInit(): void {
-    const bookId = this.route.snapshot.paramMap.get('id');
-    if (bookId) {
-      forkJoin({
-        book: this.bookService.getBookById(Number(bookId)),
-        cart: this.cartService.getUserCart()
-      }).subscribe({
-        next: (results) => {
-          if (results.book.status === 200 && results.book.data) {
-            this.book = results.book.data;
-          }
-
-          if (results.cart.status === 200 && results.cart.data) {
-            const cartItem = results.cart.data.find(
-              item => item.bookId === this.book.bookId
-            );
-
-            if (cartItem) {
-              this.cartQuantity = cartItem.cartQuantity;
-              this.cartCurrent = cartItem;
-            }
-          }
-        },
-        error: (error) => {
-          this.snackBar.open('Error loading book or cart', '', { duration: 3000 });
+    const bookId = Number(this.route.snapshot.paramMap.get('id'));
+    this.updateCurrentBook(bookId);
+    this.updateCurrentCart(bookId);
+    this.cartService.onCartCalled.subscribe({
+      next: (response: boolean) => {
+        if (response) {
+          this.updateCurrentCart(bookId);
         }
-      });
-    }
-    this.cartService.onCartCalled.pipe(filter(response => response), debounceTime(300)).subscribe(() => this.checkCartStatus());
+      }
+    });
     this.getWishListBooks();
     this.wishListService.onWishListChanged.subscribe((result: boolean) => {
       if (result) {
@@ -71,35 +53,44 @@ export class BookDetailsComponent {
     });
   };
 
-  fetchBookDetails(bookId: number): void {
+  updateCurrentBook(bookId: number) {
     this.bookService.getBookById(bookId).subscribe({
       next: (response: ResponseStructure<BookResponse>) => {
         if (response.status === 200 && response.data) {
           this.book = response.data;
         }
       },
-      error: (err) => {
-        console.error('Error fetching book details', err);
-      }
-    });
-  }
-
-  checkCartStatus(): void {
-    this.cartService.getUserCart().pipe(
-      catchError(() => {
-        this.snackBar.open('Error loading the cart', '', { duration: 3000 });
-        return EMPTY;
-      })
-    ).subscribe(response => {
-      if (response?.status === 200 && response.data) {
-        const cartItem = response.data.find(
-          item => item.bookId === this.book.bookId
-        );
-        this.cartQuantity = cartItem ? cartItem.cartQuantity : 0;
-        this.cartCurrent = cartItem || null;
+      error: (error: HttpErrorResponse) => {
+        const errorMessage = error.error?.message || error.message || 'Failed to fetch the book';
+        this.snackBar.open(errorMessage, '', { duration: 3000 });
       }
     });
   };
+
+
+  updateCurrentCart(bookId: number): void {
+    this.cartService.getUserCart().subscribe({
+      next: (response: ResponseStructure<CartResponse[]>) => {
+        if (response === null) {
+          this.cartQuantity = 0;
+          return;
+        } else if (response.status === 200 && response.data) {
+          const cartItem = response.data.find(item => item.bookId === bookId);
+          if (cartItem) {
+            this.cartCurrent = cartItem;
+            this.cartQuantity = cartItem.cartQuantity;
+          } else {
+            this.cartQuantity = 0;
+            this.cartCurrent = null;
+          }
+        }
+      },
+      error: (error: HttpErrorResponse) => {
+        const errorMessage = error.error?.message || error.message;
+        this.snackBar.open(errorMessage, '', { duration: 3000 });
+      }
+    });
+  }
 
   addToCart(bookId?: number): void {
     if (bookId)
@@ -150,8 +141,9 @@ export class BookDetailsComponent {
           this.wishListService.onWishListChanged.next(true);
         }
       },
-      error: (error: ResponseStructure<WishListResponse>) => {
-        this.snackBar.open(error.message, '', { duration: 3000 });
+      error: (error: HttpErrorResponse) => {
+        const errorMessage = error.error?.message || error.message || 'Failed to add book to wishlist';
+        this.snackBar.open(errorMessage, '', { duration: 3000 });
       }
     });
   }
@@ -161,7 +153,11 @@ export class BookDetailsComponent {
   getWishListBooks(): void {
     this.wishListService.getWishList().subscribe({
       next: (response: ResponseStructure<WishListResponse[]>) => {
-        if (response.status === 200 && response.data) {
+        if (response === null) {
+          this.wishListBooks = [];
+          return;
+        }
+        else if (response.status === 200 && response.data) {
           this.wishListBooks = response.data;
         }
       }
@@ -169,7 +165,6 @@ export class BookDetailsComponent {
   };
 
   isBookPresent(id: number): boolean {
-    const index = this.wishListBooks.findIndex(item => item.bookId === id);
-    return index != -1;
+    return this.wishListBooks.some(book => book.bookId === id);
   };
 }

@@ -16,11 +16,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { CartService } from '../../services/cart/cart.service';
 import { RouterLink } from '@angular/router';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-homepage',
   standalone: true,
-  imports: [ButtonModule, CommonModule, ReactiveFormsModule, MatButtonModule, MatMenuModule, MatIconModule, MatPaginatorModule,RouterLink],
+  imports: [ButtonModule, CommonModule, ReactiveFormsModule, MatButtonModule, MatMenuModule, MatIconModule, MatPaginatorModule, RouterLink],
   templateUrl: './homepage.component.html',
   styleUrl: './homepage.component.css'
 })
@@ -218,7 +219,11 @@ export class HomepageComponent implements OnInit {
   getWishListBooks(): void {
     this.wishListService.getWishList().subscribe({
       next: (response: ResponseStructure<WishListResponse[]>) => {
-        if (response.status === 200 && response.data) {
+        if (response === null) {
+          this.wishListBooks = [];
+          return;
+        }
+        else if (response.status === 200 && response.data) {
           this.wishListBooks = response.data;
         }
       }
@@ -244,8 +249,7 @@ export class HomepageComponent implements OnInit {
 
 
   isBookPresent(id: number): boolean {
-    const index = this.wishListBooks.findIndex(item => item.bookId === id);
-    return index != -1;
+    return this.wishListBooks.some(book => book.bookId === id);
   };
 
   getCurrentUser(): void {

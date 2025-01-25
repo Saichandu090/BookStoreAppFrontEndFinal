@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -45,54 +45,56 @@ export class UserLoginComponent {
 
   registerForm!: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  private formBuilder: FormBuilder = inject(FormBuilder);
+
+  constructor() {
     this.initializeForms();
   }
 
   initializeForms() {
-    this.loginForm = this.fb.group({
+    this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]]
     });
 
-    this.registerForm = this.fb.group({
+    this.registerForm = this.formBuilder.group({
       firstName: ['', [
         Validators.required,
-        Validators.pattern('^[A-Z][a-zA-Z]{2,}$')
+        Validators.pattern('^[A-Z][a-zA-Z .,\'-_=+]{2,}$')
       ]],
       lastName: ['', [
         Validators.required,
-        Validators.pattern('^[A-Z][a-zA-Z]{2,}$')
+        Validators.pattern('^[A-Z][a-zA-Z .,\'-_=+]{2,}$')
       ]],
       dob: [''],
       password: ['', [
         Validators.required,
-        Validators.minLength(8)
+        Validators.minLength(8),
+        Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};:\'",.<>?/~`]).{8,}$')
       ]],
       email: ['', [Validators.required, Validators.email]]
     });
 
-    this.forgotPasswordForm = this.fb.group({
+
+    this.forgotPasswordForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      newPassword: ['', [Validators.required, Validators.minLength(8)]],
+      newPassword: ['', [Validators.required, Validators.minLength(8), Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};:\'",.<>?/~`]).{8,}$')]],
       confirmPassword: ['', [Validators.required]]
     }, { validators: this.passwordMatchValidator });
-  }
+  };
 
-  passwordMatchValidator(form: FormGroup) {
+  passwordMatchValidator(form: FormGroup){
     const newPassword = form.get('newPassword');
     const confirmPassword = form.get('confirmPassword');
-    return newPassword && confirmPassword && newPassword.value === confirmPassword.value
-      ? null
-      : { passwordMismatch: true };
-  }
+    return newPassword && confirmPassword && newPassword.value === confirmPassword.value ? null : { passwordMismatch: true };
+  };
 
   toggleForm(): void {
     this.isLogin = !this.isLogin;
     this.loginForm.reset();
     this.registerForm.reset();
     this.isForgotPassword = false;
-  }
+  };
 
   toggleForgotPassword() {
     this.isForgotPassword = !this.isForgotPassword;
@@ -115,12 +117,14 @@ export class UserLoginComponent {
           localStorage.setItem(APP_CONSTANTS.LOGIN_TOKEN, response.message);
           localStorage.setItem("UserDetails", JSON.stringify(response.data));
           this.router.navigateByUrl("/homepage");
-        } else {
-          this.toaster.error(response.message);
         }
       },
-      error: (error: ResponseStructure<LoginResponse>) => {
-        this.toaster.error('Bad credentials');
+      error: (error: any) => {
+        if (error.error && error.error.message) {
+          this.toaster.error(error.error.message);
+        } else {
+          this.toaster.error("Login failed");
+        }
       }
     });
   };
@@ -131,19 +135,21 @@ export class UserLoginComponent {
     } else {
       this.userRegister = this.registerForm.value;
       this.userRegister.role = 'USER';
-      this.userRegister.dob = this.formatDate(this.userRegister.dob)
-      console.log(this.userRegister)
-
+      this.userRegister.dob = this.formatDate(this.userRegister.dob);
       this.loginService.registerUser(this.userRegister).subscribe({
         next: (response: ResponseStructure<RegisterResponse>) => {
-          if (response.status === 201) {
+           if (response.status === 201) {
             this.toaster.success(response.message);
             this.registerForm.reset();
             this.isLogin = !this.isLogin;
           }
         },
-        error: (error: ResponseStructure<RegisterResponse>) => {
-          this.toaster.error(error.message);
+        error: (error: any) => {
+          if (error.error && error.error.message) {
+            this.toaster.error(error.error.message);
+          } else {
+            this.toaster.error("Registration failed");
+          }
         }
       });
     }
@@ -157,8 +163,12 @@ export class UserLoginComponent {
           this.isPasswordResetStage = true;
         }
       },
-      error: (error: ResponseStructure<boolean>) => {
-        this.toaster.error('User not Exist');
+      error: (error: any) => {
+        if (error.error && error.error.message) {
+          this.toaster.error(error.error.message);
+        } else {
+          this.toaster.error("User not exist");
+        }
       }
     });
   };
@@ -184,8 +194,10 @@ export class UserLoginComponent {
               this.isPasswordResetStage = false;
             }
           },
-          error: (error) => {
-            this.toaster.error('Password rest failed');
+          error: (error: any) => {
+            if (error.error && error.error.message) {
+              this.toaster.error(error.error.message);
+            }
           }
         });
       }
