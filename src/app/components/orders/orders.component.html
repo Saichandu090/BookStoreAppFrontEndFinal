@@ -1,46 +1,60 @@
 @if (orderList.length == 0) {
-  <div class="d-flex justify-content-center align-items-center" style="height: 30vh;">
-    <div class="text-center">
-      <h4 class="mb-5">You have no Orders to display.</h4>
-      <div class="button-container">
-        <button class="btn btn-primary btn-lg" (click)="continue()">Continue Shopping</button>
-      </div>
+<div class="d-flex justify-content-center align-items-center" style="height: 30vh;">
+  <div class="text-center">
+    <h4 class="mb-5">You have no Orders to display.</h4>
+    <div class="button-container">
+      <button class="btn btn-primary btn-lg" (click)="continue()">Continue Shopping</button>
     </div>
   </div>
-}@else {
-<div *ngFor="let order of orderList" class="order-card">
-  <h2>Order ID: {{ order.orderId }}</h2>
-  <p><strong>Address:</strong> {{
-    order.orderAddress.streetName+','+order.orderAddress.city+','+order.orderAddress.state+','+order.orderAddress.pinCode
-    }}</p>
-  <p><strong>Total Quantity:</strong> {{ order.orderQuantity }}</p>
-  <p><strong>Total Price:</strong> ₹{{ order.orderPrice }}</p>
-  @if (order.cancelOrder) {
-    <p class="text-danger"><strong>Order Status:</strong> Order Cancelled!!</p>
-  }@else {
-    <p class="text-success"><strong>Order Status:</strong> Order In Transit</p>
-    <div>
-      <button class="btn btn-primary btn-lg" (click)="cancelOrder(order.orderId)">Cancel Order</button>
-    </div>
-  }
-
-  <div *ngIf="order.orderBooks.length > 0">
-    <h3>Books:</h3>
-    <div class="books-container">
-      <div *ngFor="let book of order.orderBooks" class="book-card">
-        <img [src]="book.bookLogo" alt="{{ book.bookDescription }}" class="book-image" />
-        <p><strong>Title:</strong> {{ book.bookName }}</p>
-        <p><strong>Author:</strong> {{ book.bookAuthor }}</p>
-        <p><strong>Price:</strong> ₹{{ book.bookPrice }}</p>
-      </div>
-    </div>
-  </div>
-  <hr />
 </div>
-<div class="text-center pb-4">
-  <div class="button-container">
-    <button class="btn btn-primary btn-lg" (click)="continue()">Continue Shopping</button>
+}@else {
+<div class="container">
+  <div *ngFor="let order of orderList" class="order-card">
+    <h3>Order ID: {{ order.orderId }}</h3>
+    <div class="order-details">
+      <div class="address-section">
+        <h5>Delivery Address</h5>
+        <p>
+          {{ order.orderAddress.streetName }},{{ order.orderAddress.city }},{{ order.orderAddress.state }},{{
+          order.orderAddress.pinCode }}
+        </p>
+        <h6>Payment Mode : Cash</h6>
+      </div>
+      <div class="order-summary">
+        <p><strong>Total Quantity:</strong> {{ order.orderQuantity }}</p>
+        <p><strong>Total Price:</strong> ₹{{ order.orderPrice }}</p>
+      </div>
+    </div>
+    <div class="order-status">
+      @if (order.cancelOrder) {
+      <p class="status-cancelled">Order Cancelled</p>
+      } @else {
+      <div class="active-order">
+        <p class="status-transit">Order In Transit</p>
+        <button class="btn-cancel" (click)="cancelOrder(order.orderId)">
+          Cancel Order
+        </button>
+      </div>
+      }
+    </div>
+    @if (order.orderBooks.length > 0) {
+    <div class="books-section">
+      <h3>Books Ordered</h3>
+      <div class="books-grid">
+        <div *ngFor="let book of order.orderBooks" class="book-card" [routerLink]="['/book', book.bookId]">
+          <img [src]="book.bookLogo" [alt]="book.bookDescription" class="book-image" />
+          <p><strong>Title:</strong> {{ book.bookName }}</p>
+          <p><strong>Author:</strong> {{ book.bookAuthor }}</p>
+          <p><strong>Price:</strong> ₹{{ book.bookPrice }}</p>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+  <div class="continue-shopping">
+    <button class="btn-continue" (click)="continue()">
+      Continue Shopping
+    </button>
   </div>
 </div>
 }
-

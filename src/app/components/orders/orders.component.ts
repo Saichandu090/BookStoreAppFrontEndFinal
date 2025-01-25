@@ -12,13 +12,13 @@ import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CartData } from '../../model/interfaces/cart';
 import { OrderResponse } from '../../model/interfaces/order';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 
 @Component({
   selector: 'app-orders',
   standalone: true,
-  imports: [PopoverModule, TableModule, ButtonModule, TagModule, MatTableModule, MatButtonModule, CommonModule],
+  imports: [PopoverModule, TableModule, ButtonModule, TagModule, MatTableModule, MatButtonModule, CommonModule,RouterLink],
   templateUrl: './orders.component.html',
   styleUrl: './orders.component.css',
   providers: [MessageService]

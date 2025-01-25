@@ -8,13 +8,14 @@ import { CartResponse } from '../../model/interfaces/cart';
 import { CartService } from '../../services/cart/cart.service';
 import { BooksService } from '../../services/books/books.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-wish-list',
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [CommonModule, MatIconModule,RouterLink],
   templateUrl: './wish-list.component.html',
   styleUrl: './wish-list.component.css'
 })
@@ -52,44 +53,44 @@ export class WishListComponent implements OnInit {
         if (response === null) {
           this.booksInWishList = [];
           this.wishListBooks = [];
+          return;
         }
         else if (response.status === 200 && response.data) {
-          this.booksInWishList = [];
-          this.wishListBooks = response.data;
-          this.getBooks(this.wishListBooks);
+          this.booksInWishList=[];
+          this.wishListBooks=response.data;
+          this.getBooks(response.data);
         }
       },
       error: (error) => {
-        this.snackBar.open('Error occured loading wishlist', '', { duration: 3000 });
+        const errorMessage = error.error?.message || error.message;
+        this.snackBar.open(errorMessage, '', { duration: 3000 });
       }
     });
   };
 
   getBooks(wishList: WishListResponse[]): void {
-    const sortedWishList = wishList.sort((a, b) => a.bookId - b.bookId);
-    sortedWishList.forEach(item => {
-      const wishListBook = this.booksInWishList.find(book => book.bookId === item.bookId);
-      if (!wishListBook) {
+    this.booksInWishList = this.booksInWishList.filter(book =>
+      wishList.some(wishListItem => wishListItem.bookId === book.bookId)
+    );
+    wishList.forEach(item => {
+      if (!this.booksInWishList.some(book => book.bookId === item.bookId)) {
         this.bookService.getBookById(item.bookId).subscribe({
           next: (response: ResponseStructure<BookResponse>) => {
             if (response.status === 200 && response.data) {
               this.booksInWishList.push(response.data);
             }
           },
-          error: (error: ResponseStructure<BookResponse>) => {
-            this.snackBar.open(error.message, '', { duration: 3000 });
+          error: (error: HttpErrorResponse) => {
+            const errorMessage = error.error?.message || error.message;
+            this.snackBar.open(errorMessage, '', { duration: 3000 });
           }
         });
       }
     });
-  };
+  }
 
   isBookPresent(id: number): boolean {
-    const index = this.wishListBooks.findIndex(item => item.bookId === id);
-    if (index != -1)
-      return true;
-    else
-      return false;
+    return this.wishListBooks.some(book => book.bookId === id);
   };
 
 
@@ -106,8 +107,9 @@ export class WishListComponent implements OnInit {
           this.wishListService.onWishListChanged.next(true);
         }
       },
-      error: (error: ResponseStructure<WishListResponse>) => {
-        this.snackBar.open(error.message, '', { duration: 3000 });
+      error: (error: HttpErrorResponse) => {
+        const errorMessage = error.error?.message || error.message;
+        this.snackBar.open(errorMessage, '', { duration: 3000 });
       }
     });
   };
@@ -123,8 +125,9 @@ export class WishListComponent implements OnInit {
           this.cartService.onCartCalled.next(true);
         }
       },
-      error: (error: ResponseStructure<CartResponse>) => {
-        this.snackbar.open(error.message, '', { duration: 3000 });
+      error: (error: HttpErrorResponse) => {
+        const errorMessage = error.error?.message || error.message;
+        this.snackBar.open(errorMessage, '', { duration: 3000 });
       }
     });
   };

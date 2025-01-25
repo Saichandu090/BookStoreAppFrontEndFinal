@@ -107,10 +107,10 @@ describe('BookDetailsComponent', () => {
       expect(component.cartQuantity).toBe(2);
     });
 
-    it('should handle error when fetching book or cart', () => {
+    it('should handle errors when fetching book, cart, and wishlist', () => {
       mockBooksService.getBookById.mockReturnValue(throwError(() => new Error('Book fetch error')));
-      mockCartService.getUserCart.mockReturnValue(throwError(() => new Error('Cart  error')));
-      mockWishlistService.getWishList.mockReturnValue(throwError(()=>new Error('Wishlist  error')));
+      mockCartService.getUserCart.mockReturnValue(throwError(() => new Error('Cart error')));
+      mockWishlistService.getWishList.mockReturnValue(throwError(() => new Error('Wishlist error')));
       fixture.detectChanges();
       expect(mockSnackBar.open).toHaveBeenCalledWith('Error loading book or cart', '', { duration: 3000 });
     });

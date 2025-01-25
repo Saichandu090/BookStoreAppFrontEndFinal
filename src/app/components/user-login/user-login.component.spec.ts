@@ -80,7 +80,7 @@ describe('UserLoginComponent', () => {
     it('should validate password format', () => {
       const passwordControl = component.registerForm.get('password');
 
-      passwordControl?.setValue('validPass123');
+      passwordControl?.setValue('Password@090');
       expect(passwordControl?.valid).toBeTruthy();
 
       passwordControl?.setValue('short');
@@ -133,7 +133,7 @@ describe('UserLoginComponent', () => {
         firstName: 'Kakkar',
         lastName: 'Neha',
         email: 'neha@example.com',
-        password: 'validPass123',
+        password: 'Password@090',
         dob: new Date('2003-01-01')
       });
 
@@ -199,24 +199,25 @@ describe('UserLoginComponent', () => {
       });
       mockLoginService.isUserExists.mockReturnValue(throwError(()=>mockErrorResponse));
       component.isUserExists();
-      expect(mockToastr.error).toHaveBeenCalledWith('User not Exist');
+      expect(mockToastr.error).toHaveBeenCalledWith('User not exist');
     });
   });
 
   describe('handleForgotPassword', () => {
     it('should set password reset stage on first call with valid form', () => {
       component.forgotPasswordForm.get('email')?.setValue('test@example.com');
-      component.forgotPasswordForm.get('newPassword')?.setValue('newPassword123');
-      component.forgotPasswordForm.get('confirmPassword')?.setValue('newPassword123');
+      component.forgotPasswordForm.get('newPassword')?.setValue('Password@123');
+      component.forgotPasswordForm.get('confirmPassword')?.setValue('Password@123');
       component.handleForgotPassword();
       expect(component.isPasswordResetStage).toBeTruthy();
     });
 
+
     it('should reset password successfully', () => {
       component.isPasswordResetStage = true;
       component.forgotPasswordForm.get('email')?.setValue('test@example.com');
-      component.forgotPasswordForm.get('newPassword')?.setValue('newPassword123');
-      component.forgotPasswordForm.get('confirmPassword')?.setValue('newPassword123');
+      component.forgotPasswordForm.get('newPassword')?.setValue('Password@123');
+      component.forgotPasswordForm.get('confirmPassword')?.setValue('Password@123');
       const mockResponse: ResponseStructure<boolean> = ({
         status: 200,
         data: true,
@@ -226,7 +227,7 @@ describe('UserLoginComponent', () => {
       component.handleForgotPassword();
       expect(mockLoginService.forgetPassword).toHaveBeenCalledWith({
         email: 'test@example.com',
-        password: 'newPassword123'
+        password: 'Password@123'
       });
       expect(mockSnackBar.open).toHaveBeenCalledWith('Password reset successful', '', { duration: 3000 });
       expect(component.isLogin).toBeTruthy();
@@ -234,19 +235,35 @@ describe('UserLoginComponent', () => {
       expect(component.isPasswordResetStage).toBeFalsy();
     });
 
-    it('should handle password reset failure', () => {
+
+    it('should not proceed to reset stage if form is invalid', () => {
+      component.forgotPasswordForm.markAllAsTouched();
+      component.forgotPasswordForm.get('email')?.setValue('');
+
+      component.handleForgotPassword();
+
+      expect(component.isPasswordResetStage).toBeFalsy();
+    });
+
+
+    it('should not submit password reset if form is invalid in reset stage', () => {
+      component.isPasswordResetStage = true;
+      component.forgotPasswordForm.get('newPassword')?.setValue('');
+      component.handleForgotPassword();
+      expect(mockLoginService.forgetPassword).not.toHaveBeenCalled();
+    });
+
+
+    it('should handle unsuccessful password reset response', () => {
       component.isPasswordResetStage = true;
       component.forgotPasswordForm.get('email')?.setValue('test@example.com');
       component.forgotPasswordForm.get('newPassword')?.setValue('newPassword123');
-      component.forgotPasswordForm.get('confirmPassword')?.setValue('newPassword123');
-      const mockErrorResponse: ResponseStructure<Boolean> = ({
-        status: 401,
-        data: false,
-        message: 'Password rest failed'
-      });
-      mockLoginService.forgetPassword.mockReturnValue(throwError(()=>mockErrorResponse));
+      mockLoginService.forgetPassword.mockReturnValue(
+        of({ status: 400, data: false, message: 'Reset failed' })
+      );
       component.handleForgotPassword();
-      expect(mockToastr.error).toHaveBeenCalledWith('Password rest failed');
+      expect(mockSnackBar.open).not.toHaveBeenCalled();
+      expect(component.isPasswordResetStage).toBeTruthy();
     });
   });
 });

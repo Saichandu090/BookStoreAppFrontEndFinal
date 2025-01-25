@@ -5,7 +5,7 @@
         Total Books: {{ bookList.length }}
       </div>
       <div>
-        <button mat-stroked-button [matMenuTriggerFor]="menu">Sort By</button>
+        <button mat-stroked-button [matMenuTriggerFor]="menu">Sort by relevance</button>
         <mat-menu #menu="matMenu">
           <button mat-menu-item (click)="sortByField('bookName')">Book Name</button>
           <button mat-menu-item (click)="sortByField('bookPrice')">Book Price</button>

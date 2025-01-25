@@ -70,10 +70,9 @@ export class LayoutComponent implements OnInit {
     this.dialog.open(CartComponent, {
       panelClass: 'right-dialog-container',
       width: '600px',
-      height: 'auto',
       position: {
-        right: '30px',
-        top: '60px',
+        right: '20px',
+        top: '20px',
       }
     });
   };

@@ -160,6 +160,10 @@ export class BookDetailsComponent {
         else if (response.status === 200 && response.data) {
           this.wishListBooks = response.data;
         }
+      },
+      error: (error: HttpErrorResponse) => {
+        const errorMessage = error.error?.message || error.message;
+        this.snackBar.open(errorMessage, '', { duration: 3000 });
       }
     });
   };
