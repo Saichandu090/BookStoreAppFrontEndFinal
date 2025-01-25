@@ -60,9 +60,8 @@ describe('LayoutComponent', () => {
     it('should logout when confirmed', () => {
     jest.spyOn(window, 'confirm').mockReturnValue(true);
     jest.spyOn(mockRouter, 'navigateByUrl');
-    localStorage.setItem('UserDetails', JSON.stringify({ id: 1 }));
+    localStorage.setItem('UserDetails', JSON.stringify({ email: 'something@gmail.com',role : 'ADMIN' }));
     localStorage.setItem('appToken', 'test-token');
-
     component.onLogOut();
 
     expect(window.confirm).toHaveBeenCalledWith('Do you want to Logout?');

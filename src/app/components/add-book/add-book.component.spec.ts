@@ -44,12 +44,12 @@ describe('AddBookComponent', () => {
   });
 
   it('should initialize form with empty fields', () => {
-    expect(component.bookForm.get('bookId')?.value).toBe(0);
+    expect(component.bookForm.get('bookId')?.value).toBe(null);
     expect(component.bookForm.get('bookName')?.value).toBe('');
     expect(component.bookForm.get('bookAuthor')?.value).toBe('');
     expect(component.bookForm.get('bookDescription')?.value).toBe('');
-    expect(component.bookForm.get('bookPrice')?.value).toBe(0);
-    expect(component.bookForm.get('bookQuantity')?.value).toBe(0);
+    expect(component.bookForm.get('bookPrice')?.value).toBe(null);
+    expect(component.bookForm.get('bookQuantity')?.value).toBe(null);
     expect(component.bookForm.get('bookLogo')?.value).toBe('');
   });
 

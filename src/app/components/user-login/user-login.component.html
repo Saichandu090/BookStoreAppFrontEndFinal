@@ -5,50 +5,30 @@
   </div>
   <div class="right-section">
     <div class="form-header">
-      <h2 [class.active]="isLogin" (click)="toggleForm()">
-        LOGIN
-      </h2>
-      <h2 [class.active]="!isLogin" (click)="toggleForm()">
-        SIGNUP
-      </h2>
+      <h2 [class.active]="isLogin" (click)="toggleForm()">LOGIN</h2>
+      <h2 [class.active]="!isLogin" (click)="toggleForm()">SIGNUP</h2>
     </div>
     <div class="form-body">
-      <form *ngIf="isLogin" [formGroup]="loginForm" (ngSubmit)="handleLogin()">
-
+      <!-- Login Form -->
+      <form *ngIf="isLogin && !isForgotPassword" [formGroup]="loginForm" (ngSubmit)="handleLogin()">
         <label for="uname">Email</label>
         <input type="email" class="inp" formControlName="email" name="uname">
-        @if (registerForm.controls['email'].touched) {
-          <div class="text-danger">
-            @if (registerForm.controls['email'].errors?.['required']) {
-              <span>This is required</span>
-            }
-            @if (registerForm.controls['email'].errors?.['email']) {
-              <span>Should be an Email</span>
-            }
-          </div>
-        }
+        <div class="text-danger" *ngIf="loginForm.controls['email'].touched">
+          <span *ngIf="loginForm.controls['email'].errors?.['required']">
+            Email is required
+          </span>
+        </div>
 
         <label for="uname">Password</label>
-            <input type="password" class="inp" formControlName="password" name="uname">
-            @if (registerForm.controls['password'].touched) {
-              <div class="text-danger">
-                @if (registerForm.controls['password'].errors?.['required']) {
-                  <span>This is required</span>
-                }
-                @if (registerForm.controls['password'].errors?.['pattern']) {
-                  <span>Password should be atleast 8 Characters</span>
-                }
-              </div>
-            }
+        <input type="password" class="inp" formControlName="password" name="uname">
 
-        <label class="forgot-password">Forgot Password?</label>
+        <label class="forgot-password" (click)="toggleForgotPassword()">Forgot Password?</label>
 
-        <button mat-raised-button color="primary" type="submit">
-          Login
-        </button>
+        <button mat-raised-button color="primary" type="submit">Login</button>
       </form>
 
-      <form *ngIf="!isLogin" [formGroup]="registerForm" (ngSubmit)="handleSignup()">
+      <!-- Signup Form -->
+      <form *ngIf="!isLogin && !isForgotPassword" [formGroup]="registerForm" (ngSubmit)="handleSignup()">
         <label for="firstName">FirstName</label>
             <input type="text" class="inp" formControlName="firstName" name="firstName">
             @if (registerForm.controls['firstName'].touched) {
@@ -86,7 +66,9 @@
                   <span>This is required</span>
                 }
                 @if (registerForm.controls['password'].errors?.['pattern']) {
-                  <span>Password should be atleast 8 Characters</span>
+                  <span>
+                    Password requires lowercase, uppercase, number, and special character
+                  </span>
                 }
               </div>
             }
@@ -103,10 +85,59 @@
                 }
               </div>
             }
-
-        <button mat-raised-button color="primary" type="submit">
+        <button mat-raised-button color="primary" type="submit" [disabled]="registerForm.invalid">
           Signup
         </button>
+      </form>
+
+      <!-- Forgot Password Form -->
+      <form *ngIf="isForgotPassword" [formGroup]="forgotPasswordForm" (ngSubmit)="handleForgotPassword()">
+        <ng-container *ngIf="!isPasswordResetStage">
+          <label for="email">Enter Registered Email</label>
+          <input type="email" class="inp" formControlName="email" name="email">
+
+          <div class="text-danger" *ngIf="forgotPasswordForm.controls['email'].touched">
+            <span *ngIf="forgotPasswordForm.controls['email'].errors?.['required']">
+              Email is required
+            </span>
+            <span *ngIf="forgotPasswordForm.controls['email'].errors?.['email']">
+              Should be a valid email
+            </span>
+          </div>
+
+          <button mat-raised-button color="primary" type="submit" (click)="isUserExists()">
+            Verify Email
+          </button>
+        </ng-container>
+
+        <!-- Password Reset Stage -->
+        <ng-container *ngIf="isPasswordResetStage">
+          <label for="newPassword">New Password</label>
+          <input type="password" class="inp" formControlName="newPassword" name="newPassword">
+
+          <label for="confirmPassword">Confirm New Password</label>
+          <input type="password" class="inp" formControlName="confirmPassword" name="confirmPassword">
+
+          <div class="text-danger" *ngIf="forgotPasswordForm.get('newPassword')?.touched && forgotPasswordForm.get('newPassword')?.invalid">
+            @if (forgotPasswordForm.get('newPassword')?.errors?.['required']) {
+              <span>New Password is required</span>
+            }
+            @if (forgotPasswordForm.get('newPassword')?.errors?.['pattern']) {
+              <span>
+                Password requires lowercase, uppercase, number, and special character
+              </span>
+            }
+          </div>
+
+          @if (forgotPasswordForm.get('confirmPassword')?.touched && forgotPasswordForm.hasError('passwordMismatch')) {
+            <div class="text-danger">
+              Passwords do not match
+            </div>
+          }
+          <button mat-raised-button color="primary" type="submit" [disabled]="forgotPasswordForm.invalid">
+            Reset Password
+          </button>
+        </ng-container>
       </form>
     </div>
   </div>

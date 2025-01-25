@@ -1,3 +1,4 @@
+import { RouterTestingModule } from '@angular/router/testing';
 import { WishlistService } from './../../services/wishList/wishlist.service';
 import { CartService } from './../../services/cart/cart.service';
 import { BooksService } from './../../services/books/books.service';
@@ -64,7 +65,7 @@ describe('HomepageComponent', () => {
     Object.defineProperty(window, 'localStorage', { value: localStorageMock });
 
     TestBed.configureTestingModule({
-      imports: [HomepageComponent, ReactiveFormsModule],
+      imports: [HomepageComponent, ReactiveFormsModule,RouterTestingModule],
       providers: [
         FormBuilder,
         { provide: BooksService, useValue: mockBooksService },

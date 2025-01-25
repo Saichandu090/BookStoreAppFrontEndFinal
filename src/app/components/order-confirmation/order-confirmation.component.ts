@@ -4,11 +4,12 @@ import { OrderService } from '../../services/order/order.service';
 import { AddressResponse, ResponseStructure } from '../../model/interfaces/jsonresponse';
 import { OrderResponse } from '../../model/interfaces/order';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-order-confirmation',
   standalone: true,
-  imports: [],
+  imports: [MatButtonModule],
   templateUrl: './order-confirmation.component.html',
   styleUrl: './order-confirmation.component.css'
 })

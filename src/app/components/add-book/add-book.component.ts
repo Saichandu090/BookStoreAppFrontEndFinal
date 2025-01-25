@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -18,7 +18,7 @@ import { BookResponse, ResponseStructure } from '../../model/interfaces/jsonresp
   templateUrl: './add-book.component.html',
   styleUrl: './add-book.component.css'
 })
-export class AddBookComponent {
+export class AddBookComponent implements OnInit {
 
   book: Book = new Book();
 
@@ -30,15 +30,15 @@ export class AddBookComponent {
 
   bookForm = this.formBuilder.group({
     bookId: new FormControl(0, [Validators.required]),
-    bookName: new FormControl('', [Validators.required, Validators.pattern("^[a-zA-Z .',]{3,}$")]),
-    bookAuthor: new FormControl('', [Validators.required, Validators.pattern("^[a-zA-Z .',]{5,}$")]),
-    bookDescription: new FormControl('', [Validators.required, Validators.pattern("^[a-zA-Z .',]{5,}$")]),
+    bookName: new FormControl('', [Validators.required, Validators.pattern('^[A-Z][a-zA-Z .,\'-_=+]{2,}$')]),
+    bookAuthor: new FormControl('', [Validators.required, Validators.pattern('^[A-Z][a-zA-Z .,\'-_=+]{2,}$')]),
+    bookDescription: new FormControl('', [Validators.required, Validators.pattern('^[A-Z][a-zA-Z0-9 .,\'-_=+]{2,}$')]),
     bookPrice: new FormControl(0, [Validators.required, Validators.pattern("^[0-9.]+$")]),
     bookQuantity: new FormControl(0, [Validators.required, Validators.min(16)]),
     bookLogo: new FormControl('', [Validators.required])
   });
 
-  addNewBook():void {
+  addNewBook(): void {
     if (this.bookForm.invalid) {
       this.snackBar.open("Please fill the form to submit ", '', { duration: 3000 });
       return;
@@ -57,4 +57,20 @@ export class AddBookComponent {
       });
     }
   };
+
+  resetForm(): void {
+    this.bookForm.patchValue({
+      bookId: null,
+      bookName: '',
+      bookAuthor: '',
+      bookDescription: '',
+      bookPrice: null,
+      bookQuantity: null,
+      bookLogo: ''
+    });
+  }
+
+  ngOnInit(): void {
+    this.resetForm();
+  }
 }

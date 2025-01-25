@@ -35,7 +35,6 @@ export class LayoutComponent implements OnInit {
   getCurrentUser():void {
     const user = localStorage.getItem("UserDetails");
     if (user != null) {
-      debugger;
       const pardedUser = JSON.parse(user);
       this.currentUser = pardedUser;
     }
@@ -72,8 +71,8 @@ export class LayoutComponent implements OnInit {
       panelClass: 'right-dialog-container',
       width: '600px',
       position: {
-        right: '30px',
-        top: '60px',
+        right: '20px',
+        top: '20px',
       }
     });
   };

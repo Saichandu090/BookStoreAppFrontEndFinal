@@ -1,0 +1,54 @@
+<div class="book-details-container" *ngIf="book">
+  <div class="book-details-wrapper">
+    <div class="book-image-gallery">
+      <img [src]="book.bookLogo" [alt]="book.bookName" class="main-book-image">
+    </div>
+
+    <div class="book-info">
+      <h1 class="book-title">{{ book.bookName }}</h1>
+      <h2 class="book-author">By {{ book.bookAuthor }}</h2>
+
+      <div class="book-rating">
+        <span class="stars">★★★★☆</span>
+        <span class="rating-count">(124 ratings)</span>
+      </div>
+
+      <div class="book-price-section">
+        <h3 class="book-price">{{ book.bookPrice | currency:'INR' }}</h3>
+        <span class="price-tag">Inclusive of all taxes</span>
+      </div>
+
+      <div class="book-availability">
+        <span [ngClass]="{
+            'in-stock': book.bookQuantity > 10,
+            'low-stock': book.bookQuantity <= 10 && book.bookQuantity > 0,
+            'out-of-stock': book.bookQuantity === 0
+          }">
+          {{ book.bookQuantity > 0 ? 'In Stock' : 'Out of Stock' }}
+        </span>
+      </div>
+      <div class="book-actions">
+        @if (cartQuantity === 0) {
+        <button mat-raised-button color="primary" (click)="addToCart(book.bookId)" [disabled]="book.bookQuantity === 0">
+          Add to Cart
+        </button>
+        } @else {
+        <div class="quantity-cart-control">
+          <button mat-icon-button (click)="onRemoveFromCart(cartCurrent?.cartId)">-</button>
+          <span class="quantity">{{ cartCurrent?.cartQuantity }}</span>
+          <button mat-icon-button (click)="addToCart(cartCurrent?.bookId)">+</button>
+        </div>
+        }
+        <button class="wishlist-btn"
+                          [ngClass]="{ 'active': isBookPresent(book.bookId) }"
+                          (click)="addToWishList(book.bookId)">
+                    <i class="bi bi-heart-fill"></i>
+                  </button>
+      </div>
+      <div class="book-description">
+        <h4>About the Book</h4>
+        <p>{{ book.bookDescription }}</p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,101 @@
+.cart-dialog {
+  min-width: 500px;
+  min-height: 400px;
+  padding: 20px;
+}
+
+.cart-header {
+  margin-bottom: 20px;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 10px;
+}
+
+.cart-title {
+  margin: 0;
+  font-weight: 600;
+}
+
+.cart-close {
+  cursor: pointer;
+  color: #888;
+}
+
+.cart-items-container {
+  margin-bottom: 20px;
+}
+
+.cart-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px;
+}
+
+.cart-item {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.book-thumbnail {
+  width: 80px;
+  height: 80px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 8px;
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-quantity {
+  background-color: #f0f0f0;
+  border: none;
+  padding: 5px 10px;
+  margin: 0 10px;
+  border-radius: 4px;
+  box-shadow: none;
+  outline: none;
+}
+
+.quantity-display {
+  font-weight: bold;
+}
+
+.cart-summary {
+  background-color: #f0f0f0;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 80px;
+  font-weight: bold;
+}
+
+.summary-label {
+  margin-right: auto;
+}
+
+.cart-actions {
+  justify-content: flex-end;
+  gap: 15px;
+  padding-top: 0;
+}
+
+.empty-cart-message {
+  text-align: center;
+  color: #888;
+  padding: 20px;
+}
+
+@media (max-width: 600px) {
+  .cart-dialog {
+    min-width: 100%;
+  }
+}

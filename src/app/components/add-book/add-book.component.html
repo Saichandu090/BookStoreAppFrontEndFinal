@@ -1,107 +1,164 @@
 <mat-dialog-content>
-  <div class="parent">
-      <div class="bgc-center">
-          <div class="container">
-            <form [formGroup]="bookForm">
-              <div class="col-12">
-                <label for="">Book Id</label>
-                <input type="text" formControlName="bookId" class="form-control">
-                @if(bookForm.controls["bookId"].touched){
-                <div class="text-danger">
-                  @if (bookForm.controls["bookId"].errors?.['required']) {
-                  <span>This is Required</span>
-                  }
-                </div>
-                }
-              </div>
-
-              <div class="col-12">
-                <label for="">Book Name</label>
-                <input type="text" formControlName="bookName" class="form-control">
-                @if(bookForm.controls["bookName"].touched){
-                <div class="text-danger">
-                  @if (bookForm.controls["bookName"].errors?.['required']) {
-                  <span>This is Required</span>
-                  }
-                  @if (bookForm.controls["bookName"].errors?.['pattern']) {
-                  <span>Min 3 Characters Required</span>
-                  }
-                </div>
-                }
-              </div>
-              <div class="col-12">
-                <label for="">Book Author</label>
-                <input type="text" formControlName="bookAuthor" class="form-control">
-                @if(bookForm.controls["bookAuthor"].touched){
-                <div class="text-danger">
-                  @if (bookForm.controls["bookAuthor"].errors?.['required']) {
-                  <span>This is Required</span>
-                  }
-                  @if (bookForm.controls["bookAuthor"].errors?.['pattern']) {
-                  <span>Min 5 Characters required</span>
-                  }
-                </div>
-                }
-              </div>
-              <div class="col-12">
-                <label for="">Book Description</label>
-                <input type="text" formControlName="bookDescription" class="form-control">
-                @if(bookForm.controls["bookDescription"].touched){
-                <div class="text-danger">
-                  @if (bookForm.controls["bookDescription"].errors?.['required']) {
-                  <span>This is Required</span>
-                  }
-                  @if (bookForm.controls["bookDescription"].errors?.['pattern']) {
-                  <span>Min 5 Characters Required</span>
-                  }
-                </div>
-                }
-              </div>
-              <div class="col-12">
-                <label for="">Book Price</label>
-                <input type="text" #price formControlName="bookPrice" class="form-control">
-                @if(bookForm.controls["bookPrice"].touched){
-                <div class="text-danger">
-                  @if (bookForm.controls["bookPrice"].errors?.['pattern']) {
-                  <span>Only Numbers are Required</span>
-                  }
-                  @if (bookForm.controls["bookPrice"].errors?.['required']) {
-                  <span>This is Required</span>
-                  }
-                </div>
-                }
-              </div>
-              <div class="col-12">
-                <label for="">Book Quantity</label>
-                <input type="tel" formControlName="bookQuantity" class="form-control">
-                @if(bookForm.controls["bookQuantity"].touched){
-                <div class="text-danger">
-                  @if (bookForm.controls["bookQuantity"].errors?.['min']) {
-                  <span>Min 16 books Required</span>
-                  }
-                  @if (bookForm.controls["bookQuantity"].errors?.['required']) {
-                  <span>This is Required</span>
-                  }
-                </div>
-                }
-              </div>
-              <div class="col-12">
-                <label for="">Book Logo</label>
-                <input type="text" formControlName="bookLogo" class="form-control">
-                @if(bookForm.controls["bookLogo"].touched){
-                <div class="text-danger">
-                  @if (bookForm.controls["bookLogo"].errors?.['required']) {
-                  <span>This is Required</span>
-                  }
-                </div>
-                }
-              </div>
-            </form>
-          </div>
+  <div class="dialog-container">
+    <h2 class="dialog-title">Add New Book</h2>
+    <form [formGroup]="bookForm" class="book-form">
+      <div class="form-group">
+        <label for="bookId">Book ID</label>
+        <input
+          id="bookId"
+          type="text"
+          formControlName="bookId"
+          class="form-control"
+          placeholder="Enter Book ID"
+        >
+        @if(bookForm.controls["bookId"].touched){
+        <div class="error-message">
+          @if (bookForm.controls["bookId"].errors?.['required']) {
+          <span>Book ID is required</span>
+          }
         </div>
-    </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="bookName">Book Name</label>
+        <input
+          id="bookName"
+          type="text"
+          formControlName="bookName"
+          class="form-control"
+          placeholder="Enter Book Name"
+        >
+        @if(bookForm.controls["bookName"].touched){
+        <div class="error-message">
+          @if (bookForm.controls["bookName"].errors?.['required']) {
+          <span>Book name is required</span>
+          }
+          @if (bookForm.controls["bookName"].errors?.['pattern']) {
+          <span>Minimum 3 characters required</span>
+          }
+        </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="bookAuthor">Book Author</label>
+        <input
+          id="bookAuthor"
+          type="text"
+          formControlName="bookAuthor"
+          class="form-control"
+          placeholder="Enter Book Author"
+        >
+        @if(bookForm.controls["bookAuthor"].touched){
+        <div class="error-message">
+          @if (bookForm.controls["bookAuthor"].errors?.['required']) {
+          <span>Book author is required</span>
+          }
+          @if (bookForm.controls["bookAuthor"].errors?.['pattern']) {
+          <span>Minimum 5 characters required</span>
+          }
+        </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="bookDescription">Book Description</label>
+        <input
+          id="bookDescription"
+          type="text"
+          formControlName="bookDescription"
+          class="form-control"
+          placeholder="Enter Book Description"
+        >
+        @if(bookForm.controls["bookDescription"].touched){
+        <div class="error-message">
+          @if (bookForm.controls["bookDescription"].errors?.['required']) {
+          <span>Book description is required</span>
+          }
+          @if (bookForm.controls["bookDescription"].errors?.['pattern']) {
+          <span>Minimum 5 characters required</span>
+          }
+        </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="bookPrice">Book Price</label>
+        <input
+          id="bookPrice"
+          type="text"
+          formControlName="bookPrice"
+          class="form-control"
+          placeholder="Enter Book Price"
+        >
+        @if(bookForm.controls["bookPrice"].touched){
+        <div class="error-message">
+          @if (bookForm.controls["bookPrice"].errors?.['pattern']) {
+          <span>Only numbers are allowed</span>
+          }
+          @if (bookForm.controls["bookPrice"].errors?.['required']) {
+          <span>Book price is required</span>
+          }
+        </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="bookQuantity">Book Quantity</label>
+        <input
+          id="bookQuantity"
+          type="tel"
+          formControlName="bookQuantity"
+          class="form-control"
+          placeholder="Enter Book Quantity"
+        >
+        @if(bookForm.controls["bookQuantity"].touched){
+        <div class="error-message">
+          @if (bookForm.controls["bookQuantity"].errors?.['min']) {
+          <span>Minimum 16 books required</span>
+          }
+          @if (bookForm.controls["bookQuantity"].errors?.['required']) {
+          <span>Book quantity is required</span>
+          }
+        </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="bookLogo">Book Logo</label>
+        <input
+          id="bookLogo"
+          type="text"
+          formControlName="bookLogo"
+          class="form-control"
+          placeholder="Enter Book Logo URL"
+        >
+        @if(bookForm.controls["bookLogo"].touched){
+        <div class="error-message">
+          @if (bookForm.controls["bookLogo"].errors?.['required']) {
+          <span>Book logo is required</span>
+          }
+        </div>
+        }
+      </div>
+    </form>
+  </div>
 </mat-dialog-content>
+
 <mat-dialog-actions>
-  <button mat-button mat-dialog-close [disabled]="bookForm.invalid" (click)="addNewBook()">Add Book</button>
-  <button mat-button mat-dialog-close>Close</button>
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="bookForm.invalid"
+    (click)="addNewBook()"
+  >
+    Add Book
+  </button>
+  <button
+    mat-button
+    mat-dialog-close
+  >
+    Close
+  </button>
 </mat-dialog-actions>

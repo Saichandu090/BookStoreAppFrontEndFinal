@@ -1,3 +1,10 @@
 .outline{
     width: 500px;
 }
+
+.mat-mdc-raised-button .mat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+}

@@ -8,50 +8,56 @@ import { OrdersComponent } from './components/orders/orders.component';
 import { WishListComponent } from './components/wish-list/wish-list.component';
 import { UserLoginComponent } from './components/user-login/user-login.component';
 import { OrderConfirmationComponent } from './components/order-confirmation/order-confirmation.component';
+import { BookDetailsComponent } from './components/book-details/book-details.component';
 
 export const routes: Routes = [
-    {
-        path: '',
-        redirectTo: "login",
-        pathMatch: "full"
-    },
-    {
-        path: "login",
-        component: UserLoginComponent
-    },
-    {
-        path:"adminRegister",
-        component:AdminRegisterComponent
-    },
-    {
-        path: '',
-        component: LayoutComponent,
-        children: [
-        {
-            path: 'homepage',
-            component: HomepageComponent,
-            canActivate: [loginGuard]
-        },
-        {
-            path:'create-order',
-            component:CreateOrderComponent,
-            canActivate:[loginGuard]
-        },
-        {
-            path:'orders',
-            component:OrdersComponent,
-            canActivate:[loginGuard]
-        },
-        {
-            path:'wishlist',
-            component:WishListComponent,
-            canActivate:[loginGuard]
-        },
-        {
-          path:'order-placed',
-          component:OrderConfirmationComponent,
-          canActivate:[loginGuard]
-        }
+  {
+    path: '',
+    redirectTo: "login",
+    pathMatch: "full"
+  },
+  {
+    path: "login",
+    component: UserLoginComponent
+  },
+  {
+    path: "adminRegister",
+    component: AdminRegisterComponent
+  },
+  {
+    path: '',
+    component: LayoutComponent,
+    children: [
+      {
+        path: 'homepage',
+        component: HomepageComponent,
+        canActivate: [loginGuard]
+      },
+      {
+        path: 'create-order',
+        component: CreateOrderComponent,
+        canActivate: [loginGuard]
+      },
+      {
+        path: 'orders',
+        component: OrdersComponent,
+        canActivate: [loginGuard]
+      },
+      {
+        path: 'wishlist',
+        component: WishListComponent,
+        canActivate: [loginGuard]
+      },
+      {
+        path: 'order-placed',
+        component: OrderConfirmationComponent,
+        canActivate: [loginGuard]
+      },
+      {
+        path:'book/:id',
+        component:BookDetailsComponent,
+        canActivate:[loginGuard]
+      }
     ]
-    }
+  }
 ];
