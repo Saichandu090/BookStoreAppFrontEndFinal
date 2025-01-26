@@ -3,7 +3,7 @@ import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core'
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CartData, CartResponse } from '../../model/interfaces/cart';
 import { CartService } from '../../services/cart/cart.service';
-import { AddressResponse, BookResponse, IJsonResponse, ResponseStructure } from '../../model/interfaces/jsonresponse';
+import { AddressResponse, BookResponse, ResponseStructure } from '../../model/interfaces/jsonresponse';
 import { AddressService } from '../../services/address/address.service';
 import { Address, Cart } from '../../model/classes/cart';
 import { MatInputModule } from '@angular/material/input';
@@ -19,6 +19,7 @@ import { AddAddressComponent } from '../add-address/add-address.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-create-order',
@@ -55,7 +56,7 @@ export class CreateOrderComponent implements OnInit {
 
   router: Router = inject(Router);
 
-  continue():void{
+  continue(): void {
     this.router.navigateByUrl("/homepage");
   }
 
@@ -71,8 +72,9 @@ export class CreateOrderComponent implements OnInit {
           this.snackBar.open(response.message, '', { duration: 3000 });
         }
       },
-      error: (error: ResponseStructure<CartResponse>) => {
-        this.snackBar.open(error.message, '', { duration: 3000 });
+      error: (error: HttpErrorResponse) => {
+        const errorMessage = error.error?.message || error.message;
+        this.snackbar.open(errorMessage, '', { duration: 3000 });
       }
     });
   };
@@ -96,8 +98,9 @@ export class CreateOrderComponent implements OnInit {
           this.bookService.onBookChanged.next(true);
         }
       },
-      error: (error: ResponseStructure<CartResponse>) => {
-        this.snackbar.open(error.message, '', { duration: 3000 });
+      error: (error: HttpErrorResponse) => {
+        const errorMessage = error.error?.message || error.message;
+        this.snackbar.open(errorMessage, '', { duration: 3000 });
       }
     });
   };
@@ -140,8 +143,9 @@ export class CreateOrderComponent implements OnInit {
               this.updateTotals();
             }
           },
-          error: (error: ResponseStructure<BookResponse>) => {
-            this.snackbar.open(error.message);
+          error: (error: HttpErrorResponse) => {
+            const errorMessage = error.error?.message || error.message;
+            this.snackbar.open(errorMessage, '', { duration: 3000 });
           }
         });
       }
@@ -155,8 +159,9 @@ export class CreateOrderComponent implements OnInit {
           this.loadCart(response.data);
         }
       },
-      error: (error: ResponseStructure<CartResponse[]>) => {
-        this.snackbar.open(error.message, '', { duration: 3000 });
+      error: (error: HttpErrorResponse) => {
+        const errorMessage = error.error?.message || error.message;
+        this.snackbar.open(errorMessage, '', { duration: 3000 });
       }
     })
   };
@@ -187,8 +192,9 @@ export class CreateOrderComponent implements OnInit {
           this.addressList = response.data;
         }
       },
-      error: (error: ResponseStructure<AddressResponse[]>) => {
-        this.snackBar.open(error.message, '', { duration: 3000 });
+      error: (error: HttpErrorResponse) => {
+        const errorMessage = error.error?.message || error.message;
+        this.snackbar.open(errorMessage, '', { duration: 3000 });
       }
     });
   };
@@ -217,8 +223,9 @@ export class CreateOrderComponent implements OnInit {
           });
         }
       },
-      error: (error: ResponseStructure<AddressResponse>) => {
-        this.snackBar.open(error.message, '', { duration: 3000 });
+      error: (error: HttpErrorResponse) => {
+        const errorMessage = error.error?.message || error.message;
+        this.snackbar.open(errorMessage, '', { duration: 3000 });
       }
     });
   };
@@ -252,8 +259,9 @@ export class CreateOrderComponent implements OnInit {
           this.closeEditAddress();
         }
       },
-      error: (error: ResponseStructure<AddressResponse>) => {
-        this.snackBar.open(error.message, '', { duration: 3000 });
+      error: (error: HttpErrorResponse) => {
+        const errorMessage = error.error?.message || error.message;
+        this.snackbar.open(errorMessage, '', { duration: 3000 });
       }
     });
   };
@@ -269,8 +277,9 @@ export class CreateOrderComponent implements OnInit {
             this.addressService.onAddressChange.next(true);
           }
         },
-        error: (error: ResponseStructure<string>) => {
-          this.snackBar.open(error.message, '', { duration: 3000 });
+        error: (error: HttpErrorResponse) => {
+          const errorMessage = error.error?.message || error.message;
+          this.snackbar.open(errorMessage, '', { duration: 3000 });
         }
       });
     }
@@ -282,7 +291,6 @@ export class CreateOrderComponent implements OnInit {
 
   onAddressSelect(event: any): void {
     this.selectedAddress = event.value;
-    console.log('Selected Address:', this.selectedAddress);
   };
 
   createOrder: OrderRequest = new OrderRequest();
@@ -304,8 +312,9 @@ export class CreateOrderComponent implements OnInit {
             this.cartService.onCartCalled.next(true);
           }
         },
-        error: (error: ResponseStructure<OrderResponse>) => {
-          this.snackBar.open(error.message, '', { duration: 3000 });
+        error: (error: HttpErrorResponse) => {
+          const errorMessage = error.error?.message || error.message;
+          this.snackbar.open(errorMessage, '', { duration: 3000 });
         }
       })
     }

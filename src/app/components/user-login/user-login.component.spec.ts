@@ -188,6 +188,7 @@ describe('UserLoginComponent', () => {
       expect(mockLoginService.isUserExists).toHaveBeenCalledWith(mockEmail);
       expect(component.isPasswordResetStage).toBeTruthy();
     });
+    
 
     it('should show error when user does not exist', () => {
       const mockEmail = 'test@example.com';
@@ -199,9 +200,10 @@ describe('UserLoginComponent', () => {
       });
       mockLoginService.isUserExists.mockReturnValue(throwError(()=>mockErrorResponse));
       component.isUserExists();
-      expect(mockToastr.error).toHaveBeenCalledWith('User not exist');
+      expect(mockToastr.error).toHaveBeenCalledWith('User not found');
     });
   });
+
 
   describe('handleForgotPassword', () => {
     it('should set password reset stage on first call with valid form', () => {

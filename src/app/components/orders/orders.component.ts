@@ -13,6 +13,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { CartData } from '../../model/interfaces/cart';
 import { OrderResponse } from '../../model/interfaces/order';
 import { Router, RouterLink } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
 
 @Component({
@@ -46,8 +47,9 @@ export class OrdersComponent implements OnInit {
           this.orderList = response.data;
         }
       },
-      error: (error: ResponseStructure<OrderResponse[]>) => {
-        this.snackbar.open(error.message, '', { duration: 3000 });
+      error: (error: HttpErrorResponse) => {
+        const errorMessage = error.error?.message || error.message;
+        this.snackbar.open(errorMessage, '', { duration: 3000 });
       }
     });
   };
@@ -62,8 +64,9 @@ export class OrdersComponent implements OnInit {
             this.orderService.onOrderChanged.next(true);
           }
         },
-        error: (error: ResponseStructure<OrderResponse>) => {
-          this.snackbar.open(error.message, '', { duration: 3000 });
+        error: (error: HttpErrorResponse) => {
+          const errorMessage = error.error?.message || error.message;
+          this.snackbar.open(errorMessage, '', { duration: 3000 });
         }
       });
     }

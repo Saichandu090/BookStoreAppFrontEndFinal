@@ -11,6 +11,7 @@ import { WishlistService } from '../../services/wishList/wishlist.service';
 import { CartResponse } from '../../model/interfaces/cart';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
+import { LoggedInUser } from '../../model/classes/user';
 
 @Component({
   selector: 'app-book-details',
@@ -38,6 +39,7 @@ export class BookDetailsComponent {
     const bookId = Number(this.route.snapshot.paramMap.get('id'));
     this.updateCurrentBook(bookId);
     this.updateCurrentCart(bookId);
+    this.getCurrentUser();
     this.cartService.onCartCalled.subscribe({
       next: (response: boolean) => {
         if (response) {
@@ -53,6 +55,17 @@ export class BookDetailsComponent {
     });
   };
 
+  currentUser: LoggedInUser = new LoggedInUser();
+
+  getCurrentUser(): void {
+    const user = localStorage.getItem("UserDetails");
+    if (user != null) {
+      debugger;
+      const parsedUser = JSON.parse(user);
+      this.currentUser = parsedUser;
+    }
+  };
+
   updateCurrentBook(bookId: number) {
     this.bookService.getBookById(bookId).subscribe({
       next: (response: ResponseStructure<BookResponse>) => {
@@ -61,7 +74,7 @@ export class BookDetailsComponent {
         }
       },
       error: (error: HttpErrorResponse) => {
-        const errorMessage = error.error?.message || error.message || 'Failed to fetch the book';
+        const errorMessage = error.error?.message || error.message;
         this.snackBar.open(errorMessage, '', { duration: 3000 });
       }
     });
@@ -84,13 +97,9 @@ export class BookDetailsComponent {
             this.cartCurrent = null;
           }
         }
-      },
-      error: (error: HttpErrorResponse) => {
-        const errorMessage = error.error?.message || error.message;
-        this.snackBar.open(errorMessage, '', { duration: 3000 });
       }
     });
-  }
+  };
 
   addToCart(bookId?: number): void {
     if (bookId)
@@ -105,8 +114,9 @@ export class BookDetailsComponent {
           this.snackBar.open(response.message);
         }
       },
-      error: (error: ResponseStructure<CartResponse>) => {
-        this.snackBar.open(error.message, '', { duration: 3000 });
+      error: (error: HttpErrorResponse) => {
+        const errorMessage = error.error?.message || error.message;
+        this.snackBar.open(errorMessage, '', { duration: 3000 });
       }
     });
   };
@@ -120,8 +130,9 @@ export class BookDetailsComponent {
             this.cartService.onCartCalled.next(true);
           }
         },
-        error: (error: ResponseStructure<CartResponse>) => {
-          this.snackBar.open(error.message, '', { duration: 3000 });
+        error: (error: HttpErrorResponse) => {
+          const errorMessage = error.error?.message || error.message;
+          this.snackBar.open(errorMessage, '', { duration: 3000 });
         }
       });
   };
@@ -142,11 +153,11 @@ export class BookDetailsComponent {
         }
       },
       error: (error: HttpErrorResponse) => {
-        const errorMessage = error.error?.message || error.message || 'Failed to add book to wishlist';
+        const errorMessage = error.error?.message || error.message;
         this.snackBar.open(errorMessage, '', { duration: 3000 });
       }
     });
-  }
+  };
 
   wishListBooks: WishListResponse[] = [];
 
@@ -160,10 +171,6 @@ export class BookDetailsComponent {
         else if (response.status === 200 && response.data) {
           this.wishListBooks = response.data;
         }
-      },
-      error: (error: HttpErrorResponse) => {
-        const errorMessage = error.error?.message || error.message;
-        this.snackBar.open(errorMessage, '', { duration: 3000 });
       }
     });
   };

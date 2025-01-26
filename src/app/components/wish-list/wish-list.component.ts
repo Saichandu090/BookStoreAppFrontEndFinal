@@ -61,9 +61,9 @@ export class WishListComponent implements OnInit {
           this.getBooks(response.data);
         }
       },
-      error: (error) => {
+      error: (error: HttpErrorResponse) => {
         const errorMessage = error.error?.message || error.message;
-        this.snackBar.open(errorMessage, '', { duration: 3000 });
+        this.snackbar.open(errorMessage, '', { duration: 3000 });
       }
     });
   };

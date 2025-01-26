@@ -3,12 +3,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { CartData, CartResponse } from '../../model/interfaces/cart';
 import { CartService } from '../../services/cart/cart.service';
-import { BookResponse, IJsonResponse, ResponseStructure } from '../../model/interfaces/jsonresponse';
+import { BookResponse, ResponseStructure } from '../../model/interfaces/jsonresponse';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { BooksService } from '../../services/books/books.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Cart } from '../../model/classes/cart';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-cart',
@@ -34,7 +35,7 @@ export class CartComponent implements OnInit {
   totalQuantity: number = 0;
   totalPrice: number = 0;
 
-  showCartPopUp():void {
+  showCartPopUp(): void {
     this.isPopUpOpen = !this.isPopUpOpen
   }
 
@@ -73,23 +74,25 @@ export class CartComponent implements OnInit {
               this.updateTotals();
             }
           },
-          error: (error: ResponseStructure<BookResponse>) => {
-            this.snackbar.open(error.message);
+          error: (error: HttpErrorResponse) => {
+            const errorMessage = error.error?.message || error.message;
+            this.snackbar.open(errorMessage, '', { duration: 3000 });
           }
         });
       }
     });
   };
 
-  getCartItems():void {
+  getCartItems(): void {
     this.cartService.getUserCart().subscribe({
       next: (response: ResponseStructure<CartResponse[]>) => {
         if (response.status === 200 && response.data) {
           this.loadCart(response.data);
         }
       },
-      error: (error: ResponseStructure<CartResponse[]>) => {
-        this.snackbar.open(error.message, '', { duration: 3000 });
+      error: (error: HttpErrorResponse) => {
+        const errorMessage = error.error?.message || error.message;
+        this.snackbar.open(errorMessage, '', { duration: 3000 });
       }
     });
   };
@@ -114,8 +117,9 @@ export class CartComponent implements OnInit {
           this.bookService.onBookChanged.next(true);
         }
       },
-      error: (error: ResponseStructure<CartResponse>) => {
-        this.snackbar.open(error.message, '', { duration: 3000 });
+      error: (error: HttpErrorResponse) => {
+        const errorMessage = error.error?.message || error.message;
+        this.snackbar.open(errorMessage, '', { duration: 3000 });
       }
     });
   };
@@ -133,8 +137,9 @@ export class CartComponent implements OnInit {
           this.snackbar.open(response.message, '', { duration: 3000 });
         }
       },
-      error: (error: ResponseStructure<CartResponse>) => {
-        this.snackbar.open(error.message, '', { duration: 3000 });
+      error: (error: HttpErrorResponse) => {
+        const errorMessage = error.error?.message || error.message;
+        this.snackbar.open(errorMessage, '', { duration: 3000 });
       }
     });
   };

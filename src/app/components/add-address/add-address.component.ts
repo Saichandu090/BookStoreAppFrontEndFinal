@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { AddressService } from '../../services/address/address.service';
 import { AddressResponse, ResponseStructure } from '../../model/interfaces/jsonresponse';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-add-address',
@@ -33,7 +34,7 @@ export class AddAddressComponent {
   });
 
   addNewAddress(): void {
-    if(this.newAddress.invalid){
+    if (this.newAddress.invalid) {
       return;
     }
     this.addressService.addAddress(this.newAddress.value).subscribe({
@@ -43,8 +44,9 @@ export class AddAddressComponent {
           this.addressService.onAddressChange.next(true);
         }
       },
-      error: (error: ResponseStructure<AddressResponse>) => {
-        this.snackbar.open(error.message, '', { duration: 3000 });
+      error: (error: HttpErrorResponse) => {
+        const errorMessage = error.error?.message || error.message;
+        this.snackbar.open(errorMessage, '', { duration: 3000 });
       }
     });
   };

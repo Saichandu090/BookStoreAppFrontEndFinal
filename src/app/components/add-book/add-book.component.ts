@@ -10,6 +10,7 @@ import { Book } from '../../model/classes/book';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BooksService } from '../../services/books/books.service';
 import { BookResponse, ResponseStructure } from '../../model/interfaces/jsonresponse';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-add-book',
@@ -51,8 +52,9 @@ export class AddBookComponent implements OnInit {
             this.bookService.onBookChanged.next(true);
           }
         },
-        error: (error: ResponseStructure<BookResponse>) => {
-          this.snackBar.open(error.message, '', { duration: 3000 });
+        error: (error: HttpErrorResponse) => {
+          const errorMessage = error.error?.message || error.message;
+          this.snackBar.open(errorMessage, '', { duration: 3000 });
         }
       });
     }

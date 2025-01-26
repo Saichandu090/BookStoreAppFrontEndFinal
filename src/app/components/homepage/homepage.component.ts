@@ -17,6 +17,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { CartService } from '../../services/cart/cart.service';
 import { RouterLink } from '@angular/router';
 import { forkJoin } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-homepage',
@@ -65,8 +66,9 @@ export class HomepageComponent implements OnInit {
           this.bookList = response.data;
         }
       },
-      error: (error: ResponseStructure<BookResponse[]>) => {
-        this.snackBar.open(error.message, '', { duration: 3000 });
+      error: (error: HttpErrorResponse) => {
+        const errorMessage = error.error?.message || error.message;
+        this.snackBar.open(errorMessage, '', { duration: 3000 });
       }
     });
   };
@@ -83,9 +85,9 @@ export class HomepageComponent implements OnInit {
           this.bookList = response.data;
         }
       },
-      error: (error: ResponseStructure<BookResponse[]>) => {
-        console.log("error", error)
-        this.snackBar.open(error.message, '', { duration: 3000 })
+      error: (error: HttpErrorResponse) => {
+        const errorMessage = error.error?.message || error.message;
+        this.snackBar.open(errorMessage, '', { duration: 3000 });
       }
     });
   };
@@ -118,8 +120,9 @@ export class HomepageComponent implements OnInit {
             this.bookService.onBookChanged.next(true);
           }
         },
-        error: (error: ResponseStructure<string>) => {
-          this.snackBar.open(error.message);
+        error: (error: HttpErrorResponse) => {
+          const errorMessage = error.error?.message || error.message;
+          this.snackBar.open(errorMessage, '', { duration: 3000 });
         }
       });
     }
@@ -154,6 +157,10 @@ export class HomepageComponent implements OnInit {
         } else {
           this.snackBar.open(response.message, '', { duration: 3000 })
         }
+      },
+      error: (error: HttpErrorResponse) => {
+        const errorMessage = error.error?.message || error.message;
+        this.snackBar.open(errorMessage, '', { duration: 3000 });
       }
     });
   };
@@ -188,8 +195,9 @@ export class HomepageComponent implements OnInit {
           this.snackBar.open(response.message);
         }
       },
-      error: (error: ResponseStructure<CartResponse>) => {
-        this.snackBar.open(error.message, '', { duration: 3000 });
+      error: (error: HttpErrorResponse) => {
+        const errorMessage = error.error?.message || error.message;
+        this.snackBar.open(errorMessage, '', { duration: 3000 });
       }
     });
   };
@@ -209,8 +217,9 @@ export class HomepageComponent implements OnInit {
           this.wishListService.onWishListChanged.next(true);
         }
       },
-      error: (error: ResponseStructure<WishListResponse>) => {
-        this.snackBar.open(error.message, '', { duration: 3000 });
+      error: (error: HttpErrorResponse) => {
+        const errorMessage = error.error?.message || error.message;
+        this.snackBar.open(errorMessage, '', { duration: 3000 });
       }
     });
   };
@@ -226,6 +235,10 @@ export class HomepageComponent implements OnInit {
         else if (response.status === 200 && response.data) {
           this.wishListBooks = response.data;
         }
+      },
+      error: (error: HttpErrorResponse) => {
+        const errorMessage = error.error?.message || error.message;
+        this.snackBar.open(errorMessage, '', { duration: 3000 });
       }
     });
   };
