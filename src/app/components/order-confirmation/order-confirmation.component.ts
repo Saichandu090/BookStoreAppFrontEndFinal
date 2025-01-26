@@ -5,6 +5,7 @@ import { AddressResponse, ResponseStructure } from '../../model/interfaces/jsonr
 import { OrderResponse } from '../../model/interfaces/order';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-order-confirmation',
@@ -43,8 +44,9 @@ export class OrderConfirmationComponent implements OnInit {
             order.orderAddress.state;
         }
       },
-      error: (error: ResponseStructure<OrderResponse[]>) => {
-        this.snackBar.open(error.message, '', { duration: 3000 });
+      error: (error: HttpErrorResponse) => {
+        const errorMessage = error.error?.message || error.message;
+        this.snackBar.open(errorMessage, '', { duration: 3000 });
       }
     });
   };

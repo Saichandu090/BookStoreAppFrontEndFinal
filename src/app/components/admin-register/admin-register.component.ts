@@ -8,6 +8,7 @@ import { RegisterResponse, ResponseStructure } from '../../model/interfaces/json
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-admin-register',
@@ -53,12 +54,13 @@ export class AdminRegisterComponent {
             this.router.navigateByUrl("/login");
           }
         },
-        error: (error: ResponseStructure<RegisterResponse>) => {
-          this.toaster.error(error.message);
+        error: (error: HttpErrorResponse) => {
+          const errorMessage = error.error?.message || error.message;
+          this.toaster.error(errorMessage);
         }
-      })
+      });
     }
-  }
+  };
 
   /**
    * Formats a date to 'YYYY-MM-DD'.

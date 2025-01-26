@@ -1,9 +1,3 @@
-export interface IJsonResponse{
-    result:boolean,
-    message:string,
-    data:any
-}
-
 export interface ResponseStructure<T> {
   status: number;
   message: string;

@@ -11,6 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 import { LoginService } from '../../services/login/login.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { APP_CONSTANTS } from '../../constants/constant';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-user-login',
@@ -83,7 +84,7 @@ export class UserLoginComponent {
     }, { validators: this.passwordMatchValidator });
   };
 
-  passwordMatchValidator(form: FormGroup){
+  passwordMatchValidator(form: FormGroup) {
     const newPassword = form.get('newPassword');
     const confirmPassword = form.get('confirmPassword');
     return newPassword && confirmPassword && newPassword.value === confirmPassword.value ? null : { passwordMismatch: true };
@@ -119,12 +120,9 @@ export class UserLoginComponent {
           this.router.navigateByUrl("/homepage");
         }
       },
-      error: (error: any) => {
-        if (error.error && error.error.message) {
-          this.toaster.error(error.error.message);
-        } else {
-          this.toaster.error("Login failed");
-        }
+      error: (error: HttpErrorResponse) => {
+        const errorMessage = error.error?.message || error.message;
+        this.toaster.error(errorMessage);
       }
     });
   };
@@ -138,18 +136,15 @@ export class UserLoginComponent {
       this.userRegister.dob = this.formatDate(this.userRegister.dob);
       this.loginService.registerUser(this.userRegister).subscribe({
         next: (response: ResponseStructure<RegisterResponse>) => {
-           if (response.status === 201) {
+          if (response.status === 201) {
             this.toaster.success(response.message);
             this.registerForm.reset();
             this.isLogin = !this.isLogin;
           }
         },
-        error: (error: any) => {
-          if (error.error && error.error.message) {
-            this.toaster.error(error.error.message);
-          } else {
-            this.toaster.error("Registration failed");
-          }
+        error: (error: HttpErrorResponse) => {
+          const errorMessage = error.error?.message || error.message;
+          this.toaster.error(errorMessage);
         }
       });
     }
@@ -163,12 +158,9 @@ export class UserLoginComponent {
           this.isPasswordResetStage = true;
         }
       },
-      error: (error: any) => {
-        if (error.error && error.error.message) {
-          this.toaster.error(error.error.message);
-        } else {
-          this.toaster.error("User not exist");
-        }
+      error: (error: HttpErrorResponse) => {
+        const errorMessage = error.error?.message || error.message;
+        this.toaster.error(errorMessage);
       }
     });
   };
@@ -194,10 +186,9 @@ export class UserLoginComponent {
               this.isPasswordResetStage = false;
             }
           },
-          error: (error: any) => {
-            if (error) {
-              this.toaster.error(error.error.message);
-            }
+          error: (error: HttpErrorResponse) => {
+            const errorMessage = error.error?.message || error.message;
+            this.toaster.error(errorMessage);
           }
         });
       }
