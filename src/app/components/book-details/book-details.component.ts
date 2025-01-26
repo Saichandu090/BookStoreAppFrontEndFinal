@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { BookResponse, ResponseStructure, WishListResponse } from '../../model/interfaces/jsonresponse';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { BooksService } from '../../services/books/books.service';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
@@ -16,7 +16,7 @@ import { LoggedInUser } from '../../model/classes/user';
 @Component({
   selector: 'app-book-details',
   standalone: true,
-  imports: [MatIconModule, CommonModule, MatButtonModule],
+  imports: [MatIconModule, CommonModule, MatButtonModule,RouterLink],
   templateUrl: './book-details.component.html',
   styleUrl: './book-details.component.css'
 })

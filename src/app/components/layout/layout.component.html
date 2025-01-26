@@ -1,42 +1,50 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary" style="background-color: #2259f2b6 !important ">
-  <!-- Container wrapper -->
-  <div class="container-fluid">
-    <div class="navbar" id="navbarSupportedContent">
-      <!-- Navbar brand -->
-      <i class="bi bi-book fa-2x mx-2"></i>
-      <a class="title" routerLink="/homepage">
-        Book Store Application
-      </a>
-    </div>
-    <div class="d-flex align-items-center">
-      @if (currentUser.email!='') {
-      <button mat-menu-item><span><b>Hello, {{ currentUser.email }}</b></span> </button>
-      @if (currentUser.role=="USER") {
-        <a class="link-secondary me-3 mx-2">
-          <i class="bi bi-cart3 fa-2x mx-2 text-white" (click)="openDialog()"></i>
+<div class="d-flex flex-column min-vh-100">
+  <nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary" style="background-color: #2259f2b6 !important ">
+    <!-- Container wrapper -->
+    <div class="container-fluid">
+      <div class="navbar" id="navbarSupportedContent">
+        <!-- Navbar brand -->
+        <i class="bi bi-book fa-2x mx-2"></i>
+        <a class="title" routerLink="/homepage">
+          Book Store Application
         </a>
+      </div>
+      <div class="d-flex align-items-center">
+        @if (currentUser.email!='') {
+        <button mat-menu-item><span><b>Hello, {{ currentUser.email }}</b></span> </button>
+        @if (currentUser.role=="USER") {
+          <a class="link-secondary me-3 mx-2">
+            <i class="bi bi-cart3 fa-2x mx-2 text-white" (click)="openDialog()"></i>
+          </a>
+          }
+        @if (currentUser.role=='USER') {
+          <button mat-mini-fab aria-label="Example icon button with a menu icon" [matMenuTriggerFor]="menu">
+            <mat-icon>menu</mat-icon>
+          </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item routerLink="/orders">My Orders</button>
+          <button mat-menu-item routerLink="/wishlist">WishList</button>
+          <button mat-menu-item routerLink="/homepage">Home</button>
+          <button mat-menu-item (click)="onLogOut()">Logout</button>
+        </mat-menu>
+        } @else if (currentUser.role==='ADMIN') {
+          <button mat-mini-fab aria-label="Example icon button with a menu icon" [matMenuTriggerFor]="menu">
+            <mat-icon>menu</mat-icon>
+          </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="openAddBook()">Add-Book</button>
+          <button mat-menu-item (click)="onLogOut()">Logout</button>
+        </mat-menu>
         }
-      @if (currentUser.role=='USER') {
-        <button mat-mini-fab aria-label="Example icon button with a menu icon" [matMenuTriggerFor]="menu">
-          <mat-icon>menu</mat-icon>
-        </button>
-      <mat-menu #menu="matMenu">
-        <button mat-menu-item routerLink="/orders">My Orders</button>
-        <button mat-menu-item routerLink="/wishlist">WishList</button>
-        <button mat-menu-item routerLink="/homepage">Home</button>
-        <button mat-menu-item (click)="onLogOut()">Logout</button>
-      </mat-menu>
-      } @else if (currentUser.role==='ADMIN') {
-        <button mat-mini-fab aria-label="Example icon button with a menu icon" [matMenuTriggerFor]="menu">
-          <mat-icon>menu</mat-icon>
-        </button>
-      <mat-menu #menu="matMenu">
-        <button mat-menu-item (click)="openAddBook()">Add-Book</button>
-        <button mat-menu-item (click)="onLogOut()">Logout</button>
-      </mat-menu>
       }
-    }
+      </div>
     </div>
-  </div>
-</nav>
-<router-outlet />
+  </nav>
+  <router-outlet />
+  <footer class="footer mt-auto py-3" style="background-color: #2259f2b6 !important;">
+    <div class="container text-center">
+      <span class="text-white">Bookstore Application © All Rights Reserved</span>
+    </div>
+  </footer>
+</div>
+

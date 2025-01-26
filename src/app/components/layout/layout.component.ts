@@ -62,7 +62,7 @@ export class LayoutComponent implements OnInit {
     this.dialog.open(AddBookComponent, {
       panelClass: 'right-dialog-container',
       width: '400px',
-      height: '500px'
+      height: '600px'
     });
   };
 
