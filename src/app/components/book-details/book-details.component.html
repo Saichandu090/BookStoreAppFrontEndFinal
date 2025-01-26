@@ -1,4 +1,9 @@
 <div class="book-details-container" *ngIf="book">
+  <div class="back-button-container">
+    <button mat-icon-button [routerLink]="'/homepage'" class="back-button">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+  </div>
   <div class="book-details-wrapper">
     <div class="book-image-gallery">
       <img [src]="book.bookLogo" [alt]="book.bookName" class="main-book-image">
@@ -28,24 +33,23 @@
         </span>
       </div>
       @if (currentUser.role==='USER') {
-        <div class="book-actions">
-          @if (cartQuantity === 0) {
-          <button mat-raised-button color="primary" (click)="addToCart(book.bookId)" [disabled]="book.bookQuantity === 0">
-            Add to Cart
-          </button>
-          } @else {
-          <div class="quantity-cart-control">
-            <button mat-icon-button (click)="onRemoveFromCart(cartCurrent?.cartId)">-</button>
-            <span class="quantity">{{ cartCurrent?.cartQuantity }}</span>
-            <button mat-icon-button (click)="addToCart(cartCurrent?.bookId)">+</button>
-          </div>
-          }
-          <button class="wishlist-btn"
-                            [ngClass]="{ 'active': isBookPresent(book.bookId) }"
-                            (click)="addToWishList(book.bookId)">
-                      <i class="bi bi-heart-fill"></i>
-                    </button>
+      <div class="book-actions">
+        @if (cartQuantity === 0) {
+        <button mat-raised-button color="primary" (click)="addToCart(book.bookId)" [disabled]="book.bookQuantity === 0">
+          Add to Cart
+        </button>
+        } @else {
+        <div class="quantity-cart-control">
+          <button mat-icon-button (click)="onRemoveFromCart(cartCurrent?.cartId)">-</button>
+          <span class="quantity">{{ cartCurrent?.cartQuantity }}</span>
+          <button mat-icon-button (click)="addToCart(cartCurrent?.bookId)">+</button>
         </div>
+        }
+        <button class="wishlist-btn" [ngClass]="{ 'active': isBookPresent(book.bookId) }"
+          (click)="addToWishList(book.bookId)">
+          <i class="bi bi-heart-fill"></i>
+        </button>
+      </div>
       }
       <div class="book-description">
         <h4>About the Book</h4>

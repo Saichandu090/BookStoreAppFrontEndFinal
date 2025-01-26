@@ -1,6 +1,7 @@
 .dialog-container {
   max-width: 500px;
   padding: 20px;
+  height: auto;
 }
 
 .dialog-title {
