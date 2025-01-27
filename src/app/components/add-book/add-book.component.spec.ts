@@ -74,7 +74,8 @@ describe('AddBookComponent', () => {
         bookDescription: 'Habits',
         bookPrice: 199,
         bookQuantity: 345,
-        bookLogo: 'URL'
+        bookLogo: 'URL',
+        status:true
       }
     };
 

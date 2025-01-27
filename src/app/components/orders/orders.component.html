@@ -1,12 +1,18 @@
-@if (orderList.length == 0) {
-<div class="d-flex justify-content-center align-items-center" style="height: 30vh;">
-  <div class="text-center">
-    <h4 class="mb-5">You have no Orders to display.</h4>
-    <div class="button-container">
-      <button class="btn btn-primary btn-lg" (click)="continue()">Continue Shopping</button>
+@if (isLoading) {
+  <div class="d-flex justify-content-center align-items-center" style="height: 70vh;">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
     </div>
   </div>
-</div>
+} @else if (orderList.length === 0) {
+  <div class="d-flex justify-content-center align-items-center" style="height: 30vh;">
+    <div class="text-center">
+      <h4 class="mb-5">You have no Orders to display.</h4>
+      <div class="button-container">
+        <button class="btn btn-primary btn-lg" (click)="continue()">Continue Shopping</button>
+      </div>
+    </div>
+  </div>
 }@else {
 <div class="container">
   <div *ngFor="let order of orderList" class="order-card">
@@ -23,7 +29,7 @@
       <div class="order-summary">
         <p><strong>Order Date:</strong> {{ order.orderDate }}</p>
         <p><strong>Total Quantity:</strong> {{ order.orderQuantity }}</p>
-        <p><strong>Total Price:</strong> ₹{{ order.orderPrice }}</p>
+        <p><strong>Total Price:</strong> ₹{{ order.orderPrice | number:'1.1-2'}}</p>
       </div>
     </div>
     <div class="order-status">

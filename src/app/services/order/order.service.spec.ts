@@ -217,7 +217,7 @@ describe('OrderService', () => {
             bookDescription: 'Chemistry',
             bookLogo: 'URL',
             bookPrice: 234.45,
-            bookQuantity: 1
+            bookQuantity: 1,
           }]
         },
         {

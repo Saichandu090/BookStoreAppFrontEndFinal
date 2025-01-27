@@ -16,7 +16,7 @@ import { LoggedInUser } from '../../model/classes/user';
 @Component({
   selector: 'app-book-details',
   standalone: true,
-  imports: [MatIconModule, CommonModule, MatButtonModule,RouterLink],
+  imports: [MatIconModule, CommonModule, MatButtonModule, RouterLink],
   templateUrl: './book-details.component.html',
   styleUrl: './book-details.component.css'
 })
