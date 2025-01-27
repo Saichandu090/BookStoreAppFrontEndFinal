@@ -26,8 +26,9 @@ export interface BookResponse{
   bookAuthor:string,
   bookDescription:string,
   bookPrice:number,
-  bookLogo:string
+  bookLogo:string,
   bookQuantity:number,
+  status:boolean
 }
 
 export interface AddressResponse{

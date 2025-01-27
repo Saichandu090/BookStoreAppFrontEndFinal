@@ -76,7 +76,8 @@ describe('BookDetailsComponent', () => {
           bookDescription: 'Description',
           bookPrice: 199.9,
           bookLogo: 'Url',
-          bookQuantity: 60
+          bookQuantity: 60,
+          status:true
         }
       };
       const mockCartResponse: ResponseStructure<CartResponse[]> = {

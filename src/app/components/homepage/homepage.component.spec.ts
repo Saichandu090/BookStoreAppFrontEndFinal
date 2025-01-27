@@ -96,7 +96,8 @@ describe('HomepageComponent', () => {
         bookPrice: 199.99,
         bookQuantity: 200,
         bookDescription: 'Test Description',
-        bookLogo: 'Url'
+        bookLogo: 'Url',
+        status:true
       }
     ]
   };
@@ -111,7 +112,8 @@ describe('HomepageComponent', () => {
       bookPrice: 299.99,
       bookQuantity: 120,
       bookDescription: 'Test Description',
-      bookLogo: 'UrL'
+      bookLogo: 'UrL',
+      status:true
     }
   };
 
@@ -229,7 +231,8 @@ describe('HomepageComponent', () => {
         bookDescription: 'Old one',
         bookLogo: 'Old one',
         bookName: 'Updated Book',
-        bookQuantity: 23
+        bookQuantity: 23,
+        status:true
       }
     };
     component.editableBook = 1;

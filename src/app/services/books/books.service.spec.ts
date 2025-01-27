@@ -46,7 +46,8 @@ describe('BooksService', () => {
         bookPrice: 123.45,
         bookDescription: 'Learn testing',
         bookLogo: 'URL',
-        bookQuantity: 34
+        bookQuantity: 34,
+        status:true
       }
     };
     const mockHeaders = new HttpHeaders().set('Authorization', 'Bearer mock-token');
@@ -121,7 +122,8 @@ describe('BooksService', () => {
         bookPrice: 987.3,
         bookDescription: 'Learn testing',
         bookLogo: 'URL',
-        bookQuantity: 34
+        bookQuantity: 34,
+        status:true
       }
     };
     const mockHeaders = new HttpHeaders().set('Authorization', 'Bearer mock-token');
@@ -187,7 +189,8 @@ describe('BooksService', () => {
           bookPrice: 987.3,
           bookDescription: 'Learn testing',
           bookLogo: 'URL',
-          bookQuantity: 34
+          bookQuantity: 34,
+          status:true
         },
         {
           bookId: 2,
@@ -196,7 +199,8 @@ describe('BooksService', () => {
           bookPrice: 1025.5,
           bookDescription: 'Learn testing with Book 2',
           bookLogo: 'URL2',
-          bookQuantity: 50
+          bookQuantity: 50,
+          status:true
         }
       ]
     };
@@ -239,7 +243,8 @@ describe('BooksService', () => {
           bookPrice: 987.3,
           bookDescription: 'Learn testing',
           bookLogo: 'URL',
-          bookQuantity: 34
+          bookQuantity: 34,
+          status:true
         },
         {
           bookId: 2,
@@ -248,7 +253,8 @@ describe('BooksService', () => {
           bookPrice: 1025.5,
           bookDescription: 'Learn testing with Book 2',
           bookLogo: 'URL2',
-          bookQuantity: 50
+          bookQuantity: 50,
+          status:true
         }
       ]
     };
@@ -354,7 +360,8 @@ describe('BooksService', () => {
         bookPrice: 987.3,
         bookDescription: 'Learn testing',
         bookLogo: 'URL',
-        bookQuantity: 34
+        bookQuantity: 34,
+        status:true
       }
     };
     const mockHeaders = new HttpHeaders().set('Authorization', 'Bearer mock-token');

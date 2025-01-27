@@ -86,6 +86,10 @@ export class CartComponent implements OnInit {
   getCartItems(): void {
     this.cartService.getUserCart().subscribe({
       next: (response: ResponseStructure<CartResponse[]>) => {
+        if(response===null){
+          this.cartData=[];
+          return;
+        }
         if (response.status === 200 && response.data) {
           this.loadCart(response.data);
         }

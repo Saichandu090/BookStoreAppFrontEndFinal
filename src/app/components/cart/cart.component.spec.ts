@@ -73,7 +73,8 @@ describe('CartComponent', () => {
       bookLogo: 'test-logo.jpg',
       bookAuthor: 'Test',
       bookDescription: 'Testing',
-      bookQuantity: 123
+      bookQuantity: 123,
+      status:true
     }
   };
 

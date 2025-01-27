@@ -19,7 +19,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 @Component({
   selector: 'app-orders',
   standalone: true,
-  imports: [PopoverModule, TableModule, ButtonModule, TagModule, MatTableModule, MatButtonModule, CommonModule,RouterLink],
+  imports: [PopoverModule, TableModule, ButtonModule, TagModule, MatTableModule, MatButtonModule, CommonModule, RouterLink],
   templateUrl: './orders.component.html',
   styleUrl: './orders.component.css',
   providers: [MessageService]
@@ -32,24 +32,33 @@ export class OrdersComponent implements OnInit {
 
   orderList: OrderResponse[] = [];
 
-  bookList : BookResponse[]=[];
+  bookList: BookResponse[] = [];
 
   carts: CartData[] = [];
 
   snackbar: MatSnackBar = inject(MatSnackBar);
 
-  router : Router=inject(Router);
+  router: Router = inject(Router);
+
+  isLoading: boolean = true;
 
   getOrders(): void {
     this.orderService.getAllOrders().subscribe({
       next: (response: ResponseStructure<OrderResponse[]>) => {
+        if (response === null) {
+          this.orderList = [];
+          this.isLoading = false;
+          return;
+        }
         if (response.status === 200 && response.data) {
           this.orderList = response.data;
+          this.isLoading = false;
         }
       },
       error: (error: HttpErrorResponse) => {
         const errorMessage = error.error?.message || error.message;
         this.snackbar.open(errorMessage, '', { duration: 3000 });
+        this.isLoading = false;
       }
     });
   };
@@ -72,7 +81,7 @@ export class OrdersComponent implements OnInit {
     }
   };
 
-  continue():void{
+  continue(): void {
     this.router.navigateByUrl('homepage');
   }
 

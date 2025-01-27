@@ -4,7 +4,7 @@ import { BookResponse, ResponseStructure, WishListResponse } from '../../model/i
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { LoggedInUser } from '../../model/classes/user';
-import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Book } from '../../model/classes/book';
 import { Cart, WishListRequest } from '../../model/classes/cart';
 import { CartResponse } from '../../model/interfaces/cart';
@@ -18,11 +18,12 @@ import { CartService } from '../../services/cart/cart.service';
 import { RouterLink } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-homepage',
   standalone: true,
-  imports: [ButtonModule, CommonModule, ReactiveFormsModule, MatButtonModule, MatMenuModule, MatIconModule, MatPaginatorModule, RouterLink],
+  imports: [ButtonModule, CommonModule, ReactiveFormsModule, MatButtonModule, MatMenuModule, MatIconModule, MatPaginatorModule, RouterLink,FormsModule,MatFormFieldModule],
   templateUrl: './homepage.component.html',
   styleUrl: './homepage.component.css'
 })
@@ -36,6 +37,8 @@ export class HomepageComponent implements OnInit {
   @ViewChild("editBook") editBook!: ElementRef;
 
   bookList: BookResponse[] = [];
+
+  originalBookList: any[] = [];
 
   private bookService: BooksService = inject(BooksService);
 
@@ -58,6 +61,27 @@ export class HomepageComponent implements OnInit {
   };
 
   wishListBooks: WishListResponse[] = [];
+
+  searchQuery: string = '';
+
+  searchBooks() {
+    if (!this.searchQuery.trim()) {
+      this.bookList = [...this.originalBookList];
+      return;
+    }
+
+    const query = this.searchQuery.toLowerCase().trim();
+    this.bookList = this.originalBookList.filter(book =>
+      book.bookName.toLowerCase().includes(query) ||
+      book.bookAuthor.toLowerCase().includes(query) ||
+      book.bookDescription.toLowerCase().includes(query)
+    );
+  }
+
+  clearSearch() {
+    this.searchQuery = '';
+    this.bookList = [...this.originalBookList];
+  }
 
   sortByField(field: string): void {
     this.bookService.sortByField(field).subscribe({
@@ -238,7 +262,8 @@ export class HomepageComponent implements OnInit {
       },
       error: (error: HttpErrorResponse) => {
         const errorMessage = error.error?.message || error.message;
-        this.snackBar.open(errorMessage, '', { duration: 3000 });
+        if (this.currentUser.role === 'USER')
+          this.snackBar.open(errorMessage, '', { duration: 3000 });
       }
     });
   };

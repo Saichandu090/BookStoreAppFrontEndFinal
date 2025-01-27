@@ -111,7 +111,8 @@ describe('CreateOrderComponent', () => {
       bookLogo: 'Url',
       bookAuthor: 'Testing king',
       bookDescription: 'Testable',
-      bookQuantity: 20
+      bookQuantity: 20,
+      status:true
     }
   };
 

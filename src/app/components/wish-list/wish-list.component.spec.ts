@@ -35,7 +35,8 @@ describe('WishListComponent', () => {
       bookDescription: 'Descript',
       bookPrice: 200,
       bookLogo: 'Url2',
-      bookQuantity: 50
+      bookQuantity: 50,
+      status:true
     },
     message: 'Book retrieved successfully'
   };

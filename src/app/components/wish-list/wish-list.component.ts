@@ -15,7 +15,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 @Component({
   selector: 'app-wish-list',
   standalone: true,
-  imports: [CommonModule, MatIconModule,RouterLink],
+  imports: [CommonModule, MatIconModule, RouterLink],
   templateUrl: './wish-list.component.html',
   styleUrl: './wish-list.component.css'
 })
@@ -39,6 +39,8 @@ export class WishListComponent implements OnInit {
 
   router: Router = inject(Router);
 
+  isLoading: boolean = true;
+
   wishListObject: WishListRequest = {
     bookId: 0
   };
@@ -53,17 +55,19 @@ export class WishListComponent implements OnInit {
         if (response === null) {
           this.booksInWishList = [];
           this.wishListBooks = [];
+          this.isLoading=false;
           return;
         }
         else if (response.status === 200 && response.data) {
-          this.booksInWishList=[];
-          this.wishListBooks=response.data;
+          this.booksInWishList = [];
+          this.wishListBooks = response.data;
           this.getBooks(response.data);
         }
       },
       error: (error: HttpErrorResponse) => {
         const errorMessage = error.error?.message || error.message;
         this.snackbar.open(errorMessage, '', { duration: 3000 });
+        this.isLoading = false;
       }
     });
   };
@@ -87,6 +91,7 @@ export class WishListComponent implements OnInit {
         });
       }
     });
+    this.isLoading = false;
   }
 
   isBookPresent(id: number): boolean {

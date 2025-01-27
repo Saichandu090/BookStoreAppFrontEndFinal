@@ -25,14 +25,15 @@
 
       <div class="book-availability">
         <span [ngClass]="{
-            'in-stock': book.bookQuantity > 10,
-            'low-stock': book.bookQuantity <= 10 && book.bookQuantity > 0,
-            'out-of-stock': book.bookQuantity === 0
+            'Not-Available' : !book.status,
+            'in-stock': book.bookQuantity > 10 && book.status,
+            'low-stock': book.bookQuantity <= 10 && book.bookQuantity > 0 && book.status,
+            'out-of-stock': book.bookQuantity === 0 && book.status,
           }">
-          {{ book.bookQuantity > 0 ? 'In Stock' : 'Out of Stock' }}
+          {{ book.bookQuantity > 0 ? (book.status? 'In Stock':'Not-Available') : 'Out of Stock' }}
         </span>
       </div>
-      @if (currentUser.role==='USER') {
+      @if (currentUser.role==='USER' && book.status) {
       <div class="book-actions">
         @if (cartQuantity === 0) {
         <button mat-raised-button color="primary" (click)="addToCart(book.bookId)" [disabled]="book.bookQuantity === 0">
