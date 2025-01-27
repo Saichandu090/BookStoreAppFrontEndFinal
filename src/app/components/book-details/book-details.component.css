@@ -86,6 +86,10 @@
   color: red;
 }
 
+.Not-Available {
+  color: red;
+}
+
 .quantity-selector {
   display: flex;
   align-items: center;
