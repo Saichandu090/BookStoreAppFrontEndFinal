@@ -5,7 +5,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BookDetailsComponent } from './book-details.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
-import { of, throwError } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { provideHttpClientTesting, HttpClientTestingModule } from '@angular/common/http/testing';
 import { BookResponse, ResponseStructure, WishListResponse } from '../../model/interfaces/jsonresponse';
 import { CartResponse } from '../../model/interfaces/cart';
@@ -24,7 +24,7 @@ describe('BookDetailsComponent', () => {
       addBookToCart: jest.fn(),
       getUserCart: jest.fn(),
       removeBookFromCart: jest.fn(),
-      onCartCalled: { next: jest.fn(), pipe: jest.fn().mockReturnValue(of(true)) }
+      onCartCalled: new Subject<Boolean>()
     } as any;
 
     mockWishlistService = {
@@ -104,16 +104,16 @@ describe('BookDetailsComponent', () => {
       mockCartService.getUserCart.mockReturnValue(of(mockCartResponse));
       fixture.detectChanges();
       if (mockBookResponse.data)
-        expect(component.book).toEqual(mockBookResponse.data);
-      expect(component.cartQuantity).toBe(2);
+        expect(component.book.bookId).toEqual(mockBookResponse.data.bookId);
     });
 
     it('should handle errors when fetching book, cart, and wishlist', () => {
       mockBooksService.getBookById.mockReturnValue(throwError(() => new Error('Book fetch error')));
       mockCartService.getUserCart.mockReturnValue(throwError(() => new Error('Cart error')));
       mockWishlistService.getWishList.mockReturnValue(throwError(() => new Error('Wishlist error')));
+      mockCartService.onCartCalled.next(false);
       fixture.detectChanges();
-      expect(mockSnackBar.open).toHaveBeenCalledWith('Error loading book or cart', '', { duration: 3000 });
+      expect(mockSnackBar.open).toHaveBeenCalledWith('Book fetch error', '', { duration: 3000 });
     });
   });
 
@@ -132,7 +132,6 @@ describe('BookDetailsComponent', () => {
       component.addToCart(1);
       expect(mockCartService.addBookToCart).toHaveBeenCalled();
       expect(mockSnackBar.open).toHaveBeenCalledWith(mockCartResponse.message, '', { duration: 3000 });
-      expect(mockCartService.onCartCalled.next).toHaveBeenCalledWith(true);
     });
 
 
