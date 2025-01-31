@@ -36,7 +36,7 @@ export class AddBookComponent implements OnInit {
     bookDescription: new FormControl('', [Validators.required, Validators.pattern('^[A-Z][a-zA-Z0-9 .,\'-_=+]{2,}$')]),
     bookPrice: new FormControl(0, [Validators.required, Validators.pattern("^[0-9.]+$")]),
     bookQuantity: new FormControl(0, [Validators.required, Validators.min(16)]),
-    bookLogo: new FormControl('', [Validators.required])
+    bookLogo: new FormControl('', [Validators.required,Validators.maxLength(255)])
   });
 
   addNewBook(): void {

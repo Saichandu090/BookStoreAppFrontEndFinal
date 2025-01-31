@@ -139,6 +139,9 @@
           @if (bookForm.controls["bookLogo"].errors?.['required']) {
           <span>Book logo is required</span>
           }
+          @if (bookForm.controls["bookLogo"].errors?.['maxlength']) {
+            <span>Book Url should be less than 255 characters</span>
+            }
         </div>
         }
       </div>
