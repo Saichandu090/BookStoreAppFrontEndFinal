@@ -192,7 +192,6 @@ export class HomepageComponent implements OnInit {
 
   onUpdateBook(): void {
     this.updatableBook = Object.assign(new Book(), this.bookForm.value);
-    this.updatableBook.bookId = this.editableBook;
     this.bookService.updateBook(this.editableBook, this.updatableBook).subscribe({
       next: (response: ResponseStructure<BookResponse>) => {
         if (response.status === 200) {

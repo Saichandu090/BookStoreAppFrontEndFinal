@@ -1,13 +1,13 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { HttpClientTestingModule, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { LayoutComponent } from './layout.component';
-import { Router } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { LoggedInUser } from '../../model/classes/user';
 import { RouterTestingModule } from '@angular/router/testing';
-import { UserLoginComponent } from '../user-login/user-login.component';
 import { ToastrService } from 'ngx-toastr';
+import { routes } from '../../app.routes';
 
 describe('LayoutComponent', () => {
   let component: LayoutComponent;
@@ -19,8 +19,7 @@ describe('LayoutComponent', () => {
 
   beforeEach(async () => {
     mockRouter = {
-      navigateByUrl: jest.fn().mockResolvedValue(true),
-      config: []
+      navigateByUrl: jest.fn()
     } as any;
 
     mockSnackBar = {
@@ -37,11 +36,11 @@ describe('LayoutComponent', () => {
     } as any;
 
     await TestBed.configureTestingModule({
-      imports: [LayoutComponent, HttpClientTestingModule, RouterTestingModule.withRoutes([{ path: 'login', component: UserLoginComponent }])],
+      imports: [LayoutComponent, HttpClientTestingModule, RouterTestingModule],
       providers: [
         { provide: MatSnackBar, useValue: mockSnackBar },
         { provide: MatDialog, useValue: mockDialog },
-        { provide: ToastrService, useValue: mockToaster }
+        { provide: ToastrService, useValue: mockToaster },provideHttpClientTesting()
       ],
     }).compileComponents();
 
@@ -71,27 +70,28 @@ describe('LayoutComponent', () => {
 
   describe('onLogOut', () => {
 
-    it('should logout when confirmed', fakeAsync(() => {
+    it('should logout when confirmed', () => {
 
       localStorage.setItem('UserDetails', JSON.stringify({ email: 'something@gmail.com', role: 'ADMIN' }));
       localStorage.setItem('appToken', 'test-token');
-      mockRouter.navigateByUrl.mockResolvedValue(true);
       jest.spyOn(window, 'confirm').mockReturnValue(true);
+
       component.onLogOut();
-      flush();
 
       expect(window.confirm).toHaveBeenCalledWith('Do you want to Logout?');
       expect(mockSnackBar.open).toHaveBeenCalledWith('Logout Success', '', { duration: 3000 });
       expect(localStorage.getItem('appToken')).toBeNull();
       expect(localStorage.getItem('UserDetails')).toBeNull();
       expect(mockRouter.navigateByUrl).toHaveBeenCalledWith('/login');
-    }));
+    });
 
     it('should not logout when not confirmed', () => {
       jest.spyOn(window, 'confirm').mockReturnValue(false);
       localStorage.setItem('UserDetails', '{"test@gmail.com": "USER"}');
       localStorage.setItem('appToken', 'test-token');
+
       component.onLogOut();
+
       expect(window.confirm).toHaveBeenCalledWith('Do you want to Logout?');
       expect(mockSnackBar.open).not.toHaveBeenCalled();
       expect(localStorage.getItem('appToken')).not.toBeNull();
