@@ -30,7 +30,6 @@ export class AddBookComponent implements OnInit {
   formBuilder: FormBuilder = inject(FormBuilder);
 
   bookForm = this.formBuilder.group({
-    bookId: new FormControl(0, [Validators.required]),
     bookName: new FormControl('', [Validators.required, Validators.pattern('^[A-Z][a-zA-Z .,\'-_=+]{2,}$')]),
     bookAuthor: new FormControl('', [Validators.required, Validators.pattern('^[A-Z][a-zA-Z .,\'-_=+]{2,}$')]),
     bookDescription: new FormControl('', [Validators.required, Validators.pattern('^[A-Z][a-zA-Z0-9 .,\'-_=+]{2,}$')]),
@@ -62,7 +61,6 @@ export class AddBookComponent implements OnInit {
 
   resetForm(): void {
     this.bookForm.patchValue({
-      bookId: null,
       bookName: '',
       bookAuthor: '',
       bookDescription: '',
