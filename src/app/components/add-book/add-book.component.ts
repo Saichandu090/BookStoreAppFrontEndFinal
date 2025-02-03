@@ -6,7 +6,7 @@ import { MatDialogActions, MatDialogClose, MatDialogContent } from '@angular/mat
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { Book } from '../../model/classes/book';
+import { BookRequest } from '../../model/classes/book';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BooksService } from '../../services/books/books.service';
 import { BookResponse, ResponseStructure } from '../../model/interfaces/jsonresponse';
@@ -21,7 +21,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class AddBookComponent implements OnInit {
 
-  book: Book = new Book();
+  book: BookRequest = new BookRequest();
 
   snackBar: MatSnackBar = inject(MatSnackBar);
 
@@ -43,7 +43,7 @@ export class AddBookComponent implements OnInit {
       this.snackBar.open("Please fill the form to submit ", '', { duration: 3000 });
       return;
     } else {
-      this.book = Object.assign(new Book(), this.bookForm.value);
+      this.book = Object.assign(new BookRequest(), this.bookForm.value);
       this.bookService.addNewBook(this.book).subscribe({
         next: (response: ResponseStructure<BookResponse>) => {
           if (response.status === 201) {
