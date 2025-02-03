@@ -44,7 +44,6 @@ describe('AddBookComponent', () => {
   });
 
   it('should initialize form with empty fields', () => {
-    expect(component.bookForm.get('bookId')?.value).toBe(null);
     expect(component.bookForm.get('bookName')?.value).toBe('');
     expect(component.bookForm.get('bookAuthor')?.value).toBe('');
     expect(component.bookForm.get('bookDescription')?.value).toBe('');
@@ -55,7 +54,6 @@ describe('AddBookComponent', () => {
 
   describe('addNewBook', () => {
     const mockBookData = {
-      bookId: 1,
       bookName: 'Atom',
       bookAuthor: 'James',
       bookDescription: 'Habits',

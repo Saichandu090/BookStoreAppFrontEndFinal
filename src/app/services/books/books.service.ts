@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { BookResponse, ResponseStructure } from '../../model/interfaces/jsonresponse';
 import { APP_CONSTANTS } from '../../constants/constant';
-import { Book } from '../../model/classes/book';
+import { Book, BookRequest } from '../../model/classes/book';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +25,7 @@ export class BooksService {
     return headers;
   }
 
-  addNewBook(bookObject: Book): Observable<ResponseStructure<BookResponse>> {
+  addNewBook(bookObject: BookRequest): Observable<ResponseStructure<BookResponse>> {
     const headers = this.getHeaders();
     return this.http.post<ResponseStructure<BookResponse>>(this.baseURL + 'addBook', bookObject, { headers })
   }
