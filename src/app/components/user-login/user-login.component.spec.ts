@@ -7,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { of, throwError } from 'rxjs';
 import { LoginResponse, RegisterResponse, ResponseStructure } from '../../model/interfaces/jsonresponse';
+import { HttpErrorResponse } from '@angular/common/http';
 
 describe('UserLoginComponent', () => {
   let component: UserLoginComponent;
@@ -108,13 +109,11 @@ describe('UserLoginComponent', () => {
     });
 
     it('should handle login error', () => {
-      const errorResponse = {
-        message: 'Login failed'
-      };
-
-      mockLoginService.loginUser.mockReturnValue(throwError(() => errorResponse));
+      const errorResponse = { error: { message: 'Login failed' } };
+      component.loginForm.setValue({ email: 'test@example.com', password: 'pasword123' });
+      mockLoginService.loginUser.mockReturnValue(throwError(()=>errorResponse));
       component.handleLogin();
-      expect(mockToastr.error).toHaveBeenCalledWith('Bad credentials');
+      expect(mockToastr.error).toHaveBeenCalledWith(errorResponse.error.message);
     });
   });
 
@@ -188,7 +187,7 @@ describe('UserLoginComponent', () => {
       expect(mockLoginService.isUserExists).toHaveBeenCalledWith(mockEmail);
       expect(component.isPasswordResetStage).toBeTruthy();
     });
-    
+
 
     it('should show error when user does not exist', () => {
       const mockEmail = 'test@example.com';
@@ -200,7 +199,7 @@ describe('UserLoginComponent', () => {
       });
       mockLoginService.isUserExists.mockReturnValue(throwError(()=>mockErrorResponse));
       component.isUserExists();
-      expect(mockToastr.error).toHaveBeenCalledWith('User not found');
+      expect(mockToastr.error).toHaveBeenCalledWith(mockErrorResponse.message);
     });
   });
 

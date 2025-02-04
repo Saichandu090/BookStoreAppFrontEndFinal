@@ -121,7 +121,7 @@ export class UserLoginComponent {
         }
       },
       error: (error: HttpErrorResponse) => {
-        const errorMessage = error.error?.message || error.message;
+        const errorMessage = error.error?.message;
         this.toaster.error(errorMessage);
       }
     });
