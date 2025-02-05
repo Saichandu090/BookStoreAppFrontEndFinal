@@ -90,7 +90,7 @@ describe('AdminRegisterComponent', () => {
       lastName: 'Doe',
       dob: new Date('1990-01-01'),
       email: 'john.doe@example.com',
-      password: 'password123'
+      password: 'Password@123'
     };
 
     const mockSuccessResponse: ResponseStructure<RegisterResponse> = {

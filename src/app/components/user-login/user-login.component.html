@@ -21,10 +21,15 @@
 
         <label for="uname">Password</label>
         <input type="password" class="inp" formControlName="password" name="uname">
+        <div class="text-danger" *ngIf="loginForm.controls['password'].touched">
+          <span *ngIf="loginForm.controls['password'].errors?.['required']">
+            Password is required
+          </span>
+        </div>
 
         <label class="forgot-password" (click)="toggleForgotPassword()">Forgot Password?</label>
 
-        <button mat-raised-button color="primary" type="submit">Login</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">Login</button>
       </form>
 
       <!-- Signup Form -->
@@ -37,7 +42,10 @@
                   <span>This is required</span>
                 }
                 @if (registerForm.controls['firstName'].errors?.['pattern']) {
-                  <span>First Name Should start with Capital and AtLeast contain 3 characters</span>
+                  <span>FirstName Should start with Uppercase</span>
+                }
+                @if (registerForm.controls['firstName'].errors?.['minlength']) {
+                  <span>FirstName should atLeast contain 3 characters</span>
                 }
               </div>
             }
@@ -50,7 +58,10 @@
                   <span>This is required</span>
                 }
                 @if (registerForm.controls['lastName'].errors?.['pattern']) {
-                  <span>Last Name Should start with Capital and AtLeast contain 3 characters</span>
+                  <span>LastName Should start with Uppercase</span>
+                }
+                @if (registerForm.controls['lastName'].errors?.['minlength']) {
+                  <span>LastName should atLeast contain 3 characters</span>
                 }
               </div>
             }
@@ -67,7 +78,7 @@
                 }
                 @if (registerForm.controls['password'].errors?.['pattern']) {
                   <span>
-                    Password requires lowercase, uppercase, number, and special character
+                    Password requires lowercase, uppercase, number, and special character with atleast 8 characters
                   </span>
                 }
               </div>

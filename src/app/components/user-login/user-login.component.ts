@@ -61,11 +61,13 @@ export class UserLoginComponent {
     this.registerForm = this.formBuilder.group({
       firstName: ['', [
         Validators.required,
-        Validators.pattern('^[A-Z][a-zA-Z .,\'-_=+]{2,}$')
+        Validators.pattern('^[A-Z][a-zA-Z .,\'-_=+]+$'),
+        Validators.minLength(3)
       ]],
       lastName: ['', [
         Validators.required,
-        Validators.pattern('^[A-Z][a-zA-Z .,\'-_=+]{2,}$')
+        Validators.pattern('^[A-Z][a-zA-Z .,\'-_=+]+$'),
+        Validators.minLength(3)
       ]],
       dob: [''],
       password: ['', [
@@ -121,7 +123,7 @@ export class UserLoginComponent {
         }
       },
       error: (error: HttpErrorResponse) => {
-        const errorMessage = error.error?.message || error.message;
+        const errorMessage = error.error?.message;
         this.toaster.error(errorMessage);
       }
     });

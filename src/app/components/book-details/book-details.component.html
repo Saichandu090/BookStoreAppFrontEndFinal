@@ -30,7 +30,7 @@
             'low-stock': book.bookQuantity <= 10 && book.bookQuantity > 0 && book.status,
             'out-of-stock': book.bookQuantity === 0 && book.status,
           }">
-          {{ book.bookQuantity > 0 ? (book.status? 'In Stock':'Not-Available') : 'Out of Stock' }}
+          {{ book.bookQuantity > 10 ? (book.status? 'In Stock':'Not-Available') : (book.bookQuantity>0 ? 'Low-Stock ':'Out-Of-Stock') }}
         </span>
       </div>
       @if (currentUser.role==='USER' && book.status) {
