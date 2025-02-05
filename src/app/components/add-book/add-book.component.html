@@ -4,20 +4,17 @@
     <form [formGroup]="bookForm" class="book-form">
       <div class="form-group">
         <label for="bookName">Book Name</label>
-        <input
-          id="bookName"
-          type="text"
-          formControlName="bookName"
-          class="form-control"
-          placeholder="Enter Book Name"
-        >
+        <input id="bookName" type="text" formControlName="bookName" class="form-control" placeholder="Enter Book Name">
         @if(bookForm.controls["bookName"].touched){
         <div class="error-message">
           @if (bookForm.controls["bookName"].errors?.['required']) {
           <span>Book name is required</span>
           }
           @if (bookForm.controls["bookName"].errors?.['pattern']) {
-          <span>Minimum 3 characters required</span>
+          <span>First Letter should be an Uppercase,</span>
+          }
+          @if (bookForm.controls["bookName"].errors?.['minlength']) {
+          <span>Minimum 3 characters required </span>
           }
         </div>
         }
@@ -25,20 +22,18 @@
 
       <div class="form-group">
         <label for="bookAuthor">Book Author</label>
-        <input
-          id="bookAuthor"
-          type="text"
-          formControlName="bookAuthor"
-          class="form-control"
-          placeholder="Enter Book Author"
-        >
+        <input id="bookAuthor" type="text" formControlName="bookAuthor" class="form-control"
+          placeholder="Enter Book Author">
         @if(bookForm.controls["bookAuthor"].touched){
         <div class="error-message">
           @if (bookForm.controls["bookAuthor"].errors?.['required']) {
           <span>Book author is required</span>
           }
           @if (bookForm.controls["bookAuthor"].errors?.['pattern']) {
-          <span>Minimum 5 characters required</span>
+          <span>First Letter should be an Uppercase, </span>
+          }
+          @if (bookForm.controls["bookAuthor"].errors?.['minlength']) {
+          <span>Minimum 3 characters required</span>
           }
         </div>
         }
@@ -46,13 +41,8 @@
 
       <div class="form-group">
         <label for="bookDescription">Book Description</label>
-        <input
-          id="bookDescription"
-          type="text"
-          formControlName="bookDescription"
-          class="form-control"
-          placeholder="Enter Book Description"
-        >
+        <input id="bookDescription" type="text" formControlName="bookDescription" class="form-control"
+          placeholder="Enter Book Description">
         @if(bookForm.controls["bookDescription"].touched){
         <div class="error-message">
           @if (bookForm.controls["bookDescription"].errors?.['required']) {
@@ -67,13 +57,8 @@
 
       <div class="form-group">
         <label for="bookPrice">Book Price</label>
-        <input
-          id="bookPrice"
-          type="text"
-          formControlName="bookPrice"
-          class="form-control"
-          placeholder="Enter Book Price"
-        >
+        <input id="bookPrice" type="text" formControlName="bookPrice" class="form-control"
+          placeholder="Enter Book Price">
         @if(bookForm.controls["bookPrice"].touched){
         <div class="error-message">
           @if (bookForm.controls["bookPrice"].errors?.['pattern']) {
@@ -88,13 +73,8 @@
 
       <div class="form-group">
         <label for="bookQuantity">Book Quantity</label>
-        <input
-          id="bookQuantity"
-          type="tel"
-          formControlName="bookQuantity"
-          class="form-control"
-          placeholder="Enter Book Quantity"
-        >
+        <input id="bookQuantity" type="tel" formControlName="bookQuantity" class="form-control"
+          placeholder="Enter Book Quantity">
         @if(bookForm.controls["bookQuantity"].touched){
         <div class="error-message">
           @if (bookForm.controls["bookQuantity"].errors?.['min']) {
@@ -103,27 +83,25 @@
           @if (bookForm.controls["bookQuantity"].errors?.['required']) {
           <span>Book quantity is required</span>
           }
+          @if (bookForm.controls["bookQuantity"].errors?.['pattern']) {
+          <span>Only numbers are allowed</span>
+          }
         </div>
         }
       </div>
 
       <div class="form-group">
         <label for="bookLogo">Book Logo</label>
-        <input
-          id="bookLogo"
-          type="text"
-          formControlName="bookLogo"
-          class="form-control"
-          placeholder="Enter Book Logo URL"
-        >
+        <input id="bookLogo" type="text" formControlName="bookLogo" class="form-control"
+          placeholder="Enter Book Logo URL">
         @if(bookForm.controls["bookLogo"].touched){
         <div class="error-message">
           @if (bookForm.controls["bookLogo"].errors?.['required']) {
           <span>Book logo is required</span>
           }
           @if (bookForm.controls["bookLogo"].errors?.['maxlength']) {
-            <span>Book Url should be less than 255 characters</span>
-            }
+          <span>Book Url should be less than 255 characters</span>
+          }
         </div>
         }
       </div>
@@ -132,19 +110,10 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button
-    mat-raised-button
-    mat-dialog-close
-    color="primary"
-    [disabled]="bookForm.invalid"
-    (click)="addNewBook()"
-  >
+  <button mat-raised-button mat-dialog-close color="primary" [disabled]="bookForm.invalid" (click)="addNewBook()">
     Add Book
   </button>
-  <button
-    mat-button
-    mat-dialog-close
-  >
+  <button mat-button mat-dialog-close>
     Close
   </button>
 </mat-dialog-actions>

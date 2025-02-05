@@ -31,10 +31,10 @@ export class AdminRegisterComponent {
   toaster: ToastrService = inject(ToastrService);
 
   registerForm: FormGroup = this.formBuilder.group({
-    firstName: new FormControl('', [Validators.required, Validators.pattern("^[A-Z][A-Za-z .]{2,}$")]),
-    lastName: new FormControl('', [Validators.required, Validators.pattern("^[A-Z][A-Za-z .]{2,}$")]),
+    firstName: new FormControl('', [Validators.required, Validators.pattern('^[A-Z][a-zA-Z .,\'-_=+]+$'),Validators.minLength(3)]),
+    lastName: new FormControl('', [Validators.required, Validators.pattern('^[A-Z][a-zA-Z .,\'-_=+]+$'),Validators.minLength(3)]),
     dob: new FormControl('', [Validators.required]),
-    password: new FormControl('', [Validators.required, Validators.pattern("^[a-zA-Z 0-9.@-_]{8,}$")]),
+    password: new FormControl('', [Validators.required, Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};:\'",.<>?/~`]).{8,}$')]),
     email: new FormControl('', [Validators.required, Validators.email])
   })
 
